@@ -285,14 +285,14 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 			TransferFileSet aSet = null;
 			this.Log(Level.Debug, "transferList.Count: {0}", transferList.Count);
 			foreach (XmlNode node in transferList) {
-				this.Log(Level.Info, "- found a {0} set", node.Name);
+				this.Log(Level.Debug, "- found a {0} set", node.Name);
 				aSet = (TransferFileSet)TypeFactory.CreateDataType(node,this.Project);
 	            aSet.Parent = this;
 	            aSet.NamespaceManager = NamespaceManager;
 	            aSet.Initialize(node);
 	            if (aSet.IfDefined && !aSet.UnlessDefined) {
 		            this._transferList.Add(aSet);
-		            this.Log(Level.Info, "  and added it to our _transferList (count now at {0})", _transferList.Count);
+		            this.Log(Level.Debug, "  and added it to our _transferList (count now at {0})", _transferList.Count);
 	            }
 			}
 			
@@ -326,9 +326,9 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 					this.ExecuteChildTasks();
 		
 					foreach (TransferFileSet tfs in _transferList) {
-						this.Log(Level.Info, "Processing a {0}FileSet.", tfs.Direction);
+						this.Log(Level.Verbose, "Processing a {0}FileSet.", tfs.Direction);
 						foreach (string fileName in tfs.FileNames) {
-							this.Log(Level.Info, "{0}ting {1}...", tfs.Direction, fileName);
+							this.Log(Level.Verbose, "{0}ting {1}...", tfs.Direction, fileName);
 							if (tfs.Direction==TransferDirection.PUT) {
 								
 							} else if (tfs.Direction==TransferDirection.GET) {							
@@ -658,32 +658,51 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 		/// <summary>Disconnect from server</summary>
 		private void ftpDisconnect() {
 			if (IsConnected) {
-				this.Log(Level.Info, "Disconnecting from " + _server);
+				this.Log(Level.Info, "Disconnecting from '{0}'", _server);
 				_client.Quit();
 				_client = null;
 			}
 			return;
 		} // ftpDisconnect()
 
-		private string AskPasswordFromConsole() {
-			Console.WriteLine("Connecting to {0}, authenticating as {1}.", _server, _user);
-			Console.Write("Please Enter Password: ");
-			string pass = Console.ReadLine();
-			// todo: validate input
-			return pass;
+		private void LoginWithPromptForPassword(string username) {
+			bool success = false;
+			bool abort = false;
+			string pass = String.Empty;
+			this.Log(Level.Info, "Please Enter Password:");
+			while (!success && !abort) {
+				Console.Write(">> ");
+				pass = Console.ReadLine();
+				if (pass==String.Empty) {
+					abort = true;
+				} else {
+					// todo: validate input
+					try {
+						_client.User(username);
+						_client.Password(pass);
+						success = true;
+					} catch (FTPException ex) {
+						this.Log(Level.Info, ex.Message);
+						this.Log(Level.Info, "Please Re-Enter Password or Press Enter to Abort.");
+					}
+				}
+			}
+			if (abort) {
+				throw new FTPException("Login Aborted by User");
+			}
 		}
 		
 		/// <summary>Connect to server</summary>
 		private void ftpConnect() {
 #if !OFFLINE
 			if (!IsConnected) {
-				this.Log(Level.Info, "Connecting to " + _server);
+				this.Log(Level.Info, "Connecting to '{0}' as '{1}' ...", _server, _user);
 				this.Log(Level.Verbose, "Instantiating the FTPClient & opening the connection...");
 				_client = new FTPClient(_server);
 				
-				this.Log(Level.Verbose, "Authenticating with " + _user);
+				this.Log(Level.Verbose, "Authenticating...");
 				if (_password.ToUpper()=="PROMPT") {
-					_client.Login(_user, AskPasswordFromConsole());
+					LoginWithPromptForPassword(_user);
 				} else {
 					_client.Login(_user, _password);
 				}
