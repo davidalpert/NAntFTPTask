@@ -55,7 +55,7 @@
   <property name="extension.debug" value="dll">
   </property>
   <!--The initialisation target.-->
-  <target name="init.debug" >
+  <target name="init.debug" depends="subwcrev">
     <mkdir dir="${outputdir.debug}" />
   </target>
   <!--The 'clean' target.  Here we delete the built output files and extra files which are not directly specified in 
@@ -258,14 +258,18 @@
      </delete>
   </target>
 
+  	<property name="assemblyFile"	value="bin\debug\ftptask.dll" />
+	<property name="version"	value="${assemblyname::get-version(assemblyname::get-assembly-name(assemblyFile))}" />
+	<property name="outputdir.zip"	value="bin\zips-v${version}" />
+	<property name="ziproot"	value="bin\texteditor.addins.insert-v${version}" />
   <property name="build.dir" value="./bin/debug" />
-  <property name="project.version" value="1.0.34.85" />
+  <property name="project.version" value="${version}" />
   <property name="project.release.type" value="rc1" />
   <property name="project.config" value="build.debug" />
   <property name="doc.dir" value="${project::get-base-directory()}\docs" />
 <property name="link.sdkdoc.version" value="SDK_v1_0" />
 <property name="link.sdkdoc.web" value="true" />
-<property name="project.version.full" value="1.0.34.85" />
+<property name="project.version.full" value="${version}" />
 
     <target name="userdoc" depends="build.debug" description="Builds user documentation">
 	    <echo message="Creating task and type documentation from ${build.dir}" />
@@ -329,5 +333,62 @@
         </copy>
 	<echo message="User documentation: file://${doc.dir}/index.html" />
     </target>
+
+	<target name="zip"
+		depends="userdoc">
+		<property name="zipfile-bin"	value="${ziproot}-bin.zip" />
+		<property name="zipfile-src"	value="${ziproot}-src.zip" />
+		<property name="zipfile-libsrc"	value="${ziproot}-libsrc.zip" />
+		<zip zipfile="${zipfile-bin}">
+			<fileset prefix="FTPTask">
+				<include name="bin\*.*" />
+				<include name="docs\*.*" />
+				<include name="readme.txt"/>
+				<exclude name="**\.svn\*.*"/>
+			</fileset>
+		</zip>
+		<zip zipfile="${zipfile-libsrc}">
+			<fileset prefix="FTPTask" basedir="..">
+				<include name="libsource\**"/>
+				<exclude name="**\*.zip" />
+				<exclude name="**\*.exe" />
+				<exclude name="**\.svn\*.*"/>
+			</fileset>
+		</zip>
+		<zip zipfile="${zipfile-src}">
+			<fileset prefix="FTPTask\FTPTask">
+				<include name="**" />
+				<exclude name="**\*.zip" />
+				<exclude name="**\*.exe" />
+				<exclude name="**\.svn\**"/>
+			</fileset>
+		</zip>
+	</target>
+
+	<target name="subwcrev">
+		<exec program="subwcrev"
+			commandline=". AssemblyInfo.subwcrev AssemblyInfo.cs" 
+			failonerror="false" />
+	</target>
+
+
+	<target name="release"
+			description="upload the zip files and docs to spinthemoose.com/~ftptask"
+			depends="zip">
+		<connection id="ftptask" 
+			    server="spinthemoose.com" 
+			    username="ftptask" 
+			    />
+		<ftp connection="ftptask" >
+			<put type="ascii">
+				<include name="docs\**" />
+				<exclude name="**\.svn\**" />
+			</put>
+			<put type="bin" flatten="true">
+				<include name="${ziproot}*.zip"/>
+			</put>
+		</ftp>
+	</target>
+
 
 </project>

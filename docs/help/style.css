@@ -17,6 +17,11 @@ h4 {
     margin-bottom: 0.5em;
 }
 
+h5 {
+    margin-bottom: -.8em;
+    margin-left: 1.0em;    
+}
+
 hr {
     color: gray;
     background-color: inherit;
@@ -35,6 +40,7 @@ a:visited {
     color: purple;
     background-color: inherit;
 }
+
 
 a:active {
     color: #cc0000;
@@ -71,7 +77,7 @@ a.heading:hover {
 
 .NavBar {
     color: black;
-    background-color: #dfff80;
+    background-color: #ffcc99;
     border-color: #999966;
     border-style: none none solid none;
     border-width: 2px;
@@ -95,14 +101,20 @@ div.table {
 }
 
 div.nested-element {
-    margin-left: 40px;
-    position: relative;
+	margin-left: 40px;
+	position: relative;
 }
 
 div.nested-element table {
     font-size: 100%;
     border-collapse: collapse;
     width: 710px;
+}
+
+.table table {
+    font-size: 100%;
+    border-collapse: collapse;
+    width: 750px;
 }
 
 .table table {
@@ -125,20 +137,13 @@ div.nested-element table {
     padding: 5px;
 }
 
-.table td.section {
-    border: 1px solid #999999;
-    background-color: #f0f0e0;
-    padding: 5px;
-    font-weight: bold;
-}
-
 .N {
-    color: #99cc00;
+    color: #003366;
     background-color: inherit;
 }
 
 .Ant {
-    color: #ff9900;
+    color: #660000;
     background-color: inherit;
 }
 
@@ -159,18 +164,7 @@ pre.code {
     background-color: inherit;
     color: #0000AA;
     font-size: 100%;
-}
-
-pre.syntax {
-    background-color: #cccccc;
-    padding: 4px 8px;
-    cursor: text;
-    margin-top: 1em;
-    margin-bottom: 1em; 
-    color: #000000;
-    border-width: 1px;
-    border-style: solid;
-    border-color: #999999;
+    margin-left: 0px;
 }
 
 span.code {
@@ -180,19 +174,11 @@ span.code {
     font-size: 100%;
 }
 
-span.expression {
-    font-family: Monospace, Courier New, Courier;
-    background-color: inherit;
-    color: #0000AA;
-    font-weight: bold;
-    font-size: 100%;
-}
-
 tr.required {
 }
 
 td.required {
-    font-weight: bolder;
+	font-weight: bolder;
 }
 
 .missing {
@@ -206,8 +192,4 @@ span.parameter {
 p.topicstatus {
     display: block;
     color: red;
-}
-
-ul.examples {
-	list-style-type: lower-roman;
 }

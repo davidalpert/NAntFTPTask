@@ -1,0 +1,75 @@
+<!DOCTYPE html PUBLIC "-//w3c//dtd xhtml 1.1 strict//en" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>NAntContrib - Release Notes</title>
+        <meta http-equiv="Content-Language" content="en-ca" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <link rel="stylesheet" type="text/css" href="help/style.css" />
+    </head>
+    <body>
+        <table width="100%" border="0" cellspacing="0" cellpadding="2" class="NavBar">
+            <tr>
+                <td class="NavBar-Cell">
+                    <b><a href="http://www.spinthemoose.com/%7Eftptask/">FTPTask</a></b> <img src="help/images/arrow.gif" alt="->" width="13" height="9" /> Release 
+                    Notes
+                </td>
+            </tr>
+        </table>
+        <h1>
+            <span class="N">FTPTask </span>Release Notes</h1>
+        <h3>v1.0.37.85 (December 24 2004)</h3>
+        <p>The version numbering has been changed as follows:</p>
+        <dl>
+          <dt>1</dt>
+          <dd>the major release number for this task.</dd>
+          <dt>0</dt>
+          <dd>the minor release number of this task.</dd>
+          <dt>37</dt>
+          <dd>the subversion revision number of this build.</dd>
+          <dt>85</dt>
+          <dd>the version of NAnt that it was designed against.</dd>
+        </dl>
+        <h4>Task changes</h4>
+        <h5><a class="heading" href="help/tasks/aximp.html">&lt;ftp&gt;</a></h5>
+        <ul>
+            <li>            &lt;up-ascii&gt;, &lt;up-binary&gt;, &lt;down-ascii&gt;, and &lt;down-binary&gt; have been depricated</li>
+        <li>Now accepts any number of &lt;put&gt; and &lt;get&gt; elements. Both are specialized FileSet objects that accept and match Include elements.</li>
+        </ul>
+        <h3>1.0.4 (June 21, 2004)</h3>
+        <h4>Modified Tasks</h4>
+        <h5>&lt;ftp&gt;</h5>
+        <ul>
+          <li> Now accepts a &lt;script&gt; tag. </li>
+        </ul>
+        <h3>1.0.3 (June 19, 2004)</h3>
+        <h4>New Tasks</h4>
+        <h5>&lt;ftp&gt;</h5>
+        <ul>
+            <li>
+                Collected all file transfer operations into one central task.</li>
+        <li>Accepts four filesets &lt;up-ascii&gt;, &lt;up-binary&gt;, &lt;down-ascii&gt;, &lt;down-binary&gt;.</li>
+        </ul>
+        <h4>Removed Tasks</h4>
+        <h5>&lt;ftp-up&gt;</h5>
+        <ul>
+            <li>
+                Task has been combined into &lt;ftp&gt; as &lt;up-ascii&gt; and &lt;up-binary&gt;. </li>
+        </ul>
+        <h5>&lt;ftp-down&gt;</h5>
+        <ul>
+            <li>
+                Task has been combined into &lt;ftp&gt; as &lt;down-ascii&gt; and &lt;down-binary&gt;. </li>
+        </ul>
+        <h3>1.0.1 (June 3, 2004)</h3>
+        <h4>New Tasks</h4>
+        <h5>&lt;ftp-up&gt;</h5>
+        <ul>
+          <li> basic put functionality</li>
+        </ul>
+        <h5>&lt;ftp-down&gt;</h5>
+        <ul>
+          <li> basic get functionality</li>
+        </ul>
+    <p>&nbsp;</p>
+    </body>
+</html>
