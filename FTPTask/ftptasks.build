@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<project name="ftp tasks for nant" default="build">
+	<property name="nant-core" value="D:\NAnt\bin\NAnt.Core.dll" />
+	<property name="ftpclient" value="D:\FTPClient\ftpclient.dll" />
+	<property name="project.debug" value="true" />
+	
+	<target name="build">
+	
+		<csc target="library" debug="${project.debug}" output="FTPTasks.dll">
+			<sources>
+				<include name="*.cs"/>
+			</sources>
+			<references>
+				<include name="${nant-core}" />
+				<include name="${ftpclient}" />
+			</references>
+		</csc>
+		
+	</target>
+	
+	<target name="clean">
+		<delete file="FTPTasks.dll" failonerror="false"/>
+	</target>
+	
+</project>
