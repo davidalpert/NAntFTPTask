@@ -1,6 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project name="ftptask" default="build">
   <description>SharpDevelop generated NAnt 0.85 build file.</description>
+
+  <fileset id="sources">
+        <include name=".\AssemblyInfo.cs" />
+        <include name=".\Tasks\ftptask.cs" />
+        <include name=".\Tests" />
+        <include name=".\Tests\ftptasktests.cs" />
+        <include name=".\Types" />
+        <include name=".\Tasks" />
+        <include name=".\Types\Connection.cs" />
+        <include name=".\Types\TransferFileSet.cs" />
+        <include name=".\Util" />
+        <include name=".\Util\RemoteDirectoryScanner.cs" />
+        <include name=".\Types\PutFileSet.cs" />
+        <include name=".\Types\GetFileSet.cs" />
+        <include name=".\Types\RemotePath.cs" />
+        <include name=".\Enum" />
+        <include name=".\Enum\TransferDirection.cs" />
+  </fileset>
+  <fileset id="refs.debug-localcopy">
+        <include name=".\lib\debug\edtftpnet-1.1.3.dll" />
+        <include name=".\lib\debug\edtftpnet-1.1.3.pdb" />
+        <include name=".\lib\debug\ConsolePasswordInput.dll" />
+        <include name=".\lib\debug\ConsolePasswordInput.pdb" />
+  </fileset>
+  <fileset id="refs.release-localcopy">
+        <include name=".\lib\edtftpnet-1.1.3.dll" />
+        <include name=".\lib\ConsolePasswordInput.dll" />
+  </fileset>
+  
   <!--Set debug property if not set-->
   <ifnot test="${property::exists('debug')}">
     <property name="debug" value="false" />
@@ -26,12 +55,12 @@
   <property name="extension.debug" value="dll">
   </property>
   <!--The initialisation target.-->
-  <target name="init.debug" depends="subwcrev" >
+  <target name="init.debug" >
     <mkdir dir="${outputdir.debug}" />
   </target>
   <!--The 'clean' target.  Here we delete the built output files and extra files which are not directly specified in 
 		      the .prjx file (e.g. ".pdb", ".xml", ".manifest").-->
-  <target name="clean.debug">
+  <target name="clean.debug" >
     <delete>
       <fileset>
         <include name="${outputdir.debug}\${assembly.debug}.${extension.debug}" />
@@ -39,54 +68,75 @@
         <include name="${outputdir.debug}\${assembly.debug}.xml" />
         <include name="${outputdir.debug}\${assembly.debug}.${extension.debug}.manifest" />
         <include name="${outputdir.debug}\*.config" />
-		<!-- let's not forget local copies of linked libraries -->
-		<include name="${outputdir.debug}\edtftpnet-1.1.3.dll" />
-		<include name="${outputdir.debug}\edtftpnet-1.1.3.pdb" />
-		<include name="${outputdir.debug}\ConsolePasswordInput.dll" />
-		<include name="${outputdir.debug}\ConsolePasswordInput.pdb" />
+	<include name="${outputdir.debug}\edtftpnet-1.1.3.dll" />
+	<include name="${outputdir.debug}\edtftpnet-1.1.3.pdb" />
+	<include name="${outputdir.debug}\ConsolePasswordInput.dll" />
+	<include name="${outputdir.debug}\ConsolePasswordInput.pdb" />
       </fileset>
     </delete>
   </target>
   <!--The 'build' target.-->
   <target name="build.debug" depends="init.debug, gacreferences.debug" >
     <!--Compiles the code -->
-    <csc target="library" output="${outputdir.debug}\${assembly.debug}.${extension.debug}" warninglevel="4" debug="True" optimize="False" unsafe="False" checked="True" noconfig="False" nostdlib="False" define="DEBUG" warnaserror="False">
-      <sources>
-        <include name=".\AssemblyInfo\.cs" />
-        <include name=".\Tasks\ftptask.cs" />
-        <include name=".\Types" />
-        <include name=".\Tasks" />
-        <include name=".\Types\Connection.cs" />
-        <include name=".\Types\TransferFileSet.cs" />
-        <include name=".\Tests" />
-        <include name=".\Tests\ftptasktest.cs" />
-      </sources>
-      <references>
-        <include name="c:\usr\local\nant-0.85-rc1\bin\NAnt.Core.dll" />
-        <include name=".\lib\edtftpnet-1.1.3.dll" />
-        <include name=".\lib\ConsolePasswordInput.dll" />
-      </references>
+    <csc target="library" doc="${outputdir.debug}\${assembly.debug}.xml" output="${outputdir.debug}\${assembly.debug}.${extension.debug}" warninglevel="4" debug="True" optimize="False" unsafe="False" checked="True" noconfig="False" nostdlib="False" define="DEBUG" warnaserror="False">
+	    <nowarn>
+		    <CompilerWarning number="1591" />
+	    </nowarn>
+	    <sources refid="sources" />
+	    <references >
+        <include name="c:\usr\local\nant-0.85-rc1\build\net-1.1.win32\nant-0.85-debug\bin\NAnt.Core.Tests.dll" />
+        <include name="c:\usr\local\nant-0.85-rc1\build\net-1.1.win32\nant-0.85-debug\bin\NAnt.Core.dll" />
+        <include name="c:\usr\local\nant-0.85-rc1\build\net-1.1.win32\nant-0.85-debug\bin\log4net.dll" />
+        <include name=".\lib\debug\edtftpnet-1.1.3.dll" />
+        <include name=".\lib\debug\ConsolePasswordInput.dll" />
+        	<include name="${utils::get-gacpath( 'nunit.framework, Version=2.2.0.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77' ) }" />
+	    </references>
     </csc>
-    <!--Copy external libraries to output folder -->
-	<copy todir="${outputdir.debug}">
-		<fileset basedir=".\lib\debug\">
-			<include name="edtftpnet-1.1.3.dll" />
-			<include name="edtftpnet-1.1.3.pdb" />
-			<include name="ConsolePasswordInput.dll" />
-			<include name="ConsolePasswordInput.pdb" />
-		</fileset>
-	</copy>
-	<!--Copy app.config file to output folder and rename it appropriately -->
+    <!--Copy app.config file to output folder and rename it appropriately -->
+    <copy todir="${outputdir.debug}" flatten="true" overwrite="true">
+	<fileset refid="refs.debug-localcopy" />
+   </copy>
   </target>
   <!--The test target.  Only supports Nunit 2 -->
-  <target name="test.debug" depends="build.debug">
+  <target name="test.debug" depends="build.debug" >
     <nunit2>
       <formatter type="Plain" />
-      <test assemblyname="${outputdir.debug}\${assembly.debug}.${extension.debug}"  />
+      <test assemblyname="${outputdir.debug}\${assembly.debug}.${extension.debug}" appconfig="${outputdir.debug}\${assembly.debug}.${extension.debug}.config" />
     </nunit2>
   </target>
   <!--Generates a property for each Gac reference.  The property name is set to the name of the assembly-->
-  <target name="gacreferences.debug">
+  <target name="gacreferences.debug" >
+    <echo message="Importing GetGacPath script..." />
+    <script language="C#" prefix="utils">
+      <code>                 
+
+				[Function("get-gacpath")]
+				public static string GetGacPath( string assemblyName  ) 
+				{
+					string CodeBase = GetCodeBase( assemblyName );
+
+					return CodeBase.Replace( "file:///", "" );
+				}
+
+				/// 
+				/// Gets the code base for the specified assembly name.
+				/// 
+				public static string GetCodeBase( string assemblyName )
+				{
+					string CodeBase = String.Empty;
+		
+					System.Reflection.Assembly Assembly = 
+						System.Reflection.Assembly.LoadWithPartialName( assemblyName );
+	
+					if( Assembly != null )
+					{
+						CodeBase = Assembly.CodeBase;
+					}
+
+					return CodeBase;
+				}
+      			</code>
+    </script>
   </target>
   <!--Set up various properties that will be referred to in the various nant targets.-->
   <!--The output directory.-->
@@ -99,7 +149,7 @@
   <property name="extension.release" value="dll">
   </property>
   <!--The initialisation target.-->
-  <target name="init.release" depends="subwcrev" unless="${debug}">
+  <target name="init.release" unless="${debug}">
     <mkdir dir="${outputdir.release}" />
   </target>
   <!--The 'clean' target.  Here we delete the built output files and extra files which are not directly specified in 
@@ -112,9 +162,6 @@
         <include name="${outputdir.release}\${assembly.release}.xml" />
         <include name="${outputdir.release}\${assembly.release}.${extension.release}.manifest" />
         <include name="${outputdir.release}\*.config" />
-		<!-- let's not forget local copies of linked libraries -->
-		<include name="${outputdir.release}\edtftpnet-1.1.3.dll" />
-		<include name="${outputdir.release}\ConsolePasswordInput.dll" />
       </fileset>
     </delete>
   </target>
@@ -125,37 +172,162 @@
       <sources>
         <include name=".\AssemblyInfo.cs" />
         <include name=".\Tasks\ftptask.cs" />
+        <include name=".\Tests" />
+        <include name=".\Tests\ftptasktests.cs" />
         <include name=".\Types" />
         <include name=".\Tasks" />
         <include name=".\Types\Connection.cs" />
         <include name=".\Types\TransferFileSet.cs" />
-        <include name=".\Tests" />
-        <include name=".\Tests\ftptasktest.cs" />
+        <include name=".\Util" />
+        <include name=".\Util\RemoteDirectoryScanner.cs" />
+        <include name=".\Types\PutFileSet.cs" />
+        <include name=".\Types\GetFileSet.cs" />
+        <include name=".\Types\RemotePath.cs" />
+        <include name=".\Enum" />
+        <include name=".\Enum\TransferDirection.cs" />
       </sources>
       <references>
-        <include name="c:\usr\local\nant-0.85-rc1\bin\NAnt.Core.dll" />
-        <include name=".\lib\edtftpnet-1.1.3.dll" />
+        <include name=".\lib\debug\edtftpnet-1.1.3.dll" />
         <include name=".\lib\ConsolePasswordInput.dll" />
+        <include name="${utils::get-gacpath( 'nunit.framework, Version=2.2.0.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77' ) }" />
+        <include name="c:\usr\local\nant-0.85-rc1\build\net-1.1.win32\nant-0.85-debug\bin\NAnt.Core.Tests.dll" />
+        <include name="c:\usr\local\nant-0.85-rc1\build\net-1.1.win32\nant-0.85-debug\bin\NAnt.Core.dll" />
+        <include name="c:\usr\local\nant-0.85-rc1\build\net-1.1.win32\nant-0.85-debug\bin\log4net.dll" />
       </references>
     </csc>
-    <!--Copy external libraries to output folder -->
-	<copy todir="${outputdir.release}">
-		<fileset basedir=".\lib\">
-			<include name="edtftpnet-1.1.3.dll" />
-			<include name="ConsolePasswordInput.dll" />
-		</fileset>
-	</copy>
     <!--Copy app.config file to output folder and rename it appropriately -->
+    <copy todir="${outputdir.release}" flatten="true" overwrite="true">
+	<fileset refid="refs.release-localcopy" />
+   </copy>
   </target>
   <!--The test target.  Only supports Nunit 2 -->
   <target name="test.release" depends="build.release" unless="${debug}">
+    <nunit2>
+      <formatter type="Plain" />
+      <test assemblyname="${outputdir.release}\${assembly.release}.${extension.release}" appconfig="${outputdir.release}\${assembly.release}.${extension.release}.config" />
+    </nunit2>
   </target>
   <!--Generates a property for each Gac reference.  The property name is set to the name of the assembly-->
   <target name="gacreferences.release" unless="${debug}">
+    <echo message="Importing GetGacPath script..." />
+    <script language="C#" prefix="utils">
+      <code>                 
+
+				[Function("get-gacpath")]
+				public static string GetGacPath( string assemblyName  ) 
+				{
+					string CodeBase = GetCodeBase( assemblyName );
+
+					return CodeBase.Replace( "file:///", "" );
+				}
+
+				/// 
+				/// Gets the code base for the specified assembly name.
+				/// 
+				public static string GetCodeBase( string assemblyName )
+				{
+					string CodeBase = String.Empty;
+		
+					System.Reflection.Assembly Assembly = 
+						System.Reflection.Assembly.LoadWithPartialName( assemblyName );
+	
+					if( Assembly != null )
+					{
+						CodeBase = Assembly.CodeBase;
+					}
+
+					return CodeBase;
+				}
+      			</code>
+    </script>
   </target>
-  <!-- Automatically updates AssemblyInfo.cs using subwcrev -->
-  <target name="subwcrev">
-	<exec program="subwcrev"
-	      commandline=". AssemblyInfo.subwcrev AssemblyInfo.cs" />
+  <property name="nant-tasks-dir" value="c:\usr\local\nant-0.85-rc1\build\net-1.1.win32\nant-0.85-debug\bin\tasks" />
+  <target name="install" >
+     <copy overwrite="true" flatten="true" todir="${nant-tasks-dir}">
+	     <fileset>
+		     <include name="${outputdir.release}\*.dll" />
+		     <include name=".\lib\*.dll" />
+		</fileset>
+     </copy>
   </target>
+  <target name="remove" >
+     <delete failonerror="false">
+	     <fileset>
+		     <include name="${nant-tasks-dir}\*.dll" />
+		</fileset>
+     </delete>
+  </target>
+
+  <property name="build.dir" value="./bin/debug" />
+  <property name="project.version" value="1.0.34.85" />
+  <property name="project.release.type" value="rc1" />
+  <property name="project.config" value="build.debug" />
+  <property name="doc.dir" value="${project::get-base-directory()}\docs" />
+<property name="link.sdkdoc.version" value="SDK_v1_0" />
+<property name="link.sdkdoc.web" value="true" />
+<property name="project.version.full" value="1.0.34.85" />
+
+    <target name="userdoc" depends="build.debug" description="Builds user documentation">
+	    <echo message="Creating task and type documentation from ${build.dir}" />
+        <exec program="nant.exe" useruntimeengine="true">
+            <arg value="-indent:1" />
+            <arg value="-buildfile:ftptask.build" />
+            <arg value="-D:project.version=${project.version}" />
+            <arg value="-D:project.release.type=${project.release.type}" />
+            <arg value="-targetframework:${framework::get-target-framework()}" />
+            <arg value="${project.config}" />
+            <arg value="self-userdoc" />
+        </exec>
+    </target>
+    <target name="self-userdoc"> 
+        <!-- use ndoc and NAnt.Documenter to build user doc if they need it -->
+	<echo message="doc.dir = ${doc.dir}" />
+        <uptodate property="help.uptodate">
+            <targetfiles>
+		    <include name="${doc.dir}/help/*.html" />
+            </targetfiles>
+            <sourcefiles basedir="${build.dir}">
+                <!-- make sure the tasks/types are not new -->
+                <include name="ftptask.dll" />
+            </sourcefiles>
+        </uptodate>
+        <if test="${not(help.uptodate)}">
+            <ndoc>
+                <assemblies basedir="${build.dir}">
+                  <include name="ftptask.dll" />
+                </assemblies>
+                <documenters>
+                    <documenter name="NAnt">
+                        <property name="OutputDirectory" value="${doc.dir}/help" />
+                        <property name="SdkDocVersion" value="${link.sdkdoc.version}" />
+                        <property name="SdkLinksOnWeb" value="${link.sdkdoc.web}" />
+                        <!-- set base uri used for linking to other docs -->
+			<property name="NAntBaseUri" value="../" />
+                        <!-- do not filter on namespace -->
+                        <property name="NamespaceFilter" value="" />
+                        <!-- set the name and version of the product for which docs are generated -->
+                        <property name="ProductName" value="NAnt FTPTasks" />
+                        <property name="ProductVersion" value="${project.version.full}" />
+                        <property name="ProductUrl" value="http://www.spinthemoose.com/net/ftptasks" />                        
+                        <property name="Preliminary" value="${not(project.release.type == 'release')}" />
+                        <property name="DocumentAttributes" value="True" />
+                        <property name="IncludeAssemblyVersion" value="True" />
+                        <property name="ShowMissingParams" value="True" />
+                        <property name="ShowMissingReturns" value="True" />
+                        <property name="ShowMissingValues" value="True" />
+                    </documenter>
+                </documenters>
+            </ndoc>
+        </if>
+        <!-- copy doc files from source-->
+        <copy todir="${build.dir}">
+            <fileset>
+                <include name="doc/**" />
+                <exclude name="**/obj/**" />
+                <exclude name="**/bin/**" />
+            </fileset>
+        </copy>
+	<echo message="User documentation: file://${doc.dir}/index.html" />
+    </target>
+
 </project>

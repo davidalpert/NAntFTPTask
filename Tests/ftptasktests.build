@@ -8,7 +8,9 @@
 	<property name="remote-dir" 		value=".\net" />
 	<property name="local-dir" 			value="..\doc" />
 
+	<!--
 	<loadtasks assembly="..\bin\debug\ftptask.dll" />
+	-->
 	<connection id="myConn" server="${remotehost}" username="${username}" password="${password}" />	
 	<connection id="myConn2" server="${remotehost}" username="${username}" password="prompt" />	
 	<connection id="myConn3" server="${remotehost}" username="${username}" />

@@ -38,10 +38,112 @@ using PasswordInputManager = ConsolePasswordInput.ConsolePasswordInput;
 using Sourceforge.NAnt.Ftp.Types;
 using Sourceforge.NAnt.Ftp.Enum;
 using Sourceforge.NAnt.Ftp.Util;
+using Sourceforge.NAnt.Ftp.Tasks;
 
 namespace Sourceforge.NAnt.Ftp.Tasks {
 	
-	/// <summary>FTP tasks</summary>
+    /// <summary>
+    /// Transfer files over an FTP connection.
+    /// </summary>
+    /// <remarks>
+    ///   <para>
+    ///   When you use an <see cref="FTPTask"/> task, you must specify 
+    ///   connection details, either through including a <see cref="Connection"/> 
+    ///   element as a child of the ftp task or through specifying in the <b>connection</b> attribute 
+    ///   the <b>id</b> of a previously declared <see cref="Connection"/> element.
+    ///   </para>
+    ///   <para>
+    ///   The <b>up-ascii</b>, <b>up-binary</b>, <b>down-ascii</b>, and <b>down-binary</b>
+    ///   children have been depricated in favor of multiple <see cref="TransferFileSet" /> elements that are 
+    ///   included through any number of <see cref="Get"/> and <see cref="Put"/> elements.
+    ///   </para>
+    ///   <para>
+    ///   Transfer type (Ascii/Binary) is now specified as through the <b>Type</b> attribute of the <see cref="Get"/> and <see cref="Put"/> elements.
+    ///   </para>
+    ///   <h4>Include Scanning</h4>
+    ///   <para>
+    ///   <see cref="Put"/> elements are a derived version of <see cref="TransferFileSet"/> that scan
+    ///   local directories just as a <see cref="FileSet"/> does.
+    ///   </para>
+    ///   <para>
+    ///   <see cref="Get"/> elements are a derived version of <see cref="TransferFileSet"/> that process
+    ///   include statements using the same algorithm as a <see cref="FileSet"/> only they scan
+    ///   <b>remote</b> directories on the server.  This allows you to use NAnt's 
+    ///   <see cref="FileSet"/> pattern matching to selectively get a batch of files from
+    ///   a remote filesystem.
+    ///   </para>
+    ///   <note>
+    ///   <see cref="Get"/> and <see cref="Put"/> children are processed in the order 
+    ///   they are listed.  All paths in these elements and their include statements are
+    ///   to the ftp node's localpath and remotepath attributes.
+    ///   </note>
+    /// </remarks>
+    /// <example>
+    ///   <para>
+    ///   Put a single file to a remote host.
+    ///   </para>
+    ///   <code>
+    ///     <![CDATA[
+    /// <connection id="myconn" server="upload.sourceforge.net" username="anonymous" password="david@spinthemoose.com" />
+    /// <ftp  
+    ///     connection="myconn"
+    ///     remotepath="incoming"
+    ///     localpath="c:\dev\nantftptask\trunk"
+    ///     >
+    ///     <put type="ascii">
+    ///        <include name="readme.txt" />
+    ///     </put>
+    /// </ftp>
+    ///     ]]>
+    ///   </code>
+    /// </example>
+    /// <example>
+    ///   <para>Put a set of binary files to a .</para>
+    ///   <code>
+    ///     <![CDATA[
+    ///		<connection id="sourceforge 
+    ///			    server="upload.sourceforge.net" 
+    ///			    username="anonymous" 
+    ///			    password="david@spinthemoose.com" />
+    ///		<ftp connection="sourceforge" >
+    ///			<put type="bin" local-path="." remote-path="incoming" flatten="true">
+    ///				<include name="${ziproot}*.zip"/>
+    ///			</put>
+    ///		</ftp>
+    ///     ]]>
+    ///   </code>
+    /// </example>
+    /// <example>
+    ///   <para>
+    ///   Debug a request to copy all php files from a remote directory.  This will list
+    ///   the files included as the remote directories are scanned.
+    ///   </para>
+    ///   <code>
+    ///     <![CDATA[
+    ///		
+    ///		    <connection id="myConn" server="${remotehost}" username="${username}" />
+    ///	
+    /// 	    <ftp debug="true"
+    /// 	    	 connection="myConn"
+    /// 	    	 remotepath="${remote-dir}"
+    /// 	    	 showdironconnect="false" 
+    /// 	    	 >
+    ///				<get type="ascii" local-path="incoming" remote-path="." failonempty="true">
+    ///					<include name="**\*.php" />
+    ///				</get>
+    ///		    </ftp>
+    ///     ]]>
+    ///   </code>
+    ///   <note>
+    ///   When a password is not supplied, the connection is established then 
+    ///   logging output asks for password input from the console.  Any text
+    ///   typed when answering this reques is masked thanks to <b>Lim Bio Liong's</b> 
+    ///   CodeProject article <i>'.NET Console Password Input By Masking 
+    ///   Keyed-In Characters'</i> 
+    ///   (<see href="http://www.codeproject.com/dotnet/ConsolePasswordInput.asp">http://www.codeproject.com/dotnet/ConsolePasswordInput.asp</see>
+    ///    - accessed on 12/18/2004) 
+    ///   </note>
+    /// </example>
 	[TaskName("ftp")]
 	public class FTPTask : TaskContainer {
 	
@@ -119,7 +221,9 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 
 		public FTPClient Client { get {return _client;} }
 		
-		/// <summary>The property</summary>
+		/// <summary>
+		/// The port number to connect to.  Default is 21.
+		/// </summary>
 		[TaskAttribute("port", Required=false)]
 		[Int32Validator(1,65535)]
 		public int port {
@@ -130,7 +234,9 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 				}
 		} // port
 
-		/// <summary>The property</summary>
+		/// <summary>
+		/// The mode to connect as.  One of 'ACTIVE' or 'PASSIVE'.
+		/// </summary>
 		[TaskAttribute("connectmode", Required=false)]
 		public string Mode {
 			get {
@@ -140,7 +246,9 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 			}
 		} // port
 		
-		/// <summary>The property</summary>
+		/// <summary>
+		/// The id of a Connection element that specifies the details for this connection.
+		/// </summary>
 		[TaskAttribute("connection", Required=false)]
 		public string ConnectionName {
 			get {
@@ -151,7 +259,8 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 		} // server
 		
 		
-		/// <summary>The property</summary>
+		/// <summary>
+		/// If <b>true</b> we create target directories as needed when saving files.  If <b>false</b>, attempting to access a directory that does not exist generates an exception.  Default is <b>true</b>.</summary>
 		[TaskAttribute("createDirsOnDemand", Required=false)]
 		[BooleanValidator()]
 		public bool createDirsOnDemand {
@@ -162,7 +271,7 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 				}
 		} // createDirsOnDemand
 
-		/// <summary>The property</summary>
+		/// <summary>The directory to use as a base path on the remote server.  If this path is relative, it is relative to the connection's remotepath.  Default is the default connection directory.</summary>
 		[TaskAttribute("remotepath", Required=false)]
 		public string remotepath {
 			get {
@@ -172,7 +281,7 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 				}
 		} // remotepath
 		
-		/// <summary>The property</summary>
+		/// <summary>The directory to use as a base path on the local filesystem.</summary>
 		[TaskAttribute("localpath", Required=false)]
 		public string localpath {
 			get {
@@ -182,7 +291,7 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 				}
 		} // localpath
 
-		/// <summary>The property</summary>
+		/// <summary>If this is <b>true</b>, establish the remote connection but do not transfer any files or modify local or remote directory structures.  Instead, display a list of the files included in the transfer operation.  This is useful for debugging include patterns on either local or remote filesystems.</summary>
 		[TaskAttribute("debug", Required=false)]
 		[BooleanValidator()]
 		public bool Debug {
@@ -193,7 +302,7 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 				}
 		} // localpath
 
-		/// <summary>The property</summary>
+		/// <summary>If this property is <b>true</b>, a directory listing of the remotepath is sent to the logging output after the connection is established.  Default is <b>false</b>.</summary>
 		[TaskAttribute("showdironconnect", Required=false)]
 		public bool ShowDirOnConnect {
 			get {
@@ -236,9 +345,23 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 			set { _connection = value; }
 		} // credentials
 
+		/// <summary>
+		/// <para>
+		/// A PutFileSet (derived from <see cref="TransferFileSet"/>) 
+		/// that contains a list of <b>Include</b> statements that are 
+		/// processed (scanned) against the local filesystem relative 
+		/// to the <b>localpath</b> value.
+		/// </para>
+		/// <para>
+		/// Multiple &lt;put&gt; elements may be included in an 
+		/// &lt;ftp&gt; task.  They are processed with &lt;get&gt; 
+		/// elements in the order of inclusion.
+		/// </para>
+		/// </summary>
 		[BuildElementArray("put")]
 		public TransferFileSet[] PutSets {
             set {
+// these accessors are ignored.  puts and gets are grabbed from the XML the InitTask routine.
 //                foreach (TransferFileSet putset in value) {
 //                    if (putset.IfDefined && !putset.UnlessDefined) {
 //						_putSets.Add(putset);
@@ -247,9 +370,23 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 //				this.Log(Level.Info, "Found {0} put sets.", _putSets.Count);				
 			}
 		}
+		/// <summary>
+		/// <para>
+		/// A Get (derived from <see cref="TransferFileSet"/>) 
+		/// that contains a list of <b>Include</b> statements that are 
+		/// processed (scanned) against the remote filesystem relative 
+		/// to the <b>remotepath</b> value.
+		/// </para>
+		/// <para>
+		/// Multiple &lt;get&gt; elements may be included in an 
+		/// &lt;ftp&gt; task.  They are processed with &lt;put&gt; 
+		/// elements in the order of inclusion.
+		/// </para>
+		/// </summary>
 		[BuildElementArray("get")]
 		public TransferFileSet[] GetSets {
             set {
+// these accessors are ignored.  puts and gets are grabbed from the XML the InitTask routine.
 //                foreach (TransferFileSet getset in value) {
 //                    if (getset.IfDefined && !getset.UnlessDefined) {
 //						_getSets.Add(getset);
@@ -258,7 +395,7 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 //				this.Log(Level.Info, "Found {0} get sets.", _getSets.Count);
 			}
 		}
-		
+		/// <summary>Use &lt;put mode='ascii' /&gt; instead.</summary>
 		[BuildElement("up-ascii")]
         [Obsolete("Use the <put mode='ascii' /> element instead.", false)]
 		public FileSet UploadAscii {
@@ -269,6 +406,7 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 				}
 		} // UploadAscii
 
+		/// <summary>Use &lt;put mode='bin' /&gt; instead.</summary>
 		[BuildElement("up-binary")]
         [Obsolete("Use the <put mode='bin' /> element instead.", false)]
 		public FileSet UploadBinary {
@@ -279,6 +417,7 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 				}
 		} // Upload
 
+		/// <summary>Use &lt;get mode='ascii' /&gt; instead.</summary>
 		[BuildElement("down-ascii")]
         [Obsolete("Use the <get mode='ascii' /> element instead.", false)]
 		public FileSet DowloadAscii {
@@ -289,6 +428,7 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 				}
 		} // DownloadAscii
 
+		/// <summary>Use &lt;get mode='bin' /&gt; instead.</summary>
 		[BuildElement("down-binary")]
         [Obsolete("Use the <get mode='bin' /> element instead.", false)]
 		public FileSet DowloadBinary {
@@ -798,7 +938,7 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 			}
 		}
 		
-		// get one file from the PWD to a localpath (PWD is arranged in GetFileSet.TransferFiles
+		// get one file from the PWD to a localpath (PWD is arranged in Get.TransferFiles
 		public void Get(string fileName,
 		                 string localpath, 
 		                 string remotepath,

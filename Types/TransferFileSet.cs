@@ -38,9 +38,13 @@ using EnterpriseDT.Net.Ftp;
 namespace Sourceforge.NAnt.Ftp.Types {
 
 	/// <summary>
-	/// Provides credentials for connecting to a remote host.
+	/// A base class for the <see cref="Put"/> and <see cref="Get"/> elements of an <see cref="FTPTask"/>.
 	/// </summary>
-	[ElementName("transferfileset")]
+	/// <remarks>
+	/// <para>
+	/// This type is not used directly...
+	/// </para>
+	/// </remarks>
 	public class TransferFileSet : FileSet {
 
 		#region Private Instance Methods
@@ -90,7 +94,7 @@ namespace Sourceforge.NAnt.Ftp.Types {
 			// overridden if we need a remote scanner
 		}
 		public virtual void TransferFiles() {
-			// overridden by PutFileSet and GetFileSet
+			// overridden by PutFileSet and Get
 		}
 		
 		public TransferDirection Direction {
@@ -167,7 +171,7 @@ namespace Sourceforge.NAnt.Ftp.Types {
         /// If <see langword="true" /> then the pattern will be included; 
         /// otherwise, skipped. The default is <see langword="true" />.
         /// </summary>
-        /// <remarks>Copied from the <see cref="Include">Include</see> class in the NAnt-0.85-rc1 distribution.</remarks>
+        /// <remarks>Copied from the <b>Include</b> class in the NAnt-0.85-rc1 distribution.</remarks>
         [TaskAttribute("if")]
         [BooleanValidator()]
         public bool IfDefined {
@@ -180,7 +184,7 @@ namespace Sourceforge.NAnt.Ftp.Types {
         /// then the pattern will be included; otherwise, skipped. The default 
         /// is <see langword="false" />.
         /// </summary>
-        /// <remarks>Copied from the <see cref="Include">Include</see> class in the NAnt-0.85-rc1 distribution.</remarks>
+        /// <remarks>Copied from the <b>Include</b> class in the NAnt-0.85-rc1 distribution.</remarks>
         [TaskAttribute("unless")]
         [BooleanValidator()]
         public bool UnlessDefined {

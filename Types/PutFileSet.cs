@@ -25,9 +25,12 @@ using Sourceforge.NAnt.Ftp.Types;
 
 namespace Sourceforge.NAnt.Ftp.Types {
 	
+	/// <summary>
+	/// A specially derived <b>FileSet</b> element that is used in the &lt;ftp&gt; task <see cref="FTPTask"/>.
+	/// </summary>
 	[ElementName("put")]
-	public class PutFileSet : TransferFileSet {
-		public PutFileSet() {
+	public class Put : TransferFileSet {
+		public Put() {
 			this.Direction = TransferDirection.PUT;
 		}
 		

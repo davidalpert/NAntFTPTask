@@ -27,7 +27,7 @@ using NAnt.Core.Types;
 
 namespace Sourceforge.NAnt.Ftp.Types {
 	/// <summary>
-	/// Provides credentials for connecting to a remote host.
+	/// Extends the <see cref="Credential"/> type to provides connection details for connecting to a remote host.
 	/// </summary>
 	[ElementName("connection")]
 	public class Connection : Credential {

@@ -87,7 +87,7 @@ namespace Tests.Sourceforge.NAnt.Ftp.Tasks {
 
         #region Public Instance Methods
 
-        /// <summary>Test to make sure the <see cref="FtpTask">FtpTask</see> exists</summary>
+        /// <summary>Test to make sure the <see cref="FTPTask">FtpTask</see> exists</summary>
         /// <remarks>Throws a TestBuildException because no server has been defined.</remarks>
         [Test]
         [ExpectedException(typeof(TestBuildException))]

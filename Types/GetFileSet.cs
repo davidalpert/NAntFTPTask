@@ -35,8 +35,11 @@ using Sourceforge.NAnt.Ftp.Util;
 
 namespace Sourceforge.NAnt.Ftp.Types {
 
+	/// <summary>
+	/// A specially derived <b>FileSet</b> element that is used in the &lt;ftp&gt; task.
+	/// </summary>
 	[ElementName("get")]
-	public class GetFileSet : TransferFileSet {
+	public class Get : TransferFileSet {
 		
 		#region Private members
         private bool _hasScanned;
@@ -170,10 +173,10 @@ namespace Sourceforge.NAnt.Ftp.Types {
         }
 
         /// <summary>
-        /// Determines the most recently modified file in the fileset (by LastWriteTime of the <see cref="FileInfo"/>).
+        /// Determines the most recently modified file in the fileset (by LastWriteTime of the <see cref="RemotePath"/>).
         /// </summary>
         /// <returns>
-        /// The <see cref="FileInfo"/> of the file that has the newest (closest to present) last write time.
+        /// The <see cref="RemotePath"/> of the file that has the newest (closest to present) last write time.
         /// </returns>
         public new RemotePath MostRecentLastWriteTimeFile {
             get{
@@ -201,7 +204,7 @@ namespace Sourceforge.NAnt.Ftp.Types {
         /// A shallow copy of the <see cref="FileSet" />.
         /// </returns>
         public override object Clone() {
-            GetFileSet clone = new GetFileSet();
+            Get clone = new Get();
             CopyTo(clone);
             return clone;
         }
@@ -283,7 +286,7 @@ namespace Sourceforge.NAnt.Ftp.Types {
 
                 _hasScanned = true;
             } catch (Exception ex) {
-                throw new BuildException("Error creating GetFileSet.", Location, ex);
+                throw new BuildException("Error creating Get.", Location, ex);
             }
 
             if (FailOnEmpty && _scanner.FileNames.Count == 0) {
@@ -302,7 +305,7 @@ namespace Sourceforge.NAnt.Ftp.Types {
         /// Copies all instance data of the <see cref="FileSet" /> to a given
         /// <see cref="FileSet" />.
         /// </summary>
-        protected void CopyTo(GetFileSet clone) {
+        protected void CopyTo(Get clone) {
             base.CopyTo(clone);
 
             clone._hasScanned = _hasScanned;
@@ -365,13 +368,13 @@ namespace Sourceforge.NAnt.Ftp.Types {
         #endregion Public Static Methods
 
         #region Public Instance Constructors
-		public GetFileSet() {
+		public Get() {
 			this.Direction = TransferDirection.GET;
 		}
 		#endregion
 		
 		public override void InitScanner() {
-			// overridden by PutFileSet and GetFileSet			
+			// overridden by PutFileSet and Get			
 			_scanner.Client = this.Conn;
 		}
 		public override void TransferFiles() {
