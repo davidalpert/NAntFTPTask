@@ -190,7 +190,7 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 		private bool	_logfiles	= true;
 		private bool	_exec		= true;
 		
-		private FTPConnectMode 	_connectMode = FTPConnectMode.PASV;
+		private ConnectMode 	_connectMode = 0;
 		private Connection 		_connection	 = null;
 		private FTPClient  		_client 	 = null;
 
@@ -213,6 +213,8 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
                                          ANONYMOUS_USER, 
                                          ANONYMOUS_PASS);
 						
+			ConnectMode = "passive";
+			
 			return;
 		} // FTPTask()
 		#endregion
@@ -238,11 +240,11 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 		/// The mode to connect as.  One of 'ACTIVE' or 'PASSIVE'.
 		/// </summary>
 		[TaskAttribute("connectmode", Required=false)]
-		public string Mode {
+		public string ConnectMode {
 			get {
 				return _connectMode.ToString();
 			} set {
-				_connectMode = ParseConnectMode(value);
+				_connectMode = Connection.ParseConnectMode(value);
 			}
 		} // port
 		
@@ -524,7 +526,7 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 			if (ServerIsSet)
 			{	
 				try {
-					ftpConnect();
+					_connection.Open(this);
 					
 					string pwd = PWD;
 					CWD(_remotePath);
@@ -586,7 +588,7 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
                     						 this.Location, 
                     						 ex);
 				} finally {
-					ftpDisconnect();
+					_connection.Close();
 				}		
 			} else {
 				this.Log(Level.Error, "No server given");
@@ -599,96 +601,6 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 
 		#region ftp connect/disconnect functions
 
-		/// <summary>Connect to server</summary>
-		private void ftpConnect() {
-			if (!_exec) {
-				this.Log(Level.Info, "-------------- Debugging the ftp query --------------");
-				this.Log(Level.Info, "Connection will be attempted to scan remotely for <get> sets");
-				this.Log(Level.Info, "but no transfers will be attempted in either direction");
-				this.Log(Level.Info, "and neither local nor remote file trees will be modified.");
-				this.Log(Level.Info, "-----------------------------------------------------\n");				
-			}
-			
-			if (!IsConnected) {
-				this.Log(Level.Info, "Connecting to '{0}' as '{1}' ...", _server, _user);
-				this.Log(Level.Verbose, "Instantiating the FTPClient & opening the connection...");
-				_client = new FTPClient(_server);
-				
-				this.Log(Level.Verbose, "Authenticating...");
-				if (_password==null || _password==String.Empty || _password.ToUpper()=="PROMPT") {
-					if (LoginWithPasswordFile(".ftp_password", out _password)) {
-						_client.Login(_user, _password);
-					} else {
-						LoginWithPromptForPassword(_user);						
-					}
-				} else {
-					_client.Login(_user, _password);
-				}
-				
-				this.Log(Level.Verbose, "and setting the connection mode to passive.");
-				_client.ConnectMode = _connectMode;
-			}
-			return;
-		} // ftpConnect()
-
-		private bool LoginWithPasswordFile(string passfile, out string pass) {
-			bool success = false;
-			try {
-				XmlDocument doc = new XmlDocument();
-				doc.Load(passfile);
-				XmlElement e = doc.DocumentElement;
-				//this.Log(Level.Info, e.Attributes["password"].InnerText);
-				pass = e.Attributes["password"].InnerText;
-				success = true;
-			} catch (Exception ex) {
-				pass = String.Empty;
-				ex.ToString();
-			}
-			return success;
-		}
-
-		/// <summary>Do a remote login while asking the user for a password through the console.</summary>
-		/// <param name="username">the username to use when logging in.</param>
-		private void LoginWithPromptForPassword(string username) {
-			PasswordInputManager pim = new PasswordInputManager();
-			bool success = false;
-			bool abort = false;
-			string pass = String.Empty;
-			this.Log(Level.Info, "Please Enter Password:");
-			while (!success && !abort) {
-				//Console.Write(">> ");
-				//pass = Console.ReadLine();
-				pass = String.Empty;
-				pim.PasswordInput(ref pass, 256);
-				Console.WriteLine("");
-				if (pass==String.Empty) {
-					abort = true;
-				} else {
-					// todo: validate input
-					try {
-						_client.User(username);
-						_client.Password(pass);
-						success = true;
-					} catch (FTPException ex) {
-						this.Log(Level.Info, ex.Message);
-						this.Log(Level.Info, "Please Re-Enter Password or Press Enter to Abort.");
-					}
-				}
-			}
-			if (abort) {
-				throw new FTPException("Login Aborted by User");
-			}
-		}
-		
-		/// <summary>Disconnect from server</summary>
-		private void ftpDisconnect() {
-			if (IsConnected) {
-				this.Log(Level.Info, "Disconnecting from '{0}'", _server);
-				_client.Quit();
-				_client = null;
-			}
-			return;
-		} // ftpDisconnect()
 
 		#endregion
 
@@ -1143,26 +1055,6 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 		
 		#region helper functions
 		
-		// parses connectmode attribute values, ensures that they are valid,
-		// and returns the corresponding edtFTPnet enum value that can be 
-		// passed directly to the edtFTPnet FTPClient.
-		public static FTPConnectMode ParseConnectMode(string amode)
-		{
-			FTPConnectMode theMode;
-			
-			switch (amode.ToUpper()) {
-				case "ACTIVE":
-					theMode = FTPConnectMode.ACTIVE;
-					break;
-				case "PASSIVE":
-					theMode = FTPConnectMode.PASV;
-					break;
-				default:
-					throw new BuildException(String.Format("Invalid connectmode attribute '{0}'.\nMust be either 'active' or 'passive' (case-insensitive).", amode));
-			}			
-			
-			return theMode;
-		}
 
 		// parses type attribute values, ensures that they are valid,
 		// and returns the corresponding edtFTPnet enum value that can be 

@@ -22,23 +22,18 @@ using Sourceforge.NAnt.Ftp.Types;
 namespace Sourceforge.NAnt.Ftp.Enum {
 	
 	/// <summary>
-	/// Direction of a file transfer.
+	/// The ftp connection mode.
 	/// </summary>
-	public enum TransferDirection {
+	public enum ConnectMode {
 		/// <summary>
-		/// Denotes a <see cref="TransferFileSet"/> that has not been initialized.
+		/// Denotes an active ftp connection mode.
 		/// </summary>
-		NONE = 0,
+		ACTIVE = 0,
 		
 		/// <summary>
-		/// Denotes a <see cref="PutFileSet" />.
+		/// Denotes a passive ftp connection mode.
 		/// </summary>
-		PUT,
-		
-		/// <summary>
-		/// Denotes a <see cref="GetFileSet" />.
-		/// </summary>
-		GET
+		PASSIVE,		
 	}
 	
 }

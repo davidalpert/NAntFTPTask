@@ -1,5 +1,5 @@
 // NAnt - A .NET build tool
-// Copyright (C) 2001-2003 Gerry Shaw
+// Copyright (C) 2001-2002 Gerry Shaw
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -17,28 +17,15 @@
 //
 // David Alpert (david@spinthemoose.com)
 
-using Sourceforge.NAnt.Ftp.Types;
+using NAnt.Core;
 
-namespace Sourceforge.NAnt.Ftp.Enum {
+namespace Sourceforge.NAnt.Ftp {
 	
-	/// <summary>
-	/// Direction of a file transfer.
-	/// </summary>
-	public enum TransferDirection {
-		/// <summary>
-		/// Denotes a <see cref="TransferFileSet"/> that has not been initialized.
-		/// </summary>
-		NONE = 0,
-		
-		/// <summary>
-		/// Denotes a <see cref="PutFileSet" />.
-		/// </summary>
-		PUT,
-		
-		/// <summary>
-		/// Denotes a <see cref="GetFileSet" />.
-		/// </summary>
-		GET
+	public class FTPTaskException : BuildException {
+		public FTPTaskException():base() {}
+		public FTPTaskException(string msg):base(msg) {}
+		public FTPTaskException(string msg, System.Exception InnerEx):base(msg,InnerEx) {}
+		public FTPTaskException(string msg, Location loc):base(msg, loc) {}
+		public FTPTaskException(string msg, Location loc, System.Exception InnerEx):base(msg, loc, InnerEx) {}
 	}
-	
 }

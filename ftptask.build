@@ -318,6 +318,8 @@
                 <assemblies basedir="${build.dir}">
                   <include name="ftptask.dll" />
                   <include name="C:\usr\local\nant-0.85-rc1\build\net-1.1.win32\nant-0.85-debug\bin\nant.core.dll" />
+		  <!--
+		  -->
                 </assemblies>
                 <documenters>
                     <documenter name="NAnt">
@@ -341,7 +343,43 @@
                     </documenter>
                 </documenters>
             </ndoc>
+	    <if test="false">
+		    <delete failonerror="false">
+		      <fileset failonempty="false" basedir="${doc.dir}\help">
+			<include name="*\**"/>
+			<exclude name="*\*.bak" />
+			<exclude name="types\get.html" />
+			<exclude name="types\put.html" />
+			<exclude name="types\connection.html" />
+			<exclude name="types\text.html" />
+			<exclude name="tasks\ftp.html" />
+			<exclude name="elements\Sourceforge.NAnt.Ftp.*.html" />
+			<exclude name="enum\Sourceforge.NAnt.Ftp.*.html" />
+		      </fileset>
+		    </delete>
+		    <copy overwrite="true" file="${doc.dir}\help\types\index.html.bak" tofile="${doc.dir}\help\types\index.html" />
+		    <copy overwrite="true" file="${doc.dir}\help\enum\index.html.bak" tofile="${doc.dir}\help\types\index.html" />
+		    <copy overwrite="true" file="${doc.dir}\help\tasks\index.html.bak" tofile="${doc.dir}\help\tasks\index.html" />
+		    <copy overwrite="true" file="${doc.dir}\help\filters\index.html.bak" tofile="${doc.dir}\help\filters\index.html" />
+		    <copy overwrite="true" file="${doc.dir}\help\functions\index.html.bak" tofile="${doc.dir}\help\functions\index.html" />
+	    </if>
         </if>
+    </target>
+    <target name="backdoc">
+	    <copy overwrite="true" file="types\index.html" tofile="types\index.html.bak" />
+	    <copy overwrite="true" file="tasks\index.html" tofile="tasks\index.html.bak" />
+	    <copy overwrite="true" file="filters\index.html" tofile="filters\index.html.bak" />
+	    <copy overwrite="true" file="functions\index.html" tofile="functions\index.html.bak" />
+	    <copy overwrite="true" file="enums\index.html" tofile="enums\index.html.bak" />
+    </target>
+    <target name="cleandoc">
+      <delete failonerror="false">
+        <fileset failonempty="false" basedir="${doc.dir}\help">
+    	  <include name="*\**"/>
+    	  <exclude name="images\**"/>
+    	  <exclude name="*\*.bak"/>
+        </fileset>
+      </delete>
     </target>
     <target name="msdndoc" depends="build" description="Builds msdn documentation">
 	    <echo message="Creating MSDN class documentation from ${build.dir}" />
@@ -466,10 +504,6 @@
 			failonerror="false" />
 	</target>
 
-
-	<target name="release"
-			description="upload the zip files and docs to spinthemoose.com/~ftptask"
-			>
 		<connection id="ftptask" 
 			    server="spinthemoose.com" 
 			    username="ftptask" 
@@ -479,6 +513,10 @@
 			    username="anonymous" 
 			    password="david@spinthemoose.com"
 			    />
+
+	<target name="release"
+			description="upload the zip files and docs to spinthemoose.com/~ftptask"
+			>
 		    <ftp connection="ftptask" 
 			    createdirs="true"
 			    exec="true">
@@ -496,8 +534,10 @@
 			     localdir="docs"
 			>
 				<include name="**\images\**" />
+				<!--
 				<include name="**\*.pdf" />
 				<include name="**\*.chm" />
+				-->
 			</put>
 			<put type="bin" 
 			     flatten="true"
