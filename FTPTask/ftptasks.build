@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <project name="ftp tasks for nant" default="build">
-	<property name="nant-core" value="D:\NAnt\bin\NAnt.Core.dll" />
-	<property name="ftpclient" value="D:\FTPClient\ftpclient.dll" />
+	<property name="nant-core" value="c:\usr\local\nant-0.85-rc1\bin\NAnt.Core.dll" />
+	<property name="ftpclient" value="..\FTPClient\ftpclient.dll" />
 	<property name="project.debug" value="true" />
 	
 	<target name="build">
