@@ -409,8 +409,9 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 		private void DoTransfers() {
 			foreach (TransferFileSet tfs in _transferList) {
 				this.Log(Level.Info, "Processing a {0}FileSet.", tfs.Direction);
-				this.Log(Level.Info, "Local Path: "+tfs.LocalPath.ToString());
-				this.Log(Level.Info, "Remote Path: "+tfs.RemotePathString);
+				this.Log(Level.Info, " +    Local Path: "+tfs.LocalPath.ToString());
+				this.Log(Level.Info, " +   Remote Path: "+tfs.RemotePathString);
+				this.Log(Level.Info, " + Transfer Type: "+tfs.TransferType);
 
 				// store the PWD and change to the remote path
 				string pwd = PWD;
@@ -502,11 +503,14 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 					CWD(dir, createDirsOnDemand);
 				}
 				
-				this.Log(Level.Info, "Putting the file");
+				this.Log(Level.Info, "Putting the file as '{0}'", FtpType);
+				_client.TransferType = FtpType;
 				_client.Put(fileName, Path.GetFileName(remoteFilePath));
 	
-				this.Log(Level.Info, "Restoring the remote dir to {0}", pwd);
-				CWD(pwd);
+				if (PWD!=pwd) {
+					this.Log(Level.Info, "Restoring the remote dir to {0}", pwd);
+					CWD(pwd);
+				}
 			}
 		}
 		
@@ -697,11 +701,15 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 		
 		protected void CWD(string remotePath) {
 			remotePath = remotePath.Replace(DOS_DIR_SEPERATOR, DIR_SEPERATOR);
-			this.Log(Level.Info, "Changing remote directory to " + remotePath);
-			if (IsConnected && remotePath!=EMPTY_STRING) {
-				_client.ChDir(remotePath);
-			} else {
-				this.Log(Level.Debug, "Not connected.");
+			if (remotePath!=String.Empty) {
+				this.Log(Level.Info, "Changing remote directory to '{0}'", remotePath);
+				if (IsConnected) {
+					this.Log(Level.Verbose, " + Attempting CWD...");
+					_client.ChDir(remotePath);
+					this.Log(Level.Verbose, " + CWD successful.");
+				} else {
+					this.Log(Level.Debug, "Not connected.");
+				}
 			}
 		}
 

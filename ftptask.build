@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project name="ftptask" default="build">
   <description>SharpDevelop generated NAnt 0.85 build file.</description>
+  <target name="subwcrev">
+	<exec program="subwcrev"
+	      commandline=". AssemblyInfo.subwcrev AssemblyInfo.cs" />
+  </target>
   <!--Set debug property if not set-->
   <ifnot test="${property::exists('debug')}">
     <property name="debug" value="false" />
@@ -98,7 +102,7 @@
     </delete>
   </target>
   <!--The 'build' target.-->
-  <target name="build.release" depends="init.release, gacreferences.release" unless="${debug}">
+  <target name="build.release" depends="subwcrev, init.release, gacreferences.release" unless="${debug}">
     <!--Compiles the code -->
     <csc target="exe" output="${outputdir.release}\${assembly.release}.${extension.release}" warninglevel="4" debug="False" optimize="True" unsafe="False" checked="False" noconfig="False" nostdlib="False" define="" warnaserror="False">
       <sources>
