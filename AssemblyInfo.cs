@@ -6,12 +6,12 @@ using System.Runtime.CompilerServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 //
-[assembly: AssemblyTitle("")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("FTPTask")]
+[assembly: AssemblyDescription("An FTP task for the NAnt build tool.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Developed by:\nSascha Andres (sa@programmers-world.com)\nDavid Alpert (david@spinthemoose.com)")]
 [assembly: AssemblyProduct("")]
-[assembly: AssemblyCopyright("")]
+[assembly: AssemblyCopyright("GPL - 2004")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]		
 

@@ -1,28 +1,37 @@
 <Project name="ftptask" standardNamespace="ftptask" description="" newfilesearch="None" enableviewstate="True" version="1.1" projecttype="C#">
   <Contents>
     <File name=".\AssemblyInfo.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
-    <File name=".\ftptask.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
-    <File name=".\RemoteCopyTask.cs" subtype="Code" buildaction="Nothing" dependson="" data="" />
+    <File name=".\Tasks\ftptask.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+    <File name=".\Tasks\RemoteCopyTask.cs" subtype="Code" buildaction="Nothing" dependson="" data="" />
+    <File name=".\Tasks\ftptask_v2.cs" subtype="Code" buildaction="Nothing" dependson="" data="" />
+    <File name=".\Tests" subtype="Directory" buildaction="Nothing" dependson="" data="" />
+    <File name=".\Tests\ftptask.cs" subtype="Code" buildaction="Nothing" dependson="" data="" />
+    <File name=".\Types" subtype="Directory" buildaction="Compile" dependson="" data="" />
+    <File name=".\Tasks" subtype="Directory" buildaction="Compile" dependson="" data="" />
+    <File name=".\Types\Connection.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+    <File name=".\ftptask.build" subtype="Code" buildaction="Nothing" dependson="" data="" />
+    <File name=".\Tests\ftptask.build" subtype="Code" buildaction="Nothing" dependson="" data="" />
   </Contents>
   <References>
-    <Reference type="Assembly" refto="c:\usr\local\nant-0.85-rc1\bin\NAnt.Core.dll" localcopy="false" />
+    <Reference type="Assembly" refto="c:\usr\local\nant-0.85-rc1\bin\NAnt.Core.dll" localcopy="False" />
+    <Reference type="Assembly" refto=".\lib\debug\edtftpnet-1.1.3.dll" localcopy="True" />
   </References>
   <DeploymentInformation target="" script="" strategy="File" />
   <Configuration runwithwarnings="True" name="Debug">
     <CodeGeneration runtime="MsNet" compiler="Csc" compilerversion="" warninglevel="4" nowarn="" includedebuginformation="True" optimize="False" unsafecodeallowed="False" generateoverflowchecks="True" mainclass="" target="Library" definesymbols="DEBUG" generatexmldocumentation="False" win32Icon="" noconfig="False" nostdlib="False" />
     <Execution commandlineparameters="" consolepause="True" />
-    <Output directory="..\bin\Debug" assembly="ftptask" executeScript="" executeBeforeBuild="" executeAfterBuild="" executeBeforeBuildArguments="" executeAfterBuildArguments="" />
+    <Output directory=".\bin\Debug" assembly="ftptask" executeScript="" executeBeforeBuild="" executeAfterBuild="" executeBeforeBuildArguments="" executeAfterBuildArguments="" />
   </Configuration>
   <Configurations active="Debug">
     <Configuration runwithwarnings="True" name="Debug">
       <CodeGeneration runtime="MsNet" compiler="Csc" compilerversion="" warninglevel="4" nowarn="" includedebuginformation="True" optimize="False" unsafecodeallowed="False" generateoverflowchecks="True" mainclass="" target="Library" definesymbols="DEBUG" generatexmldocumentation="False" win32Icon="" noconfig="False" nostdlib="False" />
       <Execution commandlineparameters="" consolepause="True" />
-      <Output directory="..\bin\Debug" assembly="ftptask" executeScript="" executeBeforeBuild="" executeAfterBuild="" executeBeforeBuildArguments="" executeAfterBuildArguments="" />
+      <Output directory=".\bin\Debug" assembly="ftptask" executeScript="" executeBeforeBuild="" executeAfterBuild="" executeBeforeBuildArguments="" executeAfterBuildArguments="" />
     </Configuration>
     <Configuration runwithwarnings="True" name="Release">
       <CodeGeneration runtime="MsNet" compiler="Csc" compilerversion="" warninglevel="4" nowarn="" includedebuginformation="False" optimize="True" unsafecodeallowed="False" generateoverflowchecks="False" mainclass="" target="Exe" definesymbols="" generatexmldocumentation="False" win32Icon="" noconfig="False" nostdlib="False" />
       <Execution commandlineparameters="" consolepause="True" />
-      <Output directory="..\bin\Release" assembly="ftptask" executeScript="" executeBeforeBuild="" executeAfterBuild="" executeBeforeBuildArguments="" executeAfterBuildArguments="" />
+      <Output directory=".\bin\Release" assembly="ftptask" executeScript="" executeBeforeBuild="" executeAfterBuild="" executeBeforeBuildArguments="" executeAfterBuildArguments="" />
     </Configuration>
   </Configurations>
 </Project>

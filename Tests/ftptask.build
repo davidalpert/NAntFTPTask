@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<project name="ftp tasks for nant" default="test">
+	<property name="project.debug" 		value="true" />
+	<property name="project.verbose" 	value="true" />
+	<property name="remotehost" 		value="spinthemoose.com" />
+	<property name="username" 			value="spinthemoose" />
+	<property name="password" 			value="media!moose" />
+	<property name="remote-dir" 		value="/net" />
+	<property name="local-dir" 			value="..\doc" />
+
+	<loadtasks assembly="..\bin\debug\ftptask.dll" />
+	<connection id="myConn" server="${remotehost}" username="${username}" password="${password}" />
+
+	<target name="test" depends="" >
+		<ftp connection="myConn"
+			 remotepath="/net"
+			 showdironconnect="false">
+			<put />
+		</ftp>
+	</target>
+
+	<target name="test9" depends="test8" >
+		<ftp connection="myConn"
+			 remotepath="/net"
+			 showdironconnect="true">
+		</ftp>
+	</target>
+
+	<target name="test8" depends="test7" >
+		<ftp connection="myConn"
+			 remotepath="/net">
+		</ftp>
+	</target>
+
+	<target name="test7" depends="test6" >
+		<ftp connection="myConn"
+			 remotepath="${remote-dir}">
+		</ftp>
+	</target>
+
+	<target name="test6" depends="test5" >
+		<ftp connection="myConn"
+			 remotepath="/net"
+			 localpath="..">
+		</ftp>
+	</target>
+
+	<target name="test5" depends="test4" >
+		<ftp connection="myConn"
+			 remotepath="net">
+		</ftp>
+	</target>
+
+	<target name="test4" depends="test3" >
+		<ftp connection="myConn" />
+	</target>
+
+	<target name="test3" depends="test2">
+		<ftp>
+			<connection refid="myConn" />
+		</ftp>
+	</target>
+
+	<target name="test2" depends="test1">
+		<ftp>
+			<connection server="${remotehost}" username="${username}" password="${password}" />
+		</ftp>
+	</target>
+
+	<target name="test1" failonerror="false">
+		<ftp />
+	</target>
+
+</project>
