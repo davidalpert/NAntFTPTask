@@ -1,0 +1,103 @@
+
+C:\dev\NAnt_FTP_Task\trunk\bin\Debug>cd ..
+
+C:\dev\NAnt_FTP_Task\trunk\bin>cd ..
+
+C:\dev\NAnt_FTP_Task\trunk>dir
+ Volume in drive C is Escher
+ Volume Serial Number is A47A-1B27
+
+ Directory of C:\dev\NAnt_FTP_Task\trunk
+
+12/14/2004  03:22 PM    <DIR>          .
+12/14/2004  03:22 PM    <DIR>          ..
+12/14/2004  01:11 PM    <DIR>          bin
+12/14/2004  03:10 PM    <DIR>          edtftpnet-1.1.3
+12/14/2004  01:59 PM    <DIR>          FTP
+12/14/2004  03:35 PM    <DIR>          FTPClient
+12/14/2004  01:40 PM    <DIR>          FTPTask
+12/14/2004  01:12 PM             9,406 msg04171.html
+12/14/2004  01:11 PM    <DIR>          msg04171_files
+12/14/2004  01:12 PM             7,556 msg04172.html
+12/14/2004  01:11 PM    <DIR>          msg04172_files
+12/14/2004  01:12 PM             8,671 msg04221.html
+12/14/2004  01:11 PM    <DIR>          msg04221_files
+12/14/2004  01:12 PM             7,600 msg04222.html
+12/14/2004  01:11 PM    <DIR>          msg04222_files
+12/14/2004  03:03 PM               836 NAnt FTP Task.cmbx
+12/14/2004  03:22 PM    <DIR>          source
+12/14/2004  01:12 PM             1,652 update.build
+               6 File(s)         35,721 bytes
+              12 Dir(s)  10,297,824,256 bytes free
+
+C:\dev\NAnt_FTP_Task\trunk>cd ftpclient
+
+C:\dev\NAnt_FTP_Task\trunk\FTPClient>dir
+ Volume in drive C is Escher
+ Volume Serial Number is A47A-1B27
+
+ Directory of C:\dev\NAnt_FTP_Task\trunk\FTPClient
+
+12/14/2004  03:35 PM    <DIR>          .
+12/14/2004  03:35 PM    <DIR>          ..
+12/14/2004  01:12 PM             2,532 AssemblyInfo.cs
+12/14/2004  01:12 PM             7,618 FTPAsynchronousConnection.cs
+12/14/2004  01:40 PM               325 ftpclient.build
+12/14/2004  01:12 PM            16,896 ftpclient.dll
+12/14/2004  01:12 PM            50,688 ftpclient.pdb
+12/14/2004  03:03 PM             3,280 ftpclient.prjx
+12/14/2004  03:21 PM            21,343 FTPConnection.cs
+12/14/2004  01:12 PM               241 FTPFile.cs
+12/14/2004  01:12 PM               120 FTPFileTransferType.cs
+12/14/2004  02:46 PM               136 FTPMode.cs
+12/14/2004  03:35 PM            12,478 ftp_session_1.txt
+12/14/2004  01:47 PM    <DIR>          Tests
+              11 File(s)        115,657 bytes
+               3 Dir(s)  10,297,824,256 bytes free
+
+C:\dev\NAnt_FTP_Task\trunk\FTPClient>ftp uploads.sourceforge.net
+Connected to projects.sourceforge.net.
+^C
+C:\dev\NAnt_FTP_Task\trunk\FTPClient>ftp upload.sourceforge.net
+Connected to osdn.dl.sourceforge.net.
+220 ProFTPD 1.2.0pre10 Server (ftp1.sourceforge.net) [66.35.250.221]
+User (osdn.dl.sourceforge.net:(none)): anonymous
+331 Anonymous login ok, send your complete e-mail address as password.
+Password:
+230-********************************************************************
+ SourceForge.net FTP server - San Jose (osdn.dl.sourceforge.net)
+ Additional access is at http://osdn.dl.sourceforge.net/pub/mirrors/
+ Mirrors, try 'rsync osdn.dl.sourceforge.net::'
+
+ Got a fat pipe and something to prove? Host a SourceForge download
+   server! Email ftpadmin@sourceforge.net for opportunities.
+
+ On This Site:
+ /pub/sourceforge/          SourceForge.net Project File Archive
+ *********************************************************************
+230 Anonymous access granted, restrictions apply.
+ftp> cd incoming
+250 CWD command successful.
+ftp> dir
+200 PORT command successful.
+150 Opening ASCII mode data connection for file list.
+226-Transfer complete.
+226 Quotas off
+ftp> passive
+Invalid command.
+ftp> bin
+200 Type set to I.
+ftp> ascii
+200 Type set to A.
+ftp> bin
+200 Type set to I.
+ftp> put ftpclient.dll
+200 PORT command successful.
+150 Opening BINARY mode data connection for ftpclient.dll.
+226 Transfer complete.
+ftp: 16896 bytes sent in 0.00Seconds 16896000.00Kbytes/sec.
+ftp> close
+221 Goodbye.
+ftp> quit
+
+C:\dev\NAnt_FTP_Task\trunk\FTPClient>

@@ -11,6 +11,7 @@
 	</target>
 	
 	<target name="clean">
-		<delete file="ftpclient.dll" />
+		<delete file="ftpclient.dll" failonerror="false" />
+		<delete file="ftpclient.pdb" failonerror="false" />
 	</target>
 </project>

@@ -1,0 +1,300 @@
+
+C:\dev\NAnt_FTP_Task\trunk\source>dir
+ Volume in drive C is Escher
+ Volume Serial Number is A47A-1B27
+
+ Directory of C:\dev\NAnt_FTP_Task\trunk\source
+
+12/14/2004  03:22 PM    <DIR>          .
+12/14/2004  03:22 PM    <DIR>          ..
+06/07/2004  12:06 PM             6,148 .DS_Store
+12/14/2004  03:22 PM    <DIR>          FTP
+12/14/2004  03:22 PM    <DIR>          FtpClientTester
+               1 File(s)          6,148 bytes
+               4 Dir(s)  10,299,169,792 bytes free
+
+C:\dev\NAnt_FTP_Task\trunk\source>cd FtpClientTester
+
+C:\dev\NAnt_FTP_Task\trunk\source\FtpClientTester>dir
+ Volume in drive C is Escher
+ Volume Serial Number is A47A-1B27
+
+ Directory of C:\dev\NAnt_FTP_Task\trunk\source\FtpClientTester
+
+12/14/2004  03:22 PM    <DIR>          .
+12/14/2004  03:22 PM    <DIR>          ..
+03/05/2004  09:55 AM             1,078 App.ico
+03/05/2004  09:55 AM             2,426 AssemblyInfo.cs
+12/14/2004  03:22 PM    <DIR>          bin
+06/07/2004  02:14 PM            12,356 FTPClientTester.cs
+06/07/2004  11:25 AM             5,206 FtpClientTester.csproj
+06/07/2004  02:14 PM             1,805 FtpClientTester.csproj.user
+06/07/2004  02:14 PM            16,699 FTPClientTester.resx
+03/08/2004  09:02 AM             1,122 Logger.cs
+12/14/2004  03:22 PM    <DIR>          obj
+               7 File(s)         40,692 bytes
+               4 Dir(s)  10,299,169,792 bytes free
+
+C:\dev\NAnt_FTP_Task\trunk\source\FtpClientTester>FTPClientTester.cs
+
+C:\dev\NAnt_FTP_Task\trunk\source\FtpClientTester>cd bin
+
+C:\dev\NAnt_FTP_Task\trunk\source\FtpClientTester\bin>dir
+ Volume in drive C is Escher
+ Volume Serial Number is A47A-1B27
+
+ Directory of C:\dev\NAnt_FTP_Task\trunk\source\FtpClientTester\bin
+
+12/14/2004  03:22 PM    <DIR>          .
+12/14/2004  03:22 PM    <DIR>          ..
+12/14/2004  03:22 PM    <DIR>          Debug
+               0 File(s)              0 bytes
+               3 Dir(s)  10,299,169,792 bytes free
+
+C:\dev\NAnt_FTP_Task\trunk\source\FtpClientTester\bin>cd Debug
+
+C:\dev\NAnt_FTP_Task\trunk\source\FtpClientTester\bin\Debug>dir
+ Volume in drive C is Escher
+ Volume Serial Number is A47A-1B27
+
+ Directory of C:\dev\NAnt_FTP_Task\trunk\source\FtpClientTester\bin\Debug
+
+12/14/2004  03:22 PM    <DIR>          .
+12/14/2004  03:22 PM    <DIR>          ..
+06/07/2004  02:14 PM            28,672 FTP.dll
+06/07/2004  02:14 PM            60,928 FTP.pdb
+06/07/2004  02:14 PM            36,864 FtpClientTester.exe
+06/07/2004  02:14 PM            19,968 FtpClientTester.pdb
+               4 File(s)        146,432 bytes
+               2 Dir(s)  10,299,169,792 bytes free
+
+C:\dev\NAnt_FTP_Task\trunk\source\FtpClientTester\bin\Debug>FtpClientTester.exe
+
+C:\dev\NAnt_FTP_Task\trunk\source\FtpClientTester\bin\Debug>cd ..\..\
+
+C:\dev\NAnt_FTP_Task\trunk\source\FtpClientTester>dir
+ Volume in drive C is Escher
+ Volume Serial Number is A47A-1B27
+
+ Directory of C:\dev\NAnt_FTP_Task\trunk\source\FtpClientTester
+
+12/14/2004  03:22 PM    <DIR>          .
+12/14/2004  03:22 PM    <DIR>          ..
+03/05/2004  09:55 AM             1,078 App.ico
+03/05/2004  09:55 AM             2,426 AssemblyInfo.cs
+12/14/2004  03:22 PM    <DIR>          bin
+06/07/2004  02:14 PM            12,356 FTPClientTester.cs
+06/07/2004  11:25 AM             5,206 FtpClientTester.csproj
+06/07/2004  02:14 PM             1,805 FtpClientTester.csproj.user
+06/07/2004  02:14 PM            16,699 FTPClientTester.resx
+03/08/2004  09:02 AM             1,122 Logger.cs
+12/14/2004  03:22 PM    <DIR>          obj
+               7 File(s)         40,692 bytes
+               4 Dir(s)  10,297,897,984 bytes free
+
+C:\dev\NAnt_FTP_Task\trunk\source\FtpClientTester>cd ..
+
+C:\dev\NAnt_FTP_Task\trunk\source>cd ..
+
+C:\dev\NAnt_FTP_Task\trunk>dir
+ Volume in drive C is Escher
+ Volume Serial Number is A47A-1B27
+
+ Directory of C:\dev\NAnt_FTP_Task\trunk
+
+12/14/2004  03:22 PM    <DIR>          .
+12/14/2004  03:22 PM    <DIR>          ..
+12/14/2004  01:11 PM    <DIR>          bin
+12/14/2004  03:10 PM    <DIR>          edtftpnet-1.1.3
+12/14/2004  01:59 PM    <DIR>          FTP
+12/14/2004  01:45 PM    <DIR>          FTPClient
+12/14/2004  01:40 PM    <DIR>          FTPTask
+12/14/2004  01:12 PM             9,406 msg04171.html
+12/14/2004  01:11 PM    <DIR>          msg04171_files
+12/14/2004  01:12 PM             7,556 msg04172.html
+12/14/2004  01:11 PM    <DIR>          msg04172_files
+12/14/2004  01:12 PM             8,671 msg04221.html
+12/14/2004  01:11 PM    <DIR>          msg04221_files
+12/14/2004  01:12 PM             7,600 msg04222.html
+12/14/2004  01:11 PM    <DIR>          msg04222_files
+12/14/2004  03:03 PM               836 NAnt FTP Task.cmbx
+12/14/2004  03:22 PM    <DIR>          source
+12/14/2004  01:12 PM             1,652 update.build
+               6 File(s)         35,721 bytes
+              12 Dir(s)  10,297,897,984 bytes free
+
+C:\dev\NAnt_FTP_Task\trunk>cd FTPClient
+
+C:\dev\NAnt_FTP_Task\trunk\FTPClient>dir
+ Volume in drive C is Escher
+ Volume Serial Number is A47A-1B27
+
+ Directory of C:\dev\NAnt_FTP_Task\trunk\FTPClient
+
+12/14/2004  01:45 PM    <DIR>          .
+12/14/2004  01:45 PM    <DIR>          ..
+12/14/2004  01:12 PM             2,532 AssemblyInfo.cs
+12/14/2004  01:12 PM             7,618 FTPAsynchronousConnection.cs
+12/14/2004  01:40 PM               325 ftpclient.build
+12/14/2004  01:12 PM            16,896 ftpclient.dll
+12/14/2004  01:12 PM            50,688 ftpclient.pdb
+12/14/2004  03:03 PM             3,280 ftpclient.prjx
+12/14/2004  03:21 PM            21,343 FTPConnection.cs
+12/14/2004  01:12 PM               241 FTPFile.cs
+12/14/2004  01:12 PM               120 FTPFileTransferType.cs
+12/14/2004  02:46 PM               136 FTPMode.cs
+12/14/2004  01:47 PM    <DIR>          Tests
+              10 File(s)        103,179 bytes
+               3 Dir(s)  10,297,897,984 bytes free
+
+C:\dev\NAnt_FTP_Task\trunk\FTPClient>cd ..
+
+C:\dev\NAnt_FTP_Task\trunk>dir
+ Volume in drive C is Escher
+ Volume Serial Number is A47A-1B27
+
+ Directory of C:\dev\NAnt_FTP_Task\trunk
+
+12/14/2004  03:22 PM    <DIR>          .
+12/14/2004  03:22 PM    <DIR>          ..
+12/14/2004  01:11 PM    <DIR>          bin
+12/14/2004  03:10 PM    <DIR>          edtftpnet-1.1.3
+12/14/2004  01:59 PM    <DIR>          FTP
+12/14/2004  01:45 PM    <DIR>          FTPClient
+12/14/2004  01:40 PM    <DIR>          FTPTask
+12/14/2004  01:12 PM             9,406 msg04171.html
+12/14/2004  01:11 PM    <DIR>          msg04171_files
+12/14/2004  01:12 PM             7,556 msg04172.html
+12/14/2004  01:11 PM    <DIR>          msg04172_files
+12/14/2004  01:12 PM             8,671 msg04221.html
+12/14/2004  01:11 PM    <DIR>          msg04221_files
+12/14/2004  01:12 PM             7,600 msg04222.html
+12/14/2004  01:11 PM    <DIR>          msg04222_files
+12/14/2004  03:03 PM               836 NAnt FTP Task.cmbx
+12/14/2004  03:22 PM    <DIR>          source
+12/14/2004  01:12 PM             1,652 update.build
+               6 File(s)         35,721 bytes
+              12 Dir(s)  10,297,897,984 bytes free
+
+C:\dev\NAnt_FTP_Task\trunk>cd bin
+
+C:\dev\NAnt_FTP_Task\trunk\bin>dir
+ Volume in drive C is Escher
+ Volume Serial Number is A47A-1B27
+
+ Directory of C:\dev\NAnt_FTP_Task\trunk\bin
+
+12/14/2004  01:11 PM    <DIR>          .
+12/14/2004  01:11 PM    <DIR>          ..
+12/14/2004  03:31 PM    <DIR>          Debug
+               0 File(s)              0 bytes
+               3 Dir(s)  10,297,897,984 bytes free
+
+C:\dev\NAnt_FTP_Task\trunk\bin>cd Debug
+
+C:\dev\NAnt_FTP_Task\trunk\bin\Debug>dir
+ Volume in drive C is Escher
+ Volume Serial Number is A47A-1B27
+
+ Directory of C:\dev\NAnt_FTP_Task\trunk\bin\Debug
+
+12/14/2004  03:31 PM    <DIR>          .
+12/14/2004  03:31 PM    <DIR>          ..
+12/14/2004  02:03 PM             4,096 ftp.dll
+12/14/2004  02:15 PM            11,776 ftp.pdb
+12/14/2004  03:31 PM            28,672 ftpclient.dll
+12/14/2004  03:31 PM            60,928 ftpclient.pdb
+12/14/2004  03:31 PM             3,934 ftpclient.xml
+12/14/2004  01:12 PM            12,288 ftptask.dll
+12/14/2004  01:11 PM            30,208 ftptask.pdb
+12/14/2004  01:11 PM           204,800 log4net.dll
+12/14/2004  01:11 PM           335,872 NAnt.Core.dll
+               9 File(s)        692,574 bytes
+               2 Dir(s)  10,297,897,984 bytes free
+
+C:\dev\NAnt_FTP_Task\trunk\bin\Debug>ftp spinthemoose.com
+Connected to spinthemoose.com.
+220 ProFTPD 1.2.5 Server (ProFTPD) [139.142.202.40]
+User (spinthemoose.com:(none)): spinthemoose
+331 Password required for spinthemoose.
+Password:
+230 User spinthemoose logged in.
+ftp> dir
+200 PORT command successful.
+150 Opening ASCII mode data connection for file list.
+drwxr-sr-x   3 591      399          4096 Jun  8  2003 bethclarke
+drwxr-sr-x   3 591      399          4096 Dec  1 18:10 blather
+drwxr-sr-x   2 591      399          4096 Nov 10  2003 cciwest
+drwxr-xr-x   2 591      399          4096 Jun 12  2003 cgi-bin
+-rw-r--r--   1 591      399           301 Oct  7 22:45 config.demo.php
+drwxr-sr-x   2 591      399          4096 Nov 12  2003 cv
+drwxr-xrwx   2 591      399          4096 May  8  2004 data
+-rw-r--r--   1 591      399           683 Nov 17  2003 demo.css
+drwxr-sr-x  10 591      399          4096 Oct  7 22:45 demos
+drwxr-sr-x   2 591      399          4096 Nov 12  2003 drafts
+drwxrwsr-x   3 99       399          4096 Oct  7 22:45 error
+drwxr-sr-x   6 591      399          4096 May 12  2004 gwl
+drwxr-sr-x   2 591      399          4096 Nov 17  2003 gwl_test
+-rw-r--r--   1 591      399       3938570 Nov  6 17:51 hello_arnie_v2.mp3
+drwxr-sr-x   6 591      399          4096 Jun 24 19:23 images
+-rw-r--r--   1 591      399          4552 Dec  1 20:38 index.html
+drwxr-sr-x   2 591      399          4096 Oct  3  2003 invoices
+drwxr-sr-x   2 591      399          4096 Nov 25  2003 kisstheground
+drwxr-sr-x   3 591      399          4096 Nov 13 00:56 mark
+drwxr-sr-x   2 591      399          4096 Jun 24 19:22 metrex
+drwxr-sr-x   3 591      399          4096 Oct  7 22:45 misc
+drwxr-sr-x   5 591      399          4096 Dec 14 16:57 net
+drwxr-sr-x   2 591      399          4096 Nov 12  2003 portfolio
+-rw-r--r--   1 591      399       3636766 Dec  7 18:41 prairie_highway.mp3
+-rw-r--r--   1 591      399       4315488 Oct  7 22:47 precious.mp3
+drwxr-sr-x   4 591      399          4096 Dec  1 18:05 scl
+-rw-r--r--   1 591      399           404 Oct  3  2003 sitescripts.js
+drwxr-sr-x   3 591      399          4096 Nov 13 00:55 solstice03
+drwxr-sr-x   6 591      399          4096 Nov 24 00:54 turimiquire
+-rw-r--r--   1 591      399          2201 Oct  3  2003 v4.css
+-rw-r--r--   1 591      399          2378 Oct  7 23:37 v5.css
+drwxr-sr-x   2 591      399          4096 Oct  7 22:45 webcode
+drwxr-sr-x   2 591      399          4096 Jun 12  2003 youthnet
+226 Transfer complete.
+ftp: 2145 bytes received in 0.54Seconds 3.96Kbytes/sec.
+ftp> cd net
+250 CWD command successful.
+ftp> dir
+200 PORT command successful.
+150 Opening ASCII mode data connection for file list.
+drwxr-sr-x   5 591      399          4096 Dec  1 18:45 blather
+-rw-r--r--   1 591      399          3525 Dec  1 20:38 index.html
+drwxr-sr-x   4 591      399          4096 Dec  1 18:04 scl
+drwxr-sr-x   2 591      399          4096 Dec 14 16:57 sdaddins
+226 Transfer complete.
+ftp: 256 bytes received in 0.09Seconds 2.84Kbytes/sec.
+ftp> rename index.html index.htm
+350 File or directory exists, ready for destination name.
+250 rename successful.
+ftp> dir
+200 PORT command successful.
+150 Opening ASCII mode data connection for file list.
+drwxr-sr-x   5 591      399          4096 Dec  1 18:45 blather
+-rw-r--r--   1 591      399          3525 Dec  1 20:38 index.htm
+drwxr-sr-x   4 591      399          4096 Dec  1 18:04 scl
+drwxr-sr-x   2 591      399          4096 Dec 14 16:57 sdaddins
+226 Transfer complete.
+ftp: 255 bytes received in 0.09Seconds 2.83Kbytes/sec.
+ftp> copy index.htm
+Invalid command.
+ftp> cp index.htm
+Invalid command.
+ftp> copy index.htm index.html
+Invalid command.
+ftp> move index.htm
+Invalid command.
+ftp> rename index.htm
+To name index.html
+350 File or directory exists, ready for destination name.
+250 rename successful.
+ftp> rename index.htm
+To name index.html
+550 index.htm: No such file or directory
+ftp> close
+221 Goodbye.
+ftp>

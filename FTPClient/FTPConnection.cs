@@ -10,30 +10,38 @@ using System.Threading;
 namespace FTPClient
 {
 	/// <summary>
-	/// Summary description for FTPConnection.
+	/// A class to manage FTP connections and common FTP functions.
 	/// </summary>
-
 	public class FTPConnection
 	{		
-		private TcpClient tcpClient;
+		#region constants
 		private static int BLOCK_SIZE = 512;
 		private static int DEFAULT_REMOTE_PORT = 21;
 		private static int DATA_PORT_RANGE_FROM = 1500;
 		private static int DATA_PORT_RANGE_TO = 65000;
-		private FTPMode mode;
-		private int activeConnectionsCount;
-		private string remoteHost;
+		#endregion
+		
+		#region private members
+		private TcpClient tcpClient;		// the client
+		private FTPMode mode;				// the tcpip mode (active/passive)
+		private int activeConnectionsCount;	// number of active connections
+		private string remoteHost;			// the remote host
 
 		private ArrayList messageList = new ArrayList();
 		private bool logMessages;
-
+		#endregion
+		
+		#region ct'rs
+		/// <summary>Initializes an <see cref="FTPConnection">FTPConnection</see> object.</summary>
 		public FTPConnection()
 		{
 			this.activeConnectionsCount = 0;
 			this.mode = FTPMode.Active;
 			this.logMessages = false;
 		}
+		#endregion
 
+		#region public access members
 		public ArrayList MessageList
 		{
 			get
@@ -59,38 +67,65 @@ namespace FTPClient
 				this.logMessages = value;
 			}
 		}
-
+		#endregion
+		
+		#region open/close
+		/// <overloads>Opens an FTP connection.</overloads>
+		/// <summary>Opens an FTP connection to the given host, authenticating with the given username and password.</summary>
+		/// <param name="remoteHost">The remote FTP host.</param>
+		/// <param name="user">The login name to use when authenticating the connection.</param>
+		/// <param name="password">The password to use when authenticating the connection.</param>
 		public virtual void Open(string remoteHost, string user, string password)
 		{
 			Open(remoteHost, DEFAULT_REMOTE_PORT, user, password, FTPMode.Active);
 		}
-
+		/// <summary>Opens an FTP connection to the given host and the given mode, authenticating with the given username and password.</summary>
+		/// <param name="remoteHost">The remote FTP host.</param>
+		/// <param name="user">The login name to use when authenticating the connection.</param>
+		/// <param name="password">The password to use when authenticating the connection.</param>
+		/// <param name="mode">The <see cref="FTPMode">FTPMode</see> to set once the connection is open.</param>
 		public virtual void Open(string remoteHost, string user, string password, FTPMode mode)
 		{
 			Open(remoteHost, DEFAULT_REMOTE_PORT, user, password, mode);
 		}
-
+		/// <summary>Opens an FTP connection to the given host at the given remote port, authenticating with the given username and password.</summary>
+		/// <param name="remoteHost">The remote FTP host.</param>
+		/// <param name="user">The login name to use when authenticating the connection.</param>
+		/// <param name="password">The password to use when authenticating the connection.</param>
+		/// <param name="remotePort">The remote port to request when connecting.</param>
 		public virtual void Open(string remoteHost, int remotePort, string user, string password)
 		{
 			Open(remoteHost, remotePort, user, password, FTPMode.Active);
 		}
-		
+		/// <summary>Opens an FTP connection to the given host at the given remote port, authenticating with the given username and password, and setting the given transfer mode.</summary>
+		/// <param name="remoteHost">The remote FTP host.</param>
+		/// <param name="user">The login name to use when authenticating the connection.</param>
+		/// <param name="password">The password to use when authenticating the connection.</param>
+		/// <param name="remotePort">The remote port to request when connecting.</param>
+		/// <param name="pMode">The <see cref="FTPMode">FTPMode</see> to set once the connection is open.</param>
 		public virtual void Open(string remoteHost, int remotePort, string user, string password, FTPMode pMode)
-		{
+		{	
 			ArrayList tempMessageList = new ArrayList();
 			int returnValue;
 
-			this.mode = pMode;
 			this.tcpClient = new TcpClient();
+			this.mode = pMode;
 			this.remoteHost = remoteHost;
-
+			
 			// As we cannot detect the local address from the TCPClient class, convert "127.0.0.1" and "localhost" to
             // the DNS record of this machine; this will ensure that the connection address and the PORT command address
             // are identical.  This fixes bug 854919.
-			if (remoteHost == "localhost" || remoteHost == "127.0.0.1")
-			{
-				remoteHost = GetLocalAddressList()[0].ToString();
-			}
+            try {
+	            if (remoteHost == "localhost" || remoteHost == "127.0.0.1")
+				{
+					remoteHost = LocalAddressList[0].ToString();
+				}
+            }
+            catch (Exception ex)
+            {
+            	System.Diagnostics.Debug.Assert(false, ex.ToString());
+            	return;
+            }
 
 			//CONNECT
 			try
@@ -101,6 +136,7 @@ namespace FTPClient
 			{
 				throw new IOException("Couldn't connect to remote server");
 			}
+
 			tempMessageList = Read();
 			returnValue = GetMessageReturnValue((string)tempMessageList[0]);
 			if(returnValue != 220)
@@ -131,6 +167,10 @@ namespace FTPClient
 			}
 		}
 
+		public bool IsConnected {
+			get {return false;}
+		}
+
 		public virtual void Close()
 		{
 			ArrayList messageList = new ArrayList();
@@ -141,7 +181,18 @@ namespace FTPClient
 				this.tcpClient.Close();
 			}
 		}
+		#endregion
 
+		#region private utility functions
+		/// <summary>Gets an array of <see cref="IPAddress">IPAddresses</see> that resolve to the host name of the local computer.</summary>
+		/// <returns>An <see cref="Array">array</see> of <see cref="IPAddress">IPAddresses</see> that resolve to the host name of the local computer.</returns>
+		public IPAddress[] LocalAddressList
+		{
+			get {return Dns.Resolve(Dns.GetHostName()).AddressList;}
+		}		
+		#endregion
+		
+		#region untested
 		public ArrayList Dir(String mask)
 		{
 			ArrayList tmpList = Dir();
@@ -534,7 +585,7 @@ namespace FTPClient
 			int portLow = portNumber & 255;
 
 			tempMessageList = SendCommand("PORT " 
-				+ GetLocalAddressList()[0].ToString().Replace(".", ",")
+				+ LocalAddressList[0].ToString().Replace(".", ",")
 				+ "," + portHigh.ToString() + "," + portLow);
 
 			returnValue = GetMessageReturnValue((string)tempMessageList[0]);
@@ -710,11 +761,6 @@ namespace FTPClient
 			}
 		}
 
-		private IPAddress[] GetLocalAddressList()
-		{
-			return Dns.Resolve(Dns.GetHostName()).AddressList;
-		}
-
 		private void LockTcpClient()
 		{
 			System.Threading.Monitor.Enter(this.tcpClient);
@@ -724,5 +770,6 @@ namespace FTPClient
 		{
 			System.Threading.Monitor.Exit(this.tcpClient);
 		}
+		#endregion
 	}
 }
