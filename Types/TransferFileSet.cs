@@ -19,36 +19,23 @@
 
 using System;
 using System.Collections;
+using System.Collections.Specialized;
 using System.IO;
+using System.Globalization;
 using System.Net;
 
+using NAnt.Core;
 using NAnt.Core.Attributes;
 using NAnt.Core.Util;
 using NAnt.Core.Types;
 	
 using Sourceforge.NAnt.Ftp.Tasks;
-	
+using Sourceforge.NAnt.Ftp.Util;
+using Sourceforge.NAnt.Ftp.Enum;
+
+using EnterpriseDT.Net.Ftp;
+
 namespace Sourceforge.NAnt.Ftp.Types {
-
-	public enum TransferDirection {
-		NONE = 0,
-		PUT,
-		GET
-	}
-	
-	[ElementName("put")]
-	public class PutFileSet : TransferFileSet {
-		public PutFileSet() {
-			this.Direction = TransferDirection.PUT;
-		}
-	}
-
-	[ElementName("get")]
-	public class GetFileSet : TransferFileSet {
-		public GetFileSet() {
-			this.Direction = TransferDirection.GET;
-		}
-	}
 
 	/// <summary>
 	/// Provides credentials for connecting to a remote host.
@@ -64,10 +51,10 @@ namespace Sourceforge.NAnt.Ftp.Types {
 		private bool _createdirsondemand=true;
 		private TransferDirection _transferDirection;
 		private string _baseRemoteDirectory = ".";
+		
 		#endregion
 		
 		#region Public Instance Constructors
-		
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Connection" /> class.
 		/// </summary>

@@ -20,20 +20,20 @@
 			 remotepath=".\net"
 			 showdironconnect="true" 
 			 >
+<!--
 			<put type="ascii">
 				<include name="..\AssemblyInfo.cs" />
 			</put>
 			<put type="b" local-path=".." remote-path="test">
 				<include name="**\*.cs" />
 			</put>
-			<!--
+-->
 			<get type="a">
 				<include name="..\AssemblyInfo.cs" />
 			</get>
-			<get type="bin" >
-				<include name="..\AssemblyInfo.cs" />
+			<get type="bin" local-path="incoming" remote-path="test">
+				<include name="**\*.cs" />
 			</get>
-			-->
 		</ftp>
 	</target>
 

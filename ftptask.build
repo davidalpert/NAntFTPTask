@@ -26,12 +26,12 @@
   <property name="extension.debug" value="dll">
   </property>
   <!--The initialisation target.-->
-  <target name="init.debug" depends="subwcrev" if="${debug}">
+  <target name="init.debug" depends="subwcrev" >
     <mkdir dir="${outputdir.debug}" />
   </target>
   <!--The 'clean' target.  Here we delete the built output files and extra files which are not directly specified in 
 		      the .prjx file (e.g. ".pdb", ".xml", ".manifest").-->
-  <target name="clean.debug" if="${debug}">
+  <target name="clean.debug">
     <delete>
       <fileset>
         <include name="${outputdir.debug}\${assembly.debug}.${extension.debug}" />
@@ -39,20 +39,27 @@
         <include name="${outputdir.debug}\${assembly.debug}.xml" />
         <include name="${outputdir.debug}\${assembly.debug}.${extension.debug}.manifest" />
         <include name="${outputdir.debug}\*.config" />
+		<!-- let's not forget local copies of linked libraries -->
+		<include name="${outputdir.debug}\edtftpnet-1.1.3.dll" />
+		<include name="${outputdir.debug}\edtftpnet-1.1.3.pdb" />
+		<include name="${outputdir.debug}\ConsolePasswordInput.dll" />
+		<include name="${outputdir.debug}\ConsolePasswordInput.pdb" />
       </fileset>
     </delete>
   </target>
   <!--The 'build' target.-->
-  <target name="build.debug" depends="init.debug, gacreferences.debug" if="${debug}">
+  <target name="build.debug" depends="init.debug, gacreferences.debug" >
     <!--Compiles the code -->
     <csc target="library" output="${outputdir.debug}\${assembly.debug}.${extension.debug}" warninglevel="4" debug="True" optimize="False" unsafe="False" checked="True" noconfig="False" nostdlib="False" define="DEBUG" warnaserror="False">
       <sources>
-        <include name=".\AssemblyInfo.cs" />
+        <include name=".\AssemblyInfo\.cs" />
         <include name=".\Tasks\ftptask.cs" />
         <include name=".\Types" />
         <include name=".\Tasks" />
         <include name=".\Types\Connection.cs" />
         <include name=".\Types\TransferFileSet.cs" />
+        <include name=".\Tests" />
+        <include name=".\Tests\ftptasktest.cs" />
       </sources>
       <references>
         <include name="c:\usr\local\nant-0.85-rc1\bin\NAnt.Core.dll" />
@@ -60,17 +67,26 @@
         <include name=".\lib\ConsolePasswordInput.dll" />
       </references>
     </csc>
-    <!--Copy app.config file to output folder and rename it appropriately -->
+    <!--Copy external libraries to output folder -->
+	<copy todir="${outputdir.debug}">
+		<fileset basedir=".\lib\debug\">
+			<include name="edtftpnet-1.1.3.dll" />
+			<include name="edtftpnet-1.1.3.pdb" />
+			<include name="ConsolePasswordInput.dll" />
+			<include name="ConsolePasswordInput.pdb" />
+		</fileset>
+	</copy>
+	<!--Copy app.config file to output folder and rename it appropriately -->
   </target>
   <!--The test target.  Only supports Nunit 2 -->
-  <target name="test.debug" depends="build.debug" if="${debug}">
+  <target name="test.debug" depends="build.debug">
     <nunit2>
       <formatter type="Plain" />
-      <test assemblyname="${outputdir.debug}\${assembly.debug}.${extension.debug}" appconfig="${outputdir.debug}\${assembly.debug}.${extension.debug}.config" />
+      <test assemblyname="${outputdir.debug}\${assembly.debug}.${extension.debug}"  />
     </nunit2>
   </target>
   <!--Generates a property for each Gac reference.  The property name is set to the name of the assembly-->
-  <target name="gacreferences.debug" if="${debug}">
+  <target name="gacreferences.debug">
   </target>
   <!--Set up various properties that will be referred to in the various nant targets.-->
   <!--The output directory.-->
@@ -96,6 +112,9 @@
         <include name="${outputdir.release}\${assembly.release}.xml" />
         <include name="${outputdir.release}\${assembly.release}.${extension.release}.manifest" />
         <include name="${outputdir.release}\*.config" />
+		<!-- let's not forget local copies of linked libraries -->
+		<include name="${outputdir.release}\edtftpnet-1.1.3.dll" />
+		<include name="${outputdir.release}\ConsolePasswordInput.dll" />
       </fileset>
     </delete>
   </target>
@@ -110,13 +129,22 @@
         <include name=".\Tasks" />
         <include name=".\Types\Connection.cs" />
         <include name=".\Types\TransferFileSet.cs" />
+        <include name=".\Tests" />
+        <include name=".\Tests\ftptasktest.cs" />
       </sources>
       <references>
         <include name="c:\usr\local\nant-0.85-rc1\bin\NAnt.Core.dll" />
-        <include name=".\lib\debug\edtftpnet-1.1.3.dll" />
-        <include name=".\lib\debug\ConsolePasswordInput.dll" />
+        <include name=".\lib\edtftpnet-1.1.3.dll" />
+        <include name=".\lib\ConsolePasswordInput.dll" />
       </references>
     </csc>
+    <!--Copy external libraries to output folder -->
+	<copy todir="${outputdir.release}">
+		<fileset basedir=".\lib\">
+			<include name="edtftpnet-1.1.3.dll" />
+			<include name="ConsolePasswordInput.dll" />
+		</fileset>
+	</copy>
     <!--Copy app.config file to output folder and rename it appropriately -->
   </target>
   <!--The test target.  Only supports Nunit 2 -->
