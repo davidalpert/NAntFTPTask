@@ -59,6 +59,8 @@ using NAnt.Core;
 using NAnt.Core.Util;
 
 using Sourceforge.NAnt.Ftp.Tasks;
+using Sourceforge.NAnt.Ftp.Util;
+
 using EnterpriseDT.Net.Ftp;
 
 namespace Sourceforge.NAnt.Ftp.Util {
@@ -135,16 +137,19 @@ namespace Sourceforge.NAnt.Ftp.Util {
         private DirScannerStringCollection _scannedDirectories;
         private ArrayList _searchDirIsRecursive;
 
-        private FTPTask _task;
+        private FTPTask _conn;
         #endregion Private Instance Fields
 
         public RemoteDirectoryScanner () {
-        	_task = null;
+        	_conn = new FTPTask();
         }
         public RemoteDirectoryScanner (FTPTask supervisor) {
-        	_task = supervisor;
+        	_conn = supervisor;
         }
-        public FTPTask Task { set {_task = value;} }
+        public FTPTask Conn { 
+        	get {return _conn;}
+        	set {_conn = value;} 
+        }
         
         #region Private Static Fields
 
@@ -163,7 +168,7 @@ namespace Sourceforge.NAnt.Ftp.Util {
         /// A shallow copy of the <see cref="DirectoryScanner" />.
         /// </returns>
         public new object Clone() {
-            RemoteDirectoryScanner clone = new RemoteDirectoryScanner(_task);
+            RemoteDirectoryScanner clone = new RemoteDirectoryScanner(_conn);
             if (_baseDirectory != null) {
                 clone._baseDirectory = _baseDirectory;
             }
@@ -295,10 +300,10 @@ namespace Sourceforge.NAnt.Ftp.Util {
             _excludePatterns = new ArrayList();
             _excludeNames = new StringCollectionWithGoodToString ();
             _fileNames = new ArrayList();
-            _directoryNames = new DirScannerStringCollection();
-            _searchDirectories = new DirScannerStringCollection();
+            _directoryNames = new DirScannerStringCollection(_conn);
+            _searchDirectories = new DirScannerStringCollection(_conn);
             _searchDirIsRecursive = new ArrayList();
-            _scannedDirectories = new DirScannerStringCollection();
+            _scannedDirectories = new DirScannerStringCollection(_conn);
 
 #if DEBUG_REGEXES
             Console.WriteLine("*********************************************************************");
@@ -365,7 +370,7 @@ namespace Sourceforge.NAnt.Ftp.Util {
 
                     regexPatterns.Add(entry);
                 } else {
-                    string exactName = Path.Combine(searchDirectory, regexPattern);
+                    string exactName = RPath.Combine(searchDirectory, regexPattern);
                     if (!nonRegexFiles.Contains(exactName)) {
                         nonRegexFiles.Add(exactName);
                     } 
@@ -413,12 +418,12 @@ namespace Sourceforge.NAnt.Ftp.Util {
         /// </history>
         private void ParseSearchDirectoryAndPattern(bool isInclude, string originalNAntPattern, out string searchDirectory, out bool recursive, out bool isRegex, out string regexPattern) {
             string s = originalNAntPattern;
-            s = s.Replace('\\', '/');
-            s = s.Replace('/', '/');
+            s = s.Replace('\\', RPath.DirectorySeparatorChar);
+            s = s.Replace('/', RPath.DirectorySeparatorChar);
 
             // Get indices of pieces used for recursive check only
             int indexOfFirstDirectoryWildcard = s.IndexOf("**");
-            int indexOfLastOriginalDirectorySeparator = s.LastIndexOf(Path.DirectorySeparatorChar);
+            int indexOfLastOriginalDirectorySeparator = s.LastIndexOf(RPath.DirectorySeparatorChar);
 
             // search for the first wildcard character (if any) and exclude the rest of the string beginnning from the character
             char[] wildcards = {'?', '*'};
@@ -428,7 +433,7 @@ namespace Sourceforge.NAnt.Ftp.Util {
             }
 
             // find the last DirectorySeparatorChar (if any) and exclude the rest of the string
-            int indexOfLastDirectorySeparator = s.LastIndexOf(Path.DirectorySeparatorChar);
+            int indexOfLastDirectorySeparator = s.LastIndexOf(RPath.DirectorySeparatorChar);
 
             // The pattern is potentially recursive if and only if more than one base directory could be matched.
             // ie: 
@@ -446,24 +451,23 @@ namespace Sourceforge.NAnt.Ftp.Util {
             // to it
             if (indexOfLastDirectorySeparator != -1) {
                 s = originalNAntPattern.Substring(0, indexOfLastDirectorySeparator);
-                if (s.Length == 2 && s[1] == Path.VolumeSeparatorChar) {
-                    s += Path.DirectorySeparatorChar;
+                if (s.Length == 2 && s[1] == RPath.VolumeSeparatorChar) {
+                    s += RPath.DirectorySeparatorChar;
                 }
             } else {
                 s = "";
             }
             
             //We only prepend BaseDirectory when s represents a relative path.
-            if (Path.IsPathRooted(s)) {
-                searchDirectory = new DirectoryInfo(s).FullName;
+            if (RPath.IsPathRooted(s)) {
+            	searchDirectory = new RemotePath(s).Path;
             } else {
                 //We also (correctly) get to this branch of code when s.Length == 0
                 // Note that I tried setting the base directory of unrooted exclude patterns to "" but this ends up
                 // matching base directories where it shouldn't.
 //              if (isInclude || indexOfFirstWildcard == -1)
-                    searchDirectory = BaseDirectory;
-                    //new DirectoryInfo(Path.Combine(
-                    //    BaseDirectory.FullName, s)).FullName;
+                    searchDirectory = new RemotePath(RPath.Combine(
+                        BaseDirectory, s)).Path;
 //              else
 //                  searchDirectory = String.Empty;
             }
@@ -492,7 +496,7 @@ namespace Sourceforge.NAnt.Ftp.Util {
 
         private bool IsCaseSensitiveFileSystem(string path) {
             // Windows (not case-sensitive) is backslash, others (e.g. Unix) are not
-            return (VolumeInfo.IsVolumeCaseSensitive(new Uri(Path.GetFullPath(path) + Path.DirectorySeparatorChar))); 
+            return (VolumeInfo.IsVolumeCaseSensitive(new Uri(_conn.ResolvePath(path) + RPath.DirectorySeparatorChar))); 
         }
 
         /// <summary>
@@ -514,12 +518,12 @@ namespace Sourceforge.NAnt.Ftp.Util {
             _scannedDirectories.Add(path);
 
             // if the path doesn't exist, return.
-            if (!Directory.Exists(path)) {
+            if (!_conn.remoteDirExists(path)) {
                 return;
             }
 
             // get info for the current directory
-            DirectoryInfo currentDirectoryInfo = new DirectoryInfo(path);
+            RemotePath currentDir = new RemotePath(path);
 
             // check whether directory is on case-sensitive volume
             bool caseSensitive = IsCaseSensitiveFileSystem(path);
@@ -553,7 +557,7 @@ namespace Sourceforge.NAnt.Ftp.Util {
                     }
 
                     // make sure basedirectory ends with directory separator
-                    if (!StringUtils.EndsWith(baseDirectory, Path.DirectorySeparatorChar)) {
+                    if (!StringUtils.EndsWith(baseDirectory, RPath.DirectorySeparatorChar)) {
                         baseDirectory += Path.DirectorySeparatorChar;
                     }
 
@@ -577,8 +581,8 @@ namespace Sourceforge.NAnt.Ftp.Util {
                     }
 
                     // make sure basedirectory ends with directory separator
-                    if (!StringUtils.EndsWith(baseDirectory, Path.DirectorySeparatorChar)) {
-                        baseDirectory += Path.DirectorySeparatorChar;
+                    if (!StringUtils.EndsWith(baseDirectory, RPath.DirectorySeparatorChar)) {
+                        baseDirectory += RPath.DirectorySeparatorChar;
                     }
 
                     if (pathCompare.StartsWith(baseDirectory)) {
@@ -587,26 +591,26 @@ namespace Sourceforge.NAnt.Ftp.Util {
                 }
             }
 
-            foreach (DirectoryInfo directoryInfo in currentDirectoryInfo.GetDirectories()) 
+            foreach (RemotePath dir in _conn.GetDirs(currentDir.Path))
             {
                 if (recursive) {
                     // scan subfolders if we are running recursively
-                    ScanDirectory(directoryInfo.FullName, true);
+                    ScanDirectory(dir.FullPath, true);
                 } else {
                     // otherwise just test to see if the subdirectories are included
-                    if (IsPathIncluded(directoryInfo.FullName, caseSensitive, includedPatterns, excludedPatterns)) {
-                        _directoryNames.Add(directoryInfo.FullName);
+                    if (IsPathIncluded(dir.FullPath, caseSensitive, includedPatterns, excludedPatterns)) {
+                        _directoryNames.Add(dir.FullPath);
                     }
                 }
             }
 
             // scan files
-            foreach (FileInfo fileInfo in currentDirectoryInfo.GetFiles()) {
-                string filename = Path.Combine(path, fileInfo.Name);
+            foreach (RemotePath file in _conn.GetFiles(currentDir.Path)) {
+                string filename = file.FullPath;
                 if (!caseSensitive)
                     filename = filename.ToLower();
                 if (IsPathIncluded(filename, caseSensitive, includedPatterns, excludedPatterns)) {
-                    _fileNames.Add(Path.Combine(path, fileInfo.Name));
+                    _fileNames.Add(file);
                 }
             }
 
@@ -614,8 +618,8 @@ namespace Sourceforge.NAnt.Ftp.Util {
             // delete empty directories.  This may *seem* like a special case
             // but it is more like formalizing something in a way that makes
             // writing the delete task easier :)
-            if (IsPathIncluded(path, caseSensitive, includedPatterns, excludedPatterns)) {
-                _directoryNames.Add(path);
+            if (IsPathIncluded(currentDir.Path, caseSensitive, includedPatterns, excludedPatterns)) {
+                _directoryNames.Add(currentDir.Path);
             }
         }
         
@@ -747,15 +751,15 @@ namespace Sourceforge.NAnt.Ftp.Util {
 
             // NAnt patterns can use either / \ as a directory seperator.
             // We must replace both of these characters with Path.DirectorySeperatorChar
-            pathBuilder.Replace('/',  Path.DirectorySeparatorChar);
-            pathBuilder.Replace('\\', Path.DirectorySeparatorChar);
+            pathBuilder.Replace('/',  RPath.DirectorySeparatorChar);
+            pathBuilder.Replace('\\', RPath.DirectorySeparatorChar);
             
             return pathBuilder;
         }
 
         private static string CleanPath(string baseDirectory, string nantPath) 
         {
-            return new DirectoryInfo(Path.Combine(baseDirectory, CleanPath(nantPath).ToString())).FullName;
+        	return new RemotePath(RPath.Combine(baseDirectory, CleanPath(nantPath).ToString())).FullPath;
         }
 
         /// <summary>
@@ -787,7 +791,7 @@ namespace Sourceforge.NAnt.Ftp.Util {
             pattern.Replace("+", @"\+");
 
             // Special case directory seperator string under Windows.
-            string seperator = Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture);
+            string seperator = RPath.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture);
             if (seperator == @"\") {
                 seperator = @"\\";
             }
@@ -882,7 +886,14 @@ namespace Sourceforge.NAnt.Ftp.Util {
 
     [Serializable()]
     public class DirScannerStringCollection : StringCollectionWithGoodToString {
-        #region Override implementation of ICloneable
+
+    	private FTPTask _conn;
+    	
+    	public DirScannerStringCollection(FTPTask conn) {
+    		_conn=conn;
+    	}
+    	
+    	#region Override implementation of ICloneable
 
         /// <summary>
         /// Creates a shallow copy of the <see cref="DirScannerStringCollection" />.
@@ -893,7 +904,7 @@ namespace Sourceforge.NAnt.Ftp.Util {
         public override object Clone() {
             string[] strings = new string[Count];
             CopyTo(strings, 0);
-            DirScannerStringCollection clone = new DirScannerStringCollection();
+            DirScannerStringCollection clone = new DirScannerStringCollection(_conn);
             clone.AddRange(strings);
             return clone;
         }
@@ -962,8 +973,8 @@ namespace Sourceforge.NAnt.Ftp.Util {
         /// case-sensitive filesystem; otherwise, <see langword="false" />.
         /// </returns>
         private bool IsCaseSensitiveFileSystem(string path) {
-            return PlatformHelper.IsVolumeCaseSensitive(Path.GetFullPath(path) 
-                + Path.DirectorySeparatorChar); 
+        	return PlatformHelper.IsVolumeCaseSensitive(_conn.ResolvePath(path)
+                + RPath.DirectorySeparatorChar); 
         }
 
         #endregion Private Instance Methods

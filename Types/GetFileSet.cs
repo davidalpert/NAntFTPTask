@@ -29,6 +29,7 @@ using NAnt.Core.Types;
 using EnterpriseDT.Net.Ftp;
 
 using Sourceforge.NAnt.Ftp.Enum;
+using Sourceforge.NAnt.Ftp.Tasks;
 using Sourceforge.NAnt.Ftp.Types;
 using Sourceforge.NAnt.Ftp.Util;
 
@@ -81,12 +82,12 @@ namespace Sourceforge.NAnt.Ftp.Types {
         /// A collection that contains the file names that match the 
         /// <see cref="FileSet" />.
         /// </value>
-        public new FTPFile[] FileNames {
+        public new RemotePath[] FileNames {
             get {
                 if (!_hasScanned) {
                     Scan();
                 }
-        		return (FTPFile[])_scanner.FileNames.ToArray();
+        		return (RemotePath[])_scanner.FileNames.ToArray(typeof(RemotePath));
             }
         }
 
@@ -173,19 +174,19 @@ namespace Sourceforge.NAnt.Ftp.Types {
         /// <returns>
         /// The <see cref="FileInfo"/> of the file that has the newest (closest to present) last write time.
         /// </returns>
-        public new FTPFile MostRecentLastWriteTimeFile {
+        public new RemotePath MostRecentLastWriteTimeFile {
             get{
-				FTPFile newestFile = null;
+				RemotePath newestPath = null;
 
-                foreach (FTPFile file in FileNames) {
-					if (newestFile == null) {
-						newestFile = file;
-					} else if (file.LastModified > newestFile.LastModified) {
-						logger.Info(string.Format(CultureInfo.InvariantCulture, "'{0}' was newer than {1}", file.Name, newestFile.Name));
-						newestFile = file;
+                foreach (RemotePath rpath in FileNames) {
+					if (newestPath == null) {
+						newestPath = rpath;
+					} else if (rpath.File.LastModified > newestPath.File.LastModified) {
+						logger.Info(string.Format(CultureInfo.InvariantCulture, "'{0}' was newer than {1}", rpath.FullPath, newestPath.FullPath));
+						newestPath = rpath;
 					}
                 }
-                return newestFile;
+                return newestPath;
             }
         }
         #endregion
@@ -235,8 +236,8 @@ namespace Sourceforge.NAnt.Ftp.Types {
             } else {
                 sb.Append("Files:");
                 sb.Append(Environment.NewLine);
-                foreach (FTPFile file in this.FileNames) {
-                    sb.Append(file.Name);
+                foreach (RemotePath rpath in this.FileNames) {
+                    sb.Append(rpath.FullPath);
                     sb.Append(Environment.NewLine);
                 }
                 sb.Append("Dirs:");
@@ -255,7 +256,7 @@ namespace Sourceforge.NAnt.Ftp.Types {
         #region Public Instance Methods
 
         public bool RemoteDirectoryExists(string dirname) {
-        	return true;
+        	return _scanner.Conn.remoteDirExists(dirname);
         }
         
         public override void Scan() {
@@ -269,23 +270,24 @@ namespace Sourceforge.NAnt.Ftp.Types {
                     if (RemoteDirectoryExists(name)) {
                         _scanner.DirectoryNames.Add(name);
                     } else {
-                        _scanner.FileNames.Add(name);
+//                		int sep = name.LastIndexOf(RPath.DirectorySeparatorChar);
+//                		DateTime date = DateTime.Now;
+//                		FTPFile ftpfile = new FTPFile(FTPFile.UNKNOWN, String.Empty, name.Substring(sep),
+//                		                              0, false, ref date);
+//                		RemotePath file = new RemotePath(ftpfile);
+//                		file.Path = name.Substring(0,sep);
+                		_scanner.FileNames.Add(new RemotePath(name));
                     }
-                }
-
-                // add all the path-searched patterns to the scanned files.
-                foreach (string name in PathFiles.Scan()) {
-                    _scanner.FileNames.Add(name);
                 }
 
                 _hasScanned = true;
             } catch (Exception ex) {
-                throw new BuildException("Error creating FileSet.", Location, ex);
+                throw new BuildException("Error creating GetFileSet.", Location, ex);
             }
 
             if (FailOnEmpty && _scanner.FileNames.Count == 0) {
                 throw new ValidationException(string.Format(CultureInfo.InvariantCulture, 
-                    "The fileset specified is empty after scanning '{0}' for: {1}", 
+                    "The getfileset specified is empty after scanning '{0}' for: {1}", 
                     _scanner.BaseDirectory, _scanner.Includes.ToString()), 
                     Location);
             }
@@ -366,5 +368,21 @@ namespace Sourceforge.NAnt.Ftp.Types {
 			this.Direction = TransferDirection.GET;
 		}
 		#endregion
+		
+		public override void TransferFiles(FTPTask super) {
+
+			_scanner.Conn = super;
+			
+			// transfer the files
+			foreach (RemotePath rpath in FileNames) {
+				super.Get(rpath.FullPath,
+				    	  LocalPath.ToString(), 
+				    	  RemotePathString, 
+				    	  FTPTask.ParseTransferType(TransferType), 
+				    	  Flatten,
+				    	  CreateDirsOnDemand);
+			}						
+		}
+
 	}
 }

@@ -20,6 +20,7 @@
 using NAnt.Core.Attributes;
 
 using Sourceforge.NAnt.Ftp.Enum;
+using Sourceforge.NAnt.Ftp.Tasks;
 using Sourceforge.NAnt.Ftp.Types;
 
 namespace Sourceforge.NAnt.Ftp.Types {
@@ -28,6 +29,19 @@ namespace Sourceforge.NAnt.Ftp.Types {
 	public class PutFileSet : TransferFileSet {
 		public PutFileSet() {
 			this.Direction = TransferDirection.PUT;
+		}
+		
+		public override void TransferFiles(FTPTask super) {
+
+			// transfer the files
+			foreach (string fileName in FileNames) {
+				super.Put(fileName, 
+				    	  LocalPath.ToString(), 
+				    	  RemotePathString, 
+				    	  FTPTask.ParseTransferType(TransferType), 
+				    	  Flatten,
+				    	  CreateDirsOnDemand);
+			}						
 		}
 	}
 }

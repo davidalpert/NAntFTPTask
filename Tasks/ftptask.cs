@@ -37,6 +37,7 @@ using PasswordInputManager = ConsolePasswordInput.ConsolePasswordInput;
 
 using Sourceforge.NAnt.Ftp.Types;
 using Sourceforge.NAnt.Ftp.Enum;
+using Sourceforge.NAnt.Ftp.Util;
 
 namespace Sourceforge.NAnt.Ftp.Tasks {
 	
@@ -357,7 +358,7 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 					CWD(_remotePath);
 				
 					if (_showDirOnConnect) {
-						DIR();
+						ShowDir(".");
 					}
 									
 					this.ExecuteChildTasks();
@@ -491,7 +492,7 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 
 		#region ftp directory functions
 		
-		private string PWD {
+		public string PWD {
 			get { 
 				if (IsConnected) {
 					return _client.Pwd();
@@ -501,7 +502,7 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 			}
 		}
 		
-		private void CWD(string remotePath) {
+		public void CWD(string remotePath) {
 			remotePath = remotePath.Replace(DOS_DIR_SEPERATOR, DIR_SEPERATOR);
 			if (remotePath!=String.Empty) {
 				this.Log(Level.Info, "Changing remote directory to '{0}'", remotePath);
@@ -515,7 +516,7 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 			}
 		}
 
-		private void CWD(string remotePath, bool createOnDemand) {
+		public void CWD(string remotePath, bool createOnDemand) {
 			if (createOnDemand) {
 				try {
 					CWD(remotePath);
@@ -527,32 +528,136 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 				}
 			}
 		}
-		
-		private void DIR() {
-			this.Log(Level.Info, "Remote Directory Listing:");
+
+		public FTPFile[] DirDetails(string path) {
 			if (IsConnected) {
-				string[] dirlist = _client.Dir(".", true);
-				foreach(string itemname in dirlist) {
-					this.Log(Level.Info, " + : {0}",itemname);
-				}
-				this.Log(Level.Info, "Remote Directory Listing 2:");
-				FTPFile[] files = _client.DirDetails(".");
-				foreach (FTPFile file in files) {
-					this.Log(Level.Info, " + : {0} -- {1}",file.Dir, file.Name);
-				}
+				return _client.DirDetails(path);
 			} else {
-				this.Log(Level.Debug, "Not connected.");
+				FTPFile[] result = {};
+				return result;
+			}
+		}
+		public string[] DirDetails(string path, bool full) {
+			if (IsConnected) {
+				return _client.Dir(path, full);
+			} else {
+				string[] result = {};
+				return result;
 			}
 		}
 		
-		private void MkDir(string dirname) {
+		public RemotePath[] GetDirs(string path) {
+			RemotePath[] list = RemotePath.FromFTPFileArray(path, DirDetails(path));
+			int dircount = 0;
+			foreach (RemotePath rpath in list) {
+				if (rpath.IsDir) {
+					dircount++;
+				}
+			}
+			if (dircount==0) {
+				RemotePath[] result = {};
+				return result;
+			} else {
+				RemotePath[] result = new RemotePath[dircount];
+				int z=0;
+				foreach(RemotePath rpath in list) {
+					if (rpath.IsDir) {
+						result[z].File   = rpath.File;
+						result[z++].Path = rpath.Path;
+					}
+				}
+				return result;
+			}
+			
+		}
+		public string ResolvePath(string rpath){
+			string pwd = PWD;
+			string result;
+			try {
+				CWD(rpath);
+				result = PWD;
+			} catch (FTPException fex) {
+				fex.ToString();
+				// path does not exist
+				result = String.Empty;
+			} finally {
+				CWD(pwd);
+			}
+			return result;
+		}
+
+		public RemotePath[] GetFiles(string path) {
+			RemotePath[] list = RemotePath.FromFTPFileArray(path, DirDetails(path));
+			int filecount = 0;
+			foreach (RemotePath rpath in list) {
+				if (rpath.IsFile) {
+					filecount++;
+				}
+			}
+			if (filecount==0) {
+				RemotePath[] result = {};
+				return result;
+			} else {
+				RemotePath[] result = new RemotePath[filecount];
+				int z=0;
+				foreach(RemotePath rpath in list) {
+					if (rpath.IsFile) {
+						result[z].File   = rpath.File;
+						result[z++].Path = rpath.Path;
+					}
+				}
+				return result;
+			}
+			
+		}
+		
+		public void ShowDir(string dir) {
+			this.Log(Level.Info, "Remote Directory Listing:");
+			if (IsConnected) {
+				string[] dirlist = DirDetails(dir, true);
+				foreach(string itemname in dirlist) {
+					this.Log(Level.Info, " + : {0}",itemname);
+				}
+			} else {
+				this.Log(Level.Debug, "Not connected.");
+			}			
+		}
+		
+		public void MkDir(string dirname) {
 			if (IsConnected) {
 				_client.MkDir(dirname);
 			}
 		}
 		
-		private bool remoteDirExists(string remoteDir) {
-			return false;
+		public bool remoteFileExists(string remotePath) {
+			bool exist = false;
+			if (IsConnected) {
+				FTPFile[] dirlist = _client.DirDetails(Path.GetDirectoryName(remotePath));
+				foreach (FTPFile node in dirlist) {
+					if (node.Dir==false && node.Name==Path.GetFileName(remotePath)) {
+						exist = true;
+					}
+				}
+			}
+			return exist;
+		}
+		
+		public bool remoteDirExists(string remoteDir) {
+			bool exist = true;
+			if (IsConnected) {
+				string pwd = PWD;
+				try {
+					CWD(remoteDir);
+				} catch (FTPException fex) {
+					fex.ToString();
+					exist = false;
+				} finally {
+					CWD(pwd);
+				}
+			} else {
+				exist = false;
+			}
+			return exist;
 		}
 		
 		#endregion
@@ -566,42 +671,13 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 				this.Log(Level.Info, " +    Local Path: "+tfs.LocalPath.ToString());
 				this.Log(Level.Info, " +   Remote Path: "+tfs.RemotePathString);
 				this.Log(Level.Info, " + Transfer Type: "+tfs.TransferType);
-
-				// store the PWD and change to the remote path
-				string pwd = PWD;
-				CWD(tfs.RemotePathString, tfs.CreateDirsOnDemand);
 				
-				// transfer the files
-				foreach (string fileName in tfs.FileNames) {
-				
-					if (tfs.Direction==TransferDirection.PUT) {
-						
-						Put(fileName, 
-						    tfs.LocalPath.ToString(), 
-						    tfs.RemotePathString, 
-						    ParseTransferType(tfs.TransferType), 
-						    tfs.Flatten,
-						    tfs.CreateDirsOnDemand);
-						
-					} else if (tfs.Direction==TransferDirection.GET) {							
-
-						Get(fileName, 
-						    tfs.LocalPath.ToString(), 
-						    tfs.RemotePathString, 
-						    ParseTransferType(tfs.TransferType), 
-						    tfs.Flatten,
-						    tfs.CreateDirsOnDemand);
-						
-					}
-				}
-				
-				// and restore the PWD
-				CWD(pwd);
+				tfs.Transfer(this);
 			}
 		}
 
 		// put one file
-		private void Put(string fileName,
+		public void Put(string fileName,
 		                 string localpath, 
 		                 string remotepath,
 		                 FTPTransferType FtpType, 
@@ -677,7 +753,7 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 		}
 		
 		// get one file
-		private void Get(string fileName,
+		public void Get(string fileName,
 		                 string localpath, 
 		                 string remotepath,
 		                 FTPTransferType FtpType, 

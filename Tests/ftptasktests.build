@@ -5,7 +5,7 @@
 	<property name="remotehost" 		value="localhost" />
 	<property name="username" 		value="anonymous" />
 	<property name="password" 		value="david@spinthemoose.com" />
-	<property name="remote-dir" 		value=".\net\test" />
+	<property name="remote-dir" 		value=".\net" />
 	<property name="local-dir" 			value="..\doc" />
 
 	<loadtasks assembly="..\bin\debug\ftptask.dll" />
@@ -26,10 +26,10 @@
 			<put type="b" local-path=".." remote-path="test">
 				<include name="**\*.cs" />
 			</put>
-			<get type="a">
+			<get type="a" failonempty="true">
 				<include name="..\AssemblyInfo.cs" />
 			</get>
-			<get type="bin" local-path="incoming" remote-path="test">
+			<get type="bin" local-path="incoming" remote-path="test" failonempty="true">
 				<include name="**\*.cs" />
 			</get>
 		</ftp>

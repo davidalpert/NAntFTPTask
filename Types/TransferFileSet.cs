@@ -62,7 +62,22 @@ namespace Sourceforge.NAnt.Ftp.Types {
 			this.Direction = TransferDirection.NONE;
 		}
 		#endregion Public Instance Constructors
-		       
+		   
+		public void Transfer(FTPTask super) {
+			// store the PWD and change to the remote path
+			string pwd = super.PWD;
+			super.CWD(RemotePathString, CreateDirsOnDemand);
+			
+			TransferFiles(super);
+			
+			// and restore the PWD
+			super.CWD(pwd);
+		}
+		
+		public virtual void TransferFiles(FTPTask super) {
+			// overridden by PutFileSet and GetFileSet
+		}
+		
 		public TransferDirection Direction {
 			get {return _transferDirection;}
 			set {_transferDirection = value;}
