@@ -585,7 +585,10 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 				
 				this.Log(Level.Verbose, "Authenticating...");
 				if (_password==null || _password==String.Empty || _password.ToUpper()=="PROMPT") {
-					LoginWithPromptForPassword(_user);
+					if (!LoginWithPasswordFile(_user,".ftp_password")
+					{
+						LoginWithPromptForPassword(_user);
+					}
 				} else {
 					_client.Login(_user, _password);
 				}
@@ -595,6 +598,10 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 			}
 			return;
 		} // ftpConnect()
+
+		private void LoginWithPasswordFile(string username,string passfile) {
+			
+		}
 
 		/// <summary>Do a remote login while asking the user for a password through the console.</summary>
 		/// <param name="username">the username to use when logging in.</param>

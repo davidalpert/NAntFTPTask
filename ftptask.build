@@ -347,20 +347,20 @@
 				<exclude name="**\.svn\*.*"/>
 			</fileset>
 		</zip>
-		<zip zipfile="${zipfile-libsrc}">
-			<fileset prefix="FTPTask" basedir="..">
-				<include name="libsource\**"/>
-				<exclude name="**\*.zip" />
-				<exclude name="**\*.exe" />
-				<exclude name="**\.svn\*.*"/>
-			</fileset>
-		</zip>
 		<zip zipfile="${zipfile-src}">
 			<fileset prefix="FTPTask\FTPTask">
 				<include name="**" />
 				<exclude name="**\*.zip" />
 				<exclude name="**\*.exe" />
 				<exclude name="**\.svn\**"/>
+			</fileset>
+		</zip>
+		<zip zipfile="${zipfile-libsrc}">
+			<fileset prefix="FTPTask" basedir="..">
+				<include name="libsource\**"/>
+				<exclude name="**\*.zip" />
+				<exclude name="**\*.exe" />
+				<exclude name="**\.svn\*.*"/>
 			</fileset>
 		</zip>
 	</target>
@@ -374,17 +374,39 @@
 
 	<target name="release"
 			description="upload the zip files and docs to spinthemoose.com/~ftptask"
-			depends="zip">
+			>
 		<connection id="ftptask" 
 			    server="spinthemoose.com" 
 			    username="ftptask" 
 			    />
-		<ftp connection="ftptask" >
-			<put type="ascii">
-				<include name="docs\**" />
+		<connection id="test" 
+			    server="localhost" 
+			    username="anonymous" 
+			    password="david@spinthemoose.com"
+			    />
+		    <ftp connection="ftptask" 
+			    remotepath="ftptask"
+			    createDirsOnDemand="true"
+			    debug="false" >
+			<put type="ascii"
+			     local-path="docs"
+			 >
+				<include name="**" />
 				<exclude name="**\.svn\**" />
+				<exclude name="**\*.pdf" />
+				<exclude name="**\*.chm" />
+				<exclude name="**\images\**" />
 			</put>
-			<put type="bin" flatten="true">
+			<put type="bin" 
+			     local-path="docs"
+			>
+				<include name="**\images\**" />
+				<include name="**\*.pdf" />
+				<include name="**\*.chm" />
+			</put>
+			<put type="bin" 
+			     flatten="true"
+			>
 				<include name="${ziproot}*.zip"/>
 			</put>
 		</ftp>

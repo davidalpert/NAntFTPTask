@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//w3c//dtd xhtml 1.1 strict//en" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
-        <title>NAntContrib - Extra goodness for NAnt</title>
+        <title>FTPTask - An FTP task for NAnt</title>
         <meta http-equiv="Content-Language" content="en-ca" />
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <link href="help\style.css" type="text/css" rel="stylesheet" />
@@ -42,7 +42,7 @@ while (false !== ($entry = $d->read())) {
 $d->close();
 ?>
         </ul>
-        <p>&nbsp;&nbsp;(Source code for the 3rd party libraries is included here.) </p>
+        <p>&nbsp;&nbsp;(Source code for the 3rd party libraries is included in the 'libsrc.zip' files.) </p>
         <p>
             <img alt=">" src="help%5Cimages%5Cbullet.gif" />
         Read the <a href="help/index.html">user documentation</a>.</p>

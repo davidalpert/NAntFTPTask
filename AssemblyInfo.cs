@@ -8,7 +8,7 @@ using System.Runtime.CompilerServices;
 //
 [assembly: AssemblyTitle("FTPTask")]
 [assembly: AssemblyDescription("An FTP task for the NAnt build tool.")]
-[assembly: AssemblyConfiguration("Last Modified on 2004/12/24 22:44:15")]
+[assembly: AssemblyConfiguration("Last Modified on 2004/12/24 22:46:47")]
 [assembly: AssemblyCompany("Developed by:\nSascha Andres (sa@programmers-world.com)\nDavid Alpert (david@spinthemoose.com)")]
 [assembly: AssemblyProduct("")]
 [assembly: AssemblyCopyright("GPL - 2004")]
@@ -26,7 +26,7 @@ using System.Runtime.CompilerServices;
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
 
-[assembly: AssemblyVersion("1.0.37.85")]
+[assembly: AssemblyVersion("1.0.38.85")]
 
 //
 // In order to sign your assembly you must specify a key to use. Refer to the 
