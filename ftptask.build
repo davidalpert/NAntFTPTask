@@ -317,6 +317,7 @@
             <ndoc>
                 <assemblies basedir="${build.dir}">
                   <include name="ftptask.dll" />
+                  <include name="C:\usr\local\nant-0.85-rc1\build\net-1.1.win32\nant-0.85-debug\bin\nant.core.dll" />
                 </assemblies>
                 <documenters>
                     <documenter name="NAnt">

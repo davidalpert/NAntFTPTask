@@ -29,29 +29,37 @@ namespace Sourceforge.NAnt.Ftp.Types {
 	/// <summary>
 	/// Extends the <see cref="Credential"/> type to provides connection details for connecting to a remote host.
 	/// </summary>
+	/// <remarks>This class now acts as a wrapper to insulate the third-party libraries.</remarks>
 	[ElementName("connection")]
 	public class Connection : Credential {
-		#region Public Instance Constructors
 		
+		#region Public Instance Constructors
+		/// <overloads>
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Connection" /> class.
 		/// </summary>
+		/// </overloads>
+		/// <summary>Init an empty connection instance.</summary>
 		public Connection() {
 			Init(String.Empty, String.Empty, String.Empty);
 		}
+		/// <summary>Init a connection instance with a server name.</summary>
 		public Connection(string host)
 		{
 			Init(host, String.Empty, String.Empty);
 		}
+		/// <summary>Init a connection instance with a server name and username.</summary>
 		public Connection(string host, string user)
 		{
 			Init(host, user, String.Empty);
 		}
+		/// <summary>Init a connection instance with a server name, username, and password.</summary>
 		public Connection(string host, string user, string pass)
 		{
 			Init(host, user, pass);
 		}
-		public void Init(string host, string user, string pass)
+		/// <summary>Internal routine to perform the instance initialization.</summary>
+		private void Init(string host, string user, string pass)
 		{
 			this.Domain = host;
 			this.UserName = user;
