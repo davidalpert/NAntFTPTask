@@ -128,11 +128,11 @@ namespace Sourceforge.NAnt.Ftp.Util {
 		}
 		public string FullPath {
 			get { 
-				if (_path==String.Empty || _path==".") {
-					return _file.Name;
-				} else {
+//				if (_path==String.Empty || _path==".") {
+//					return _file.Name;
+//				} else {
 					return Dir + _file.Name;				
-				}
+//				}
 			}
 		}
 		public string Name {

@@ -312,7 +312,7 @@ namespace Sourceforge.NAnt.Ftp.Util {
             Console.WriteLine(new System.Diagnostics.StackTrace().ToString());
 
 
-            Console.WriteLine("Base Directory: " + BaseDirectory.FullName);
+            Console.WriteLine("Base Directory: " + BaseDirectory);
             Console.WriteLine("Includes:");
             foreach (string strPattern in _includes)
                 Console.WriteLine(strPattern);
@@ -469,10 +469,19 @@ namespace Sourceforge.NAnt.Ftp.Util {
                 // Note that I tried setting the base directory of unrooted exclude patterns to "" but this ends up
                 // matching base directories where it shouldn't.
 //              if (isInclude || indexOfFirstWildcard == -1)
-                    searchDirectory = new RemotePath(RPath.Combine(
-                        BaseDirectory, s), true).FullPath;
+//
+// David Alpert (david@spinthemoose.com)
+// Wednesday, December 22, 2004
+// let's try simplifying this because i keep getting the search directory appended to the base direcotry (i.e. /net/test + test/ does not exist because we're already in test!)
+//                    searchDirectory = new RemotePath(RPath.Combine(
+//                        BaseDirectory, s), true).FullPath;
+					searchDirectory = s;
 //              else
 //                  searchDirectory = String.Empty;
+
+				if (searchDirectory==String.Empty) {
+					searchDirectory = ".";
+				}
             }
             
             string modifiedNAntPattern = originalNAntPattern.Substring(indexOfLastDirectorySeparator + 1);
@@ -562,7 +571,7 @@ namespace Sourceforge.NAnt.Ftp.Util {
 
                     // make sure basedirectory ends with directory separator
                     if (!StringUtils.EndsWith(baseDirectory, RPath.DirectorySeparatorChar)) {
-                        baseDirectory += Path.DirectorySeparatorChar;
+                        baseDirectory += RPath.DirectorySeparatorChar;
                     }
 
                     if (pathCompare.StartsWith(baseDirectory)) {
@@ -595,34 +604,46 @@ namespace Sourceforge.NAnt.Ftp.Util {
                 }
             }
 
-            foreach (RemotePath dir in _conn.GetDirs(currentDir.FullPath))
+            // grab the directory listing and sort into dirs and files
+            //
+//            int dirCount = 0;
+//            int fileCount = 0;
+			RemotePath[] list = RemotePath.FromFTPFileArray(path, _conn.DirDetails(path));
+			            
+            //foreach (RemotePath dir in _conn.GetDirs(currentDir.FullPath))
+            foreach (RemotePath dir in list)
             {
-                if (recursive) {
-                    // scan subfolders if we are running recursively
-                    ScanDirectory(dir.FullPath, true);
-                } else {
-                    // otherwise just test to see if the subdirectories are included
-                    if (IsPathIncluded(dir.FullPath, caseSensitive, includedPatterns, excludedPatterns)) {
-                        _directoryNames.Add(dir.FullPath);
-                    }
-                }
+            	if (dir.IsDir) {
+	                if (recursive) {
+	                    // scan subfolders if we are running recursively
+	                    ScanDirectory(dir.FullPath, true);
+	                } else {
+	                    // otherwise just test to see if the subdirectories are included
+	                    if (IsPathIncluded(dir.FullPath, caseSensitive, includedPatterns, excludedPatterns)) {
+	                        _directoryNames.Add(dir.FullPath);
+	                    }
+	                }
+            	}
             }
 
             // scan files
-            foreach (RemotePath file in _conn.GetFiles(currentDir.FullPath)) {
-                string filename = file.FullPath;
-                if (!caseSensitive)
-                    filename = filename.ToLower();
-                if (IsPathIncluded(filename, caseSensitive, includedPatterns, excludedPatterns)) {
-                    _fileNames.Add(file);
-                }
+            //foreach (RemotePath file in _conn.GetFiles(currentDir.FullPath)) {
+            foreach (RemotePath file in list) {
+            	if (file.IsFile) {
+	                string filename = file.FullPath;
+	                if (!caseSensitive)
+	                    filename = filename.ToLower();
+	                if (IsPathIncluded(filename, caseSensitive, includedPatterns, excludedPatterns)) {
+	                    _fileNames.Add(file);
+	                }
+            	}
             }
 
             // check current path last so that delete task will correctly
             // delete empty directories.  This may *seem* like a special case
             // but it is more like formalizing something in a way that makes
             // writing the delete task easier :)
-            if (IsPathIncluded(currentDir.Path, caseSensitive, includedPatterns, excludedPatterns)) {
+            if (IsPathIncluded(currentDir.FullPath, caseSensitive, includedPatterns, excludedPatterns)) {
                 _directoryNames.Add(currentDir.Path);
             }
         }
@@ -977,8 +998,9 @@ namespace Sourceforge.NAnt.Ftp.Util {
         /// case-sensitive filesystem; otherwise, <see langword="false" />.
         /// </returns>
         private bool IsCaseSensitiveFileSystem(string path) {
-        	return PlatformHelper.IsVolumeCaseSensitive(_conn.ResolvePath(path)
-                + RPath.DirectorySeparatorChar); 
+//        	return PlatformHelper.IsVolumeCaseSensitive(_conn.ResolvePath(path)
+//                + RPath.DirectorySeparatorChar); 
+			return true;
         }
 
         #endregion Private Instance Methods

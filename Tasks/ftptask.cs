@@ -646,18 +646,20 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 		
 		public bool remoteDirExists(string remoteDir) {
 			bool exist = true;
-			if (IsConnected) {
-				string pwd = PWD;
-				try {
-					CWD(remoteDir);
-				} catch (FTPException fex) {
-					fex.ToString();
+			if (remoteDir!=".") {
+				if (IsConnected) {
+					string pwd = PWD;
+					try {
+						CWD(remoteDir);
+					} catch (FTPException fex) {
+						fex.ToString();
+						exist = false;
+					} finally {
+						CWD(pwd);
+					}
+				} else {
 					exist = false;
-				} finally {
-					CWD(pwd);
 				}
-			} else {
-				exist = false;
 			}
 			return exist;
 		}
@@ -764,6 +766,7 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 
 			// TODO: HERE!  woohoo!  the remote parsing works for one test-case!
 			
+#if true
 			char [] dirseps = {DOS_DIR_SEPERATOR, DIR_SEPERATOR};
 
 			string localFilePath = String.Empty;	// path to 'fileName' locally, relative to 'localpath'
@@ -809,7 +812,7 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 								 Path.GetFileName(fileName),
 								 localFilePath,
 			         			 remoteFilePath);
-
+#endif
 //			if (IsConnected) {
 //				// store the pwd
 //				string pwd = PWD;
