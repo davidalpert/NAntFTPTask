@@ -1,5 +1,3 @@
-//#define OFFLINE
-
 using System;
 using System.IO;
 using System.Net;
@@ -64,6 +62,8 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 		private string 	_remotePath = EMPTY_STRING;
 		private string 	_localPath 	= ".";
 		private bool	_showDirOnConnect = false;
+		
+		private bool	_debug		= false;
 		
 		private FTPConnectMode 	_connectMode = FTPConnectMode.PASV;
 		private Connection 		_connection	 = null;
@@ -141,6 +141,17 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 				return _localPath;
 			} set {
 					_localPath = value;
+				}
+		} // localpath
+
+		/// <summary>The property</summary>
+		[TaskAttribute("debug", Required=false)]
+		[BooleanValidator()]
+		public bool Debug {
+			get {
+				return _debug;
+			} set {
+					_debug = value;
 				}
 		} // localpath
 
@@ -324,19 +335,10 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 					if (_showDirOnConnect) {
 						DIR();
 					}
-										
+									
 					this.ExecuteChildTasks();
 		
-					foreach (TransferFileSet tfs in _transferList) {
-						this.Log(Level.Verbose, "Processing a {0}FileSet.", tfs.Direction);
-						foreach (string fileName in tfs.FileNames) {
-							this.Log(Level.Verbose, "{0}ting {1}...", tfs.Direction, fileName);
-							if (tfs.Direction==TransferDirection.PUT) {
-								
-							} else if (tfs.Direction==TransferDirection.GET) {							
-							}
-						}
-					}
+					DoTransfers();
 					
 		//				this.Log((Level.Debug, "{3}Binaries{0}{3}  up   {1}{0}{3}  down {2}", System.Environment.NewLine, _uploadBinary.FileNames.Count, _downloadBinary.Includes.Count, this.LogPrefix);
 		//				this.Log(Level.Debug, "{3}Asciis{0}{3}  up   {1}{0}{3}  down {2}", System.Environment.NewLine, _uploadAscii.FileNames.Count, _downloadAscii.Includes.Count, this.LogPrefix);
@@ -376,19 +378,142 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 						script();
 		
 				} catch (FTPException ex) {
-					this.Log(Level.Warning, ex.Message);
-
+					this.Log(Level.Error, ex.Message);
+					throw new BuildException(string.Format(CultureInfo.InvariantCulture, 
+					                                       "---- FTP Exception ----"),
+                    						 this.Location, 
+                    						 ex);
 				} finally {
 					ftpDisconnect();
 				}		
 			} else {
 				this.Log(Level.Error, "No server given");
+				throw new BuildException("FTP Exception:\n\tNo server given",
+				                         this.Location);
 			} // if
 			return;
 		} // Work()
 		#endregion
 
 		#region file functions
+
+		public string PWD {
+			get { 
+				if (IsConnected) {
+					return _client.Pwd();
+				} else {
+					return String.Empty;
+				}
+			}
+		}
+		private void DoTransfers() {
+			foreach (TransferFileSet tfs in _transferList) {
+				this.Log(Level.Info, "Processing a {0}FileSet.", tfs.Direction);
+				this.Log(Level.Info, "Local Path: "+tfs.LocalPath.ToString());
+				this.Log(Level.Info, "Remote Path: "+tfs.RemotePathString);
+
+				// store the PWD and change to the remote path
+				string pwd = PWD;
+				CWD(tfs.RemotePathString, tfs.CreateDirsOnDemand);
+				
+				// transfer the files
+				foreach (string fileName in tfs.FileNames) {
+				
+					if (tfs.Direction==TransferDirection.PUT) {
+						
+						Put(fileName, 
+						    tfs.LocalPath.ToString(), 
+						    tfs.RemotePathString, 
+						    ParseTransferType(tfs.TransferType), 
+						    tfs.Flatten,
+						    tfs.CreateDirsOnDemand);
+						
+					} else if (tfs.Direction==TransferDirection.GET) {							
+
+					}
+				}
+				
+				// and restore the PWD
+				CWD(pwd);
+			}
+		}
+		
+		private void Put(string fileName, 
+		                 string localpath, 
+		                 string remotepath,
+		                 FTPTransferType FtpType, 
+		                 bool flatten, 
+		                 bool createDirsOnDemand) {
+
+			char [] dirseps = {DOS_DIR_SEPERATOR, DIR_SEPERATOR};
+
+			string localFilePath = String.Empty;	// path to 'fileName' locally, relative to 'localpath'
+			string remoteFilePath = String.Empty;	// path to 'fileName' remotely, relative to 'remotepath'
+			
+			// convert fileName into relative paths...
+			if (Path.GetDirectoryName(fileName).StartsWith(localpath)) {
+				
+				// our abs path is longer than localpath, 
+				// so the relative path is simple.
+			
+				localFilePath = fileName.Replace(localpath, String.Empty).Remove(0,1);
+			
+			} else if (localpath.StartsWith(Path.GetDirectoryName(fileName))) {
+
+				// our abs path is shorter than the localpath
+				// so our relative path is preceded by '..' references.
+				
+				localpath = localpath.Replace(Path.GetDirectoryName(fileName), String.Empty);
+
+				int z = -1;
+
+				z = localpath.IndexOfAny(dirseps);
+				while( z >-1 ) {
+					localFilePath += ".."+Path.DirectorySeparatorChar;
+					localpath = localpath.Remove(z,1);
+					z = localpath.IndexOfAny(dirseps);
+				}
+				localFilePath += Path.GetFileName(fileName);
+			}
+			
+			// mirror the remote file path from the local file path, flattening if requested
+			if (flatten) {
+				remoteFilePath = Path.GetFileName(localFilePath);
+			} else {
+				remoteFilePath = localFilePath;
+			}
+			
+			remoteFilePath = remoteFilePath.Replace(DOS_DIR_SEPERATOR, DIR_SEPERATOR);
+			
+			this.Log(Level.Info, "{0}ting {1}\n     to {2} ...", 
+								 "Put",
+//			         			 localFilePath,
+//			         			 remoteFilePath);
+			         			 fileName,
+			         			 remotepath+DIR_SEPERATOR+remoteFilePath);
+
+			if (IsConnected) {
+				// store the pwd
+				string pwd = PWD;
+				
+				// change to the requested directory
+				string[] dirs = Path.GetDirectoryName(remoteFilePath).Split(dirseps);
+				foreach(string dir in dirs) {
+					CWD(dir, createDirsOnDemand);
+				}
+				
+				this.Log(Level.Info, "Putting the file");
+				_client.Put(fileName, Path.GetFileName(remoteFilePath));
+	
+				this.Log(Level.Info, "Restoring the remote dir to {0}", pwd);
+				CWD(pwd);
+			}
+		}
+		
+		private bool remoteDirExists(string remoteDir) {
+			return false;
+		}
+		
 		/// <summary>Download one file</summary>
 		/// <param name="FileName">Download this filename</param>
 		/// <param name="FtpType">using ascii or binary</param>
@@ -460,7 +585,7 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 
 			this.Log(Level.Verbose, "Uploading file {0} to {1}", FileName, localRemoteFile);
 			_client.TransferType = FtpType;
-			_client.Put(PathOf(localRemoteFile), FileName);
+			_client.Put(localRemoteFile, FileName);
 			//_ftpConn.SendFile(FileName, localRemoteFile, FtpType);
 			return;
 		} // uploadFile()
@@ -551,15 +676,30 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 			return retVal;
 		} // Cut()
 
+		protected void CWD(string remotePath, bool createOnDemand) {
+			if (createOnDemand) {
+				try {
+					CWD(remotePath);
+				} catch (FTPException fex) {
+					this.Log(Level.Info, fex.Message);
+					this.Log(Level.Info, "Creating {0} remotely.", remotePath);
+					MkDir(remotePath);
+					CWD(remotePath);
+				}
+			}
+		}
+		
+		protected void MkDir(string dirname) {
+			if (IsConnected) {
+				_client.MkDir(dirname);
+			}
+		}
+		
 		protected void CWD(string remotePath) {
 			remotePath = remotePath.Replace(DOS_DIR_SEPERATOR, DIR_SEPERATOR);
-			this.Log(Level.Info, "Changing remote directory to " + _remotePath);
+			this.Log(Level.Info, "Changing remote directory to " + remotePath);
 			if (IsConnected && remotePath!=EMPTY_STRING) {
-				try {
-					_client.ChDir(remotePath);
-				} catch (Exception ex) {
-					throw new ApplicationException(ex.Message);					
-				}
+				_client.ChDir(remotePath);
 			} else {
 				this.Log(Level.Debug, "Not connected.");
 			}
@@ -676,7 +816,9 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 			while (!success && !abort) {
 				//Console.Write(">> ");
 				//pass = Console.ReadLine();
+				pass = String.Empty;
 				pim.PasswordInput(ref pass, 256);
+				Console.WriteLine("");
 				if (pass==String.Empty) {
 					abort = true;
 				} else {
@@ -698,14 +840,16 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 		
 		/// <summary>Connect to server</summary>
 		private void ftpConnect() {
-#if !OFFLINE
-			if (!IsConnected) {
+			if (_debug) {
+				this.Log(Level.Info, "-------------- Debugging the ftp query --------------");
+			}
+			else if (!IsConnected) {
 				this.Log(Level.Info, "Connecting to '{0}' as '{1}' ...", _server, _user);
 				this.Log(Level.Verbose, "Instantiating the FTPClient & opening the connection...");
 				_client = new FTPClient(_server);
 				
 				this.Log(Level.Verbose, "Authenticating...");
-				if (_password.ToUpper()=="PROMPT") {
+				if (_password==null || _password.ToUpper()=="PROMPT") {
 					LoginWithPromptForPassword(_user);
 				} else {
 					_client.Login(_user, _password);
@@ -714,7 +858,6 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 				this.Log(Level.Verbose, "and setting the connection mode to passive.");
 				_client.ConnectMode = _connectMode;
 			}
-#endif
 			return;
 		} // ftpConnect()
 		#endregion

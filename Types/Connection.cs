@@ -62,7 +62,7 @@ namespace Sourceforge.NAnt.Ftp.Types {
         /// <summary>
         /// The server target for this connection.
         /// </summary>
-        [TaskAttribute("server", Required=false)]
+        [TaskAttribute("server", Required=true)]
         public string Server {
             get { return Domain; }
             set { Domain = StringUtils.ConvertEmptyToNull(value); }

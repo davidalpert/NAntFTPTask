@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections;
+using System.IO;
 using System.Net;
 
 using NAnt.Core.Attributes;
@@ -56,10 +57,13 @@ namespace Sourceforge.NAnt.Ftp.Types {
 	public class TransferFileSet : FileSet {
 
 		#region Private Instance Methods
-		private string _transferType;
+		private string _transferType = "bin";
 		private bool _ifDefined=true;
 		private bool _unlessDefined;
+		private bool _flatten=false;
+		private bool _createdirsondemand=true;
 		private TransferDirection _transferDirection;
+		private string _baseRemoteDirectory = ".";
 		#endregion
 		
 		#region Public Instance Constructors
@@ -80,7 +84,46 @@ namespace Sourceforge.NAnt.Ftp.Types {
 		#region Type Attributes
 		
         /// <summary>
-        /// The transfer type for this fileset.
+        /// The base of the local directory of this fileset. The default is the project 
+        /// base directory.
+        /// </summary>
+        [TaskAttribute("local-path")]
+        public virtual DirectoryInfo LocalPath {
+        	get { return BaseDirectory; }
+        	set { BaseDirectory = value;}
+        }
+        
+        /// <summary>
+        /// When set to <see langword="true" />, causes the directory structure to be flattened at the destination. The default is <see langword="false" />.
+        /// </summary>
+        [TaskAttribute("flatten")]
+        [BooleanValidator()]
+        public virtual bool Flatten {
+        	get { return _flatten; }
+        	set { _flatten = value;}
+        }
+        /// <summary>
+        /// When set to <see langword="true" />, causes the directory structure to be created as needed to ensure that the destination direction exists. The default is <see langword="true" />.
+        /// </summary>
+        [TaskAttribute("createdirsondemand")]
+        [BooleanValidator()]
+        public virtual bool CreateDirsOnDemand {
+        	get { return _createdirsondemand; }
+        	set { _createdirsondemand = value;}
+        }
+        
+        /// <summary>
+        /// The base of the remote directory of this fileset. The default is the connection
+        /// base directory.
+        /// </summary>
+        [TaskAttribute("remote-path")]
+        public virtual string RemotePathString {
+        	get { return _baseRemoteDirectory; }
+        	set { _baseRemoteDirectory = value;}
+        }
+        
+        /// <summary>
+        /// The transfer type for this fileset (one of: a, ascii, b, bin, binary, i, img, image).  Default is bin.
         /// </summary>
         [TaskAttribute("transfertype", Required=false)]
         public string TransferType {
