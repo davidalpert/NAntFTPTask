@@ -65,32 +65,46 @@ namespace Sourceforge.NAnt.Ftp.Util {
 		#endregion
 		
 		#region constructors
-		public RemotePath() {
-		}
-		public RemotePath(string path) {
-			_path = path;
+//		public RemotePath() {
+//		}
+		public RemotePath(string path, bool isDir) {
+			int sep = path.LastIndexOf(DIR_SEP);
+			// store the head of the path in an FTPFile
+			_file = new FTPFile(FTPFile.UNKNOWN, path.Substring(sep+1), isDir);
+			// store the tail (if any) in a string
+			if (sep>0) {
+				_path = path.Substring(0,sep);
+				if (_path==".") {
+					_path=String.Empty;
+				} else if (_path.Length>2 && _path[1]==DIR_SEP) {
+					_path=_path.Substring(2);
+				}
+			}
 		}
 		public RemotePath(FTPFile file) {
 			_file = file;
+			_path = String.Empty;
 		}
 		#endregion
 		
 		#region static methods
 		public static RemotePath[] FromFTPFileArray(string basepath, FTPFile[] files) {
-			RemotePath[] result = new RemotePath[files.GetUpperBound(0)];
+			RemotePath[] result = new RemotePath[files.GetUpperBound(0)+1];
 			int z = 0;
 			foreach(FTPFile file in files) {
-				result[z].Path = basepath;
-				result[z++].File = file;
+				result[z] = new RemotePath(file);
+				result[z++].Path = basepath;
+//				result[z++].File = file;
 			}
 			return result;
 		}
 		#endregion
 		
 		#region public access methods
-		// todo: HERE
+		// if _file==null then the entire path is in the _path
+		// and we don't know if it's a dir or a file...
 		public bool IsDir {
-			get {return _file!=null && _file.Dir;}
+			get {return _file.Dir;}
 		}
 		public bool IsFile {
 			get {return !(_file.Dir);}
@@ -114,19 +128,16 @@ namespace Sourceforge.NAnt.Ftp.Util {
 		}
 		public string FullPath {
 			get { 
-				string result = Dir;
-				if (_file!=null)
-					result += _file.Name;
-				return result;
+				if (_path==String.Empty || _path==".") {
+					return _file.Name;
+				} else {
+					return Dir + _file.Name;				
+				}
 			}
 		}
 		public string Name {
 			get {
-				if (_file!=null) {
-					return _file.Name;
-				} else {
-					Dir;
-				}
+				return _file.Name;
 			}
 		}
 		public FTPFile File {

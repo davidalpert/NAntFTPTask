@@ -276,7 +276,7 @@ namespace Sourceforge.NAnt.Ftp.Types {
 //                		                              0, false, ref date);
 //                		RemotePath file = new RemotePath(ftpfile);
 //                		file.Path = name.Substring(0,sep);
-                		_scanner.FileNames.Add(new RemotePath(name));
+                		_scanner.FileNames.Add(new RemotePath(name, false));
                     }
                 }
 

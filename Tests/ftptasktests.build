@@ -20,12 +20,14 @@
 			 remotepath="${remote-dir}"
 			 showdironconnect="true" 
 			 >
+			 <!--
 			<put type="ascii">
 				<include name="..\AssemblyInfo.cs" />
 			</put>
 			<put type="b" local-path=".." remote-path="test">
 				<include name="**\*.cs" />
 			</put>
+			-->
 			<get type="a" failonempty="true">
 				<include name="..\AssemblyInfo.cs" />
 			</get>

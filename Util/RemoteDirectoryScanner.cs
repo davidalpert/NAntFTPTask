@@ -370,7 +370,10 @@ namespace Sourceforge.NAnt.Ftp.Util {
 
                     regexPatterns.Add(entry);
                 } else {
-                    string exactName = RPath.Combine(searchDirectory, regexPattern);
+                    // David Alpert (david@spinthemoose.com)
+                    // Tuesday, December 21, 2004
+                    // string exactName = RPath.Combine(searchDirectory, regexPattern);
+                    string exactName = regexPattern;
                     if (!nonRegexFiles.Contains(exactName)) {
                         nonRegexFiles.Add(exactName);
                     } 
@@ -460,14 +463,14 @@ namespace Sourceforge.NAnt.Ftp.Util {
             
             //We only prepend BaseDirectory when s represents a relative path.
             if (RPath.IsPathRooted(s)) {
-            	searchDirectory = new RemotePath(s).Path;
+            	searchDirectory = new RemotePath(s, true).FullPath;
             } else {
                 //We also (correctly) get to this branch of code when s.Length == 0
                 // Note that I tried setting the base directory of unrooted exclude patterns to "" but this ends up
                 // matching base directories where it shouldn't.
 //              if (isInclude || indexOfFirstWildcard == -1)
                     searchDirectory = new RemotePath(RPath.Combine(
-                        BaseDirectory, s)).Path;
+                        BaseDirectory, s), true).FullPath;
 //              else
 //                  searchDirectory = String.Empty;
             }
@@ -496,7 +499,8 @@ namespace Sourceforge.NAnt.Ftp.Util {
 
         private bool IsCaseSensitiveFileSystem(string path) {
             // Windows (not case-sensitive) is backslash, others (e.g. Unix) are not
-            return (VolumeInfo.IsVolumeCaseSensitive(new Uri(_conn.ResolvePath(path) + RPath.DirectorySeparatorChar))); 
+//            return (VolumeInfo.IsVolumeCaseSensitive(new Uri(_conn.ResolvePath(path) + RPath.DirectorySeparatorChar)));             
+            return true;
         }
 
         /// <summary>
@@ -523,7 +527,7 @@ namespace Sourceforge.NAnt.Ftp.Util {
             }
 
             // get info for the current directory
-            RemotePath currentDir = new RemotePath(path);
+            RemotePath currentDir = new RemotePath(path, true);
 
             // check whether directory is on case-sensitive volume
             bool caseSensitive = IsCaseSensitiveFileSystem(path);
@@ -591,7 +595,7 @@ namespace Sourceforge.NAnt.Ftp.Util {
                 }
             }
 
-            foreach (RemotePath dir in _conn.GetDirs(currentDir.Path))
+            foreach (RemotePath dir in _conn.GetDirs(currentDir.FullPath))
             {
                 if (recursive) {
                     // scan subfolders if we are running recursively
@@ -605,7 +609,7 @@ namespace Sourceforge.NAnt.Ftp.Util {
             }
 
             // scan files
-            foreach (RemotePath file in _conn.GetFiles(currentDir.Path)) {
+            foreach (RemotePath file in _conn.GetFiles(currentDir.FullPath)) {
                 string filename = file.FullPath;
                 if (!caseSensitive)
                     filename = filename.ToLower();
@@ -759,7 +763,7 @@ namespace Sourceforge.NAnt.Ftp.Util {
 
         private static string CleanPath(string baseDirectory, string nantPath) 
         {
-        	return new RemotePath(RPath.Combine(baseDirectory, CleanPath(nantPath).ToString())).FullPath;
+        	return new RemotePath(RPath.Combine(baseDirectory, CleanPath(nantPath).ToString()), true).FullPath;
         }
 
         /// <summary>

@@ -562,8 +562,9 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 				int z=0;
 				foreach(RemotePath rpath in list) {
 					if (rpath.IsDir) {
-						result[z].File   = rpath.File;
-						result[z++].Path = rpath.Path;
+						result[z++] = rpath;
+//						result[z].File   = rpath.File;
+//						result[z++].Path = rpath.Path;
 					}
 				}
 				return result;
@@ -602,8 +603,9 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 				int z=0;
 				foreach(RemotePath rpath in list) {
 					if (rpath.IsFile) {
-						result[z].File   = rpath.File;
-						result[z++].Path = rpath.Path;
+						result[z++] = rpath;
+//						result[z].File   = rpath.File;
+//						result[z++].Path = rpath.Path;
 					}
 				}
 				return result;
@@ -760,6 +762,8 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 		                 bool flatten, 
 		                 bool createDirsOnDemand) {
 
+			// TODO: HERE!  woohoo!  the remote parsing works for one test-case!
+			
 			char [] dirseps = {DOS_DIR_SEPERATOR, DIR_SEPERATOR};
 
 			string localFilePath = String.Empty;	// path to 'fileName' locally, relative to 'localpath'
