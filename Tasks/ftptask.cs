@@ -16,6 +16,8 @@ using EnterpriseDT.Net.Ftp;
 using EDTLevel = EnterpriseDT.Util.Debug.Level;
 using EDTLogger = EnterpriseDT.Util.Debug.Logger;
 
+using PasswordInputManager = ConsolePasswordInput.ConsolePasswordInput;
+
 using Sourceforge.NAnt.Ftp.Types;
 
 namespace Sourceforge.NAnt.Ftp.Tasks {
@@ -666,13 +668,15 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 		} // ftpDisconnect()
 
 		private void LoginWithPromptForPassword(string username) {
+			PasswordInputManager pim = new PasswordInputManager();
 			bool success = false;
 			bool abort = false;
 			string pass = String.Empty;
 			this.Log(Level.Info, "Please Enter Password:");
 			while (!success && !abort) {
-				Console.Write(">> ");
-				pass = Console.ReadLine();
+				//Console.Write(">> ");
+				//pass = Console.ReadLine();
+				pim.PasswordInput(ref pass, 256);
 				if (pass==String.Empty) {
 					abort = true;
 				} else {

@@ -16,6 +16,7 @@
   <References>
     <Reference type="Assembly" refto="c:\usr\local\nant-0.85-rc1\bin\NAnt.Core.dll" localcopy="False" />
     <Reference type="Assembly" refto=".\lib\debug\edtftpnet-1.1.3.dll" localcopy="True" />
+    <Reference type="Assembly" refto=".\lib\ConsolePasswordInput.dll" localcopy="True" />
   </References>
   <DeploymentInformation target="" script="" strategy="File" />
   <Configuration runwithwarnings="True" name="Debug">
