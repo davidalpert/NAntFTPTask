@@ -261,7 +261,7 @@
   	<property name="assemblyFile"	value="bin\debug\ftptask.dll" />
 	<property name="version"	value="${assemblyname::get-version(assemblyname::get-assembly-name(assemblyFile))}" />
 	<property name="outputdir.zip"	value="bin\zips-v${version}" />
-	<property name="ziproot"	value="bin\texteditor.addins.insert-v${version}" />
+	<property name="ziproot"	value="bin\ftptask-v${version}" />
   <property name="build.dir" value="./bin/debug" />
   <property name="project.version" value="${version}" />
   <property name="project.release.type" value="rc1" />
