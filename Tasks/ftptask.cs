@@ -373,8 +373,10 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 		
 						script();
 		
-				}
-				finally {
+				} catch (FTPException ex) {
+					this.Log(Level.Warning, ex.Message);
+
+				} finally {
 					ftpDisconnect();
 				}		
 			} else {
@@ -663,6 +665,14 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 			return;
 		} // ftpDisconnect()
 
+		private string AskPasswordFromConsole() {
+			Console.WriteLine("Connecting to {0}, authenticating as {1}.", _server, _user);
+			Console.Write("Please Enter Password: ");
+			string pass = Console.ReadLine();
+			// todo: validate input
+			return pass;
+		}
+		
 		/// <summary>Connect to server</summary>
 		private void ftpConnect() {
 #if !OFFLINE
@@ -672,7 +682,11 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 				_client = new FTPClient(_server);
 				
 				this.Log(Level.Verbose, "Authenticating with " + _user);
-				_client.Login(_user, _password);
+				if (_password.ToUpper()=="PROMPT") {
+					_client.Login(_user, AskPasswordFromConsole());
+				} else {
+					_client.Login(_user, _password);
+				}
 				
 				this.Log(Level.Verbose, "and setting the connection mode to passive.");
 				_client.ConnectMode = _connectMode;

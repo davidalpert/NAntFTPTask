@@ -9,10 +9,11 @@
 	<property name="local-dir" 			value="..\doc" />
 
 	<loadtasks assembly="..\bin\debug\ftptask.dll" />
-	<connection id="myConn" server="${remotehost}" username="${username}" password="${password}" />
+	<connection id="myConn" server="${remotehost}" username="${username}" password="${password}" />	
+	<connection id="myConn2" server="${remotehost}" username="${username}" password="prompt" />
 
-	<target name="test" depends="test12" >
-		<ftp connection="myConn"
+	<target name="test" depends="" >
+		<ftp connection="myConn2"
 			 remotepath="/net"
 			 showdironconnect="true">
 			<put type="ascii">
