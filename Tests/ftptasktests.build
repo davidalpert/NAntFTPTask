@@ -28,7 +28,7 @@
 				<include name="**\*.cs" />
 			</put>
 			-->
-			<get type="a" failonempty="true">
+			<get type="a" local-path="incoming" failonempty="true">
 				<include name="..\AssemblyInfo.cs" />
 			</get>
 			<get type="bin" local-path="incoming" remote-path="test" failonempty="true">
