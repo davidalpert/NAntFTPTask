@@ -15,7 +15,7 @@ FTPTask is a set of elements for use in NAnt build files that enable basic FTP t
 ---------------
 
 	- use a <loadtasks> element to load the 'ftptask.dll' assembly at runtime.
-	- copy the three assemblies from bin\release to your NAnt\bin\tasks directory for inclusion in every run.
+	- copy the assemblies from bin\release to your NAnt\bin\tasks directory for inclusion in every run.
 
 
 

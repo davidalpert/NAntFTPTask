@@ -108,7 +108,7 @@ namespace Sourceforge.NAnt.Ftp.Types {
         /// The base of the local directory of this fileset. The default is the project 
         /// base directory.
         /// </summary>
-        [TaskAttribute("local-path")]
+        [TaskAttribute("localdir")]
         public virtual DirectoryInfo LocalPath {
         	get { return BaseDirectory; }
         	set { BaseDirectory = value;}
@@ -126,7 +126,7 @@ namespace Sourceforge.NAnt.Ftp.Types {
         /// <summary>
         /// When set to <see langword="true" />, causes the directory structure to be created as needed to ensure that the destination direction exists. The default is <see langword="true" />.
         /// </summary>
-        [TaskAttribute("createdirsondemand")]
+        [TaskAttribute("createdirs")]
         [BooleanValidator()]
         public virtual bool CreateDirsOnDemand {
         	get { return _createdirsondemand; }
@@ -137,7 +137,7 @@ namespace Sourceforge.NAnt.Ftp.Types {
         /// The base of the remote directory of this fileset. The default is the connection
         /// base directory.
         /// </summary>
-        [TaskAttribute("remote-path")]
+        [TaskAttribute("remotedir")]
         public virtual string RemotePathString {
         	get { return _baseRemoteDirectory; }
         	set { _baseRemoteDirectory = value;}

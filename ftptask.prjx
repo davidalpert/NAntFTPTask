@@ -23,10 +23,10 @@
   <References>
     <Reference type="Assembly" refto=".\lib\debug\edtftpnet-1.1.3.dll" localcopy="True" />
     <Reference type="Assembly" refto=".\lib\ConsolePasswordInput.dll" localcopy="True" />
-    <Reference type="Gac" refto="nunit.framework, Version=2.2.0.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77" localcopy="True" />
-    <Reference type="Assembly" refto="..\..\..\usr\local\nant-0.85-rc1\build\net-1.1.win32\nant-0.85-debug\bin\NAnt.Core.Tests.dll" localcopy="True" />
-    <Reference type="Assembly" refto="..\..\..\usr\local\nant-0.85-rc1\build\net-1.1.win32\nant-0.85-debug\bin\NAnt.Core.dll" localcopy="True" />
-    <Reference type="Assembly" refto="..\..\..\usr\local\nant-0.85-rc1\build\net-1.1.win32\nant-0.85-debug\bin\log4net.dll" localcopy="True" />
+    <Reference type="Gac" refto="nunit.framework, Version=2.2.0.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77" localcopy="true" />
+    <Reference type="Assembly" refto="..\..\..\usr\local\nant-0.85-rc1\build\net-1.1.win32\nant-0.85-debug\bin\NAnt.Core.Tests.dll" localcopy="false" />
+    <Reference type="Assembly" refto="..\..\..\usr\local\nant-0.85-rc1\build\net-1.1.win32\nant-0.85-debug\bin\NAnt.Core.dll" localcopy="false" />
+    <Reference type="Assembly" refto="..\..\..\usr\local\nant-0.85-rc1\build\net-1.1.win32\nant-0.85-debug\bin\log4net.dll" localcopy="false" />
   </References>
   <DeploymentInformation target="" script="" strategy="File" />
   <Configuration runwithwarnings="True" name="Debug">

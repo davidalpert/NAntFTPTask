@@ -72,6 +72,8 @@
 	<include name="${outputdir.debug}\edtftpnet-1.1.3.pdb" />
 	<include name="${outputdir.debug}\ConsolePasswordInput.dll" />
 	<include name="${outputdir.debug}\ConsolePasswordInput.pdb" />
+	<include name="${outputdir.debug}\*.dll" />
+	<include name="${outputdir.debug}\*.pdb" />
       </fileset>
     </delete>
   </target>
@@ -162,6 +164,8 @@
         <include name="${outputdir.release}\${assembly.release}.xml" />
         <include name="${outputdir.release}\${assembly.release}.${extension.release}.manifest" />
         <include name="${outputdir.release}\*.config" />
+	<include name="${outputdir.release}\*.dll" />
+	<include name="${outputdir.release}\*.pdb" />
       </fileset>
     </delete>
   </target>
@@ -246,7 +250,7 @@
      <copy overwrite="true" flatten="true" todir="${nant-tasks-dir}">
 	     <fileset>
 		     <include name="${outputdir.release}\*.dll" />
-		     <include name=".\lib\*.dll" />
+		     <!--include name=".\lib\*.dll" /-->
 		</fileset>
      </copy>
   </target>
@@ -259,7 +263,8 @@
   </target>
 
   	<property name="assemblyFile"	value="bin\debug\ftptask.dll" />
-	<property name="version"	value="${assemblyname::get-version(assemblyname::get-assembly-name(assemblyFile))}" />
+	<property name="version"	value="${assemblyname::get-version(assemblyname::get-assembly-name(assemblyFile))}" if="${file::exists(assemblyFile)}"/>
+	<property name="version"	value="0.0.0.0" unless="${file::exists(assemblyFile)}"/>
 	<property name="outputdir.zip"	value="bin\zips-v${version}" />
 	<property name="ziproot"	value="bin\ftptask-v${version}" />
   <property name="build.dir" value="./bin/debug" />
@@ -384,12 +389,16 @@
 			    username="anonymous" 
 			    password="david@spinthemoose.com"
 			    />
-		    <ftp connection="ftptask" 
-			    remotepath="ftptask"
-			    createDirsOnDemand="true"
+		<connection id="test2" 
+			    server="localhost" 
+			    username="anonymous" 
+			    />
+		    <ftp connection="test2" 
+			    remotedir="ftptask"
+			    createdirs="true"
 			    debug="false" >
 			<put type="ascii"
-			     local-path="docs"
+			     localdir="docs"
 			 >
 				<include name="**" />
 				<exclude name="**\.svn\**" />
@@ -398,7 +407,7 @@
 				<exclude name="**\images\**" />
 			</put>
 			<put type="bin" 
-			     local-path="docs"
+			     localdir="docs"
 			>
 				<include name="**\images\**" />
 				<include name="**\*.pdf" />

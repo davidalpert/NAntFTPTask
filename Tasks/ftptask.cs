@@ -261,7 +261,7 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 		
 		/// <summary>
 		/// If <b>true</b> we create target directories as needed when saving files.  If <b>false</b>, attempting to access a directory that does not exist generates an exception.  Default is <b>true</b>.</summary>
-		[TaskAttribute("createDirsOnDemand", Required=false)]
+		[TaskAttribute("createdirs", Required=false)]
 		[BooleanValidator()]
 		public bool createDirsOnDemand {
 			get {
@@ -272,7 +272,7 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 		} // createDirsOnDemand
 
 		/// <summary>The directory to use as a base path on the remote server.  If this path is relative, it is relative to the connection's remotepath.  Default is the default connection directory.</summary>
-		[TaskAttribute("remotepath", Required=false)]
+		[TaskAttribute("remotedir", Required=false)]
 		public string remotepath {
 			get {
 				return _remotePath;
@@ -282,7 +282,7 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 		} // remotepath
 		
 		/// <summary>The directory to use as a base path on the local filesystem.</summary>
-		[TaskAttribute("localpath", Required=false)]
+		[TaskAttribute("localdir", Required=false)]
 		public string localpath {
 			get {
 				return _localPath;
@@ -585,9 +585,10 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 				
 				this.Log(Level.Verbose, "Authenticating...");
 				if (_password==null || _password==String.Empty || _password.ToUpper()=="PROMPT") {
-					if (!LoginWithPasswordFile(_user,".ftp_password")
-					{
-						LoginWithPromptForPassword(_user);
+					if (LoginWithPasswordFile(".ftp_password", out _password)) {
+						_client.Login(_user, _password);
+					} else {
+						LoginWithPromptForPassword(_user);						
 					}
 				} else {
 					_client.Login(_user, _password);
@@ -599,8 +600,20 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 			return;
 		} // ftpConnect()
 
-		private void LoginWithPasswordFile(string username,string passfile) {
-			
+		private bool LoginWithPasswordFile(string passfile, out string pass) {
+			bool success = false;
+			try {
+				XmlDocument doc = new XmlDocument();
+				doc.Load(passfile);
+				XmlElement e = doc.DocumentElement;
+				//this.Log(Level.Info, e.Attributes["password"].InnerText);
+				pass = e.Attributes["password"].InnerText;
+				success = true;
+			} catch (Exception ex) {
+				pass = String.Empty;
+				ex.ToString();
+			}
+			return success;
 		}
 
 		/// <summary>Do a remote login while asking the user for a password through the console.</summary>
