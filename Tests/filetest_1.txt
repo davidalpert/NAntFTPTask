@@ -1,0 +1,300 @@
+      [ftp]   file: /net/test/Types/TransferFileSet.cs
+      [ftp]   file: /net/test/Util/FTPTaskException.cs
+      [ftp]   file: /net/test/Util/RemoteDirectoryScanner.cs
+      [ftp]   file: /net/test/AssemblyInfo.cs
+      [ftp] </Get>: 68 files received.
+      [ftp]
+      [ftp]   file: ftp_session_1.txt
+      [ftp]   file: ftp_session_2.txt
+      [ftp]   file: /net/AssemblyInfo.cs
+      [ftp] Disconnecting from 'localhost'
+
+BUILD FAILED
+
+INTERNAL ERROR
+
+System.NullReferenceException: Object reference not set to an instance of an obj
+ect.
+   at Sourceforge.NAnt.Ftp.Tasks.FTPTask.script() in c:\dev\nantftptask\trunk\Ta
+sks\ftptask.cs:line 1123
+   at Sourceforge.NAnt.Ftp.Tasks.FTPTask.Work() in c:\dev\nantftptask\trunk\Task
+s\ftptask.cs:line 578
+   at Sourceforge.NAnt.Ftp.Tasks.FTPTask.ExecuteTask() in c:\dev\nantftptask\tru
+nk\Tasks\ftptask.cs:line 514
+   at NAnt.Core.Task.Execute() in c:\usr\local\nant-0.85-rc1\src\NAnt.Core\Task.
+cs:line 177
+   at NAnt.Core.Target.Execute() in c:\usr\local\nant-0.85-rc1\src\NAnt.Core\Tar
+get.cs:line 249
+   at NAnt.Core.Project.Execute(String targetName, Boolean forceDependencies) in
+ c:\usr\local\nant-0.85-rc1\src\NAnt.Core\Project.cs:line 882
+   at NAnt.Core.Project.Execute() in c:\usr\local\nant-0.85-rc1\src\NAnt.Core\Pr
+oject.cs:line 839
+   at NAnt.Core.Project.Run() in c:\usr\local\nant-0.85-rc1\src\NAnt.Core\Projec
+t.cs:line 908
+
+Please send bug report to nant-developers@lists.sourceforge.net.
+
+Total time: 11.3 seconds.
+
+
+C:\dev\nantftptask\trunk\Tests>install
+bin\debug\ConsolePasswordInput.dll
+bin\debug\edtftpnet-1.1.3.dll
+bin\debug\ftptask.dll
+        3 file(s) copied.
+bin\debug\ConsolePasswordInput.pdb
+bin\debug\edtftpnet-1.1.3.pdb
+bin\debug\ftptask.pdb
+        3 file(s) copied.
+
+C:\dev\nantftptask\trunk\Tests>nant
+NAnt 0.85 (Build 0.85.1793.0; rc1; 11/28/2004)
+Copyright (C) 2001-2004 Gerry Shaw
+http://nant.sourceforge.net
+
+Buildfile: file:///C:/dev/nantftptask/trunk/Tests/ftptasktests.build
+Target(s) specified: test
+
+
+test:
+
+      [ftp] Using 'myConn2':
+      [ftp] Connecting to 'localhost' as 'anonymous' . . .
+ + Changing remote directory to 'net'
+      [ftp]
+      [ftp] <Put>.
+      [ftp]   from: C:\dev\nantftptask\trunk
+      [ftp]     to: ://net/test
+      [ftp]     as: ASCII
+      [ftp]   file: Enum\ConnectMode.cs
+      [ftp]   file: Enum\TransferDirection.cs
+      [ftp]   file: Tasks\ftptask.cs
+      [ftp]   file: Tasks\RemoteCopyTask.cs
+      [ftp]   file: Tests\incoming\Enum\ConnectMode.cs
+      [ftp]   file: Tests\incoming\Enum\TransferDirection.cs
+      [ftp]   file: Tests\incoming\Tasks\ftptask.cs
+      [ftp]   file: Tests\incoming\Tasks\RemoteCopyTask.cs
+      [ftp]   file: Tests\incoming\Tests\incoming\Enum\TransferDirection.cs
+      [ftp]   file: Tests\incoming\Tests\incoming\Tasks\ftptask.cs
+      [ftp]   file: Tests\incoming\Tests\incoming\Tasks\RemoteCopyTask.cs
+      [ftp]   file: Tests\incoming\Tests\incoming\Tests\incoming\Enum\TransferDi
+rection.cs
+      [ftp]   file: Tests\incoming\Tests\incoming\Tests\incoming\Tasks\ftptask.c
+s
+      [ftp]   file: Tests\incoming\Tests\incoming\Tests\incoming\Tasks\RemoteCop
+yTask.cs
+      [ftp]   file: Tests\incoming\Tests\incoming\Tests\incoming\Tests\incoming\
+Enum\TransferDirection.cs
+      [ftp]   file: Tests\incoming\Tests\incoming\Tests\incoming\Tests\incoming\
+Tasks\ftptask.cs
+      [ftp]   file: Tests\incoming\Tests\incoming\Tests\incoming\Tests\incoming\
+Tasks\RemoteCopyTask.cs
+      [ftp]   file: Tests\incoming\Tests\incoming\Tests\incoming\Tests\incoming\
+Tests\incoming\Enum\TransferDirection.cs
+      [ftp]   file: Tests\incoming\Tests\incoming\Tests\incoming\Tests\incoming\
+Tests\incoming\Tasks\ftptask.cs
+      [ftp]   file: Tests\incoming\Tests\incoming\Tests\incoming\Tests\incoming\
+Tests\incoming\Tasks\RemoteCopyTask.cs
+      [ftp]   file: Tests\incoming\Tests\incoming\Tests\incoming\Tests\incoming\
+Tests\incoming\Tests\incoming\Enum\TransferDirection.cs
+      [ftp] Tests: The system cannot find the file specified.
+      [ftp] Disconnecting from 'localhost'
+
+BUILD FAILED - 1 non-fatal error(s), 0 warning(s)
+
+C:\dev\nantftptask\trunk\Tests\ftptasktests.build(21,4):
+---- FTP Exception ----
+    Tests: The system cannot find the file specified.
+
+Total time: 6.9 seconds.
+
+
+C:\dev\nantftptask\trunk\Tests>nant
+NAnt 0.85 (Build 0.85.1793.0; rc1; 11/28/2004)
+Copyright (C) 2001-2004 Gerry Shaw
+http://nant.sourceforge.net
+
+Buildfile: file:///C:/dev/nantftptask/trunk/Tests/ftptasktests.build
+Target(s) specified: test
+
+
+test:
+
+      [ftp] Using 'myConn2':
+      [ftp] Connecting to 'localhost' as 'anonymous' . . .
+ + Changing remote directory to 'net'
+      [ftp]
+      [ftp] <Put>.
+      [ftp]   from: C:\dev\nantftptask\trunk
+      [ftp]     to: ://net/test
+      [ftp]     as: ASCII
+      [ftp] test: The system cannot find the file specified.
+      [ftp] Disconnecting from 'localhost'
+
+BUILD FAILED - 1 non-fatal error(s), 0 warning(s)
+
+C:\dev\nantftptask\trunk\Tests\ftptasktests.build(21,4):
+---- FTP Exception ----
+    test: The system cannot find the file specified.
+
+Total time: 0.6 seconds.
+
+
+C:\dev\nantftptask\trunk\Tests>nant
+NAnt 0.85 (Build 0.85.1793.0; rc1; 11/28/2004)
+Copyright (C) 2001-2004 Gerry Shaw
+http://nant.sourceforge.net
+
+Buildfile: file:///C:/dev/nantftptask/trunk/Tests/ftptasktests.build
+Target(s) specified: test
+
+
+test:
+
+      [ftp] Using 'myConn2':
+      [ftp] Connecting to 'localhost' as 'anonymous' . . .
+ + Changing remote directory to 'net'
+      [ftp]
+      [ftp] <Put>.
+      [ftp]   from: C:\dev\nantftptask\trunk
+      [ftp]     to: ://net/test
+      [ftp]     as: ASCII
+      [ftp] test: The system cannot find the file specified.
+      [ftp] Disconnecting from 'localhost'
+
+BUILD FAILED - 1 non-fatal error(s), 0 warning(s)
+
+C:\dev\nantftptask\trunk\Tests\ftptasktests.build(21,4):
+---- FTP Exception ----
+    test: The system cannot find the file specified.
+
+Total time: 0.3 seconds.
+
+
+C:\dev\nantftptask\trunk\Tests>nant
+NAnt 0.85 (Build 0.85.1793.0; rc1; 11/28/2004)
+Copyright (C) 2001-2004 Gerry Shaw
+http://nant.sourceforge.net
+
+^C
+C:\dev\nantftptask\trunk\Tests>install
+bin\debug\ConsolePasswordInput.dll
+bin\debug\edtftpnet-1.1.3.dll
+bin\debug\ftptask.dll
+        3 file(s) copied.
+bin\debug\ConsolePasswordInput.pdb
+bin\debug\edtftpnet-1.1.3.pdb
+bin\debug\ftptask.pdb
+        3 file(s) copied.
+
+C:\dev\nantftptask\trunk\Tests>nant
+NAnt 0.85 (Build 0.85.1793.0; rc1; 11/28/2004)
+Copyright (C) 2001-2004 Gerry Shaw
+http://nant.sourceforge.net
+
+Buildfile: file:///C:/dev/nantftptask/trunk/Tests/ftptasktests.build
+Target(s) specified: test
+
+
+test:
+
+      [ftp] Using 'myConn2':
+      [ftp] Connecting to 'localhost' as 'anonymous' . . .
+      [ftp]  + Changing remote directory to 'net'
+      [ftp]
+      [ftp] <Put>.
+      [ftp]   from: C:\dev\nantftptask\trunk
+      [ftp]     to: ://net/test
+      [ftp]     as: ASCII
+      [ftp] test: The system cannot find the file specified.
+      [ftp] Disconnecting from 'localhost'
+
+BUILD FAILED - 1 non-fatal error(s), 0 warning(s)
+
+C:\dev\nantftptask\trunk\Tests\ftptasktests.build(21,4):
+---- FTP Exception ----
+    test: The system cannot find the file specified.
+
+Total time: 0.3 seconds.
+
+
+C:\dev\nantftptask\trunk\Tests>install
+bin\debug\ConsolePasswordInput.dll
+bin\debug\edtftpnet-1.1.3.dll
+bin\debug\ftptask.dll
+        3 file(s) copied.
+bin\debug\ConsolePasswordInput.pdb
+bin\debug\edtftpnet-1.1.3.pdb
+bin\debug\ftptask.pdb
+        3 file(s) copied.
+
+C:\dev\nantftptask\trunk\Tests>nant
+NAnt 0.85 (Build 0.85.1793.0; rc1; 11/28/2004)
+Copyright (C) 2001-2004 Gerry Shaw
+http://nant.sourceforge.net
+
+Buildfile: file:///C:/dev/nantftptask/trunk/Tests/ftptasktests.build
+Target(s) specified: test
+
+
+test:
+
+      [ftp] Using 'myConn2':
+      [ftp] Connecting to 'localhost' as 'anonymous' . . .
+      [ftp]  + Changing remote directory to 'net'
+      [ftp]
+      [ftp] <Put>.
+      [ftp]   from: C:\dev\nantftptask\trunk
+      [ftp]     to: ://net/test
+      [ftp]     as: ASCII
+      [ftp]   file: Enum\ConnectMode.cs
+      [ftp]   file: Enum\TransferDirection.cs
+      [ftp]   file: Tasks\ftptask.cs
+      [ftp]   file: Tasks\RemoteCopyTask.cs
+      [ftp]   file: Tests\ftptasktests.cs
+      [ftp]   file: Types\Connection.cs
+      [ftp]   file: Types\GetFileSet.cs
+      [ftp]   file: Types\PutFileSet.cs
+      [ftp]   file: Types\RemotePath.cs
+      [ftp]   file: Types\Text.cs
+      [ftp]   file: Types\TransferFileSet.cs
+      [ftp]   file: Util\FTPTaskException.cs
+      [ftp]   file: Util\RemoteDirectoryScanner.cs
+      [ftp]   file: AssemblyInfo.cs
+      [ftp] </Put>: 14 files transmitted.
+      [ftp]
+      [ftp] <Get>.
+      [ftp]   from: ://net/test
+      [ftp]     to: C:\dev\nantftptask\trunk\Tests\incoming
+      [ftp]     as: ASCII
+      [ftp]   file: /net/test/Enum/ConnectMode.cs
+      [ftp]   file: /net/test/Enum/TransferDirection.cs
+      [ftp]   file: /net/test/Tasks/ftptask.cs
+      [ftp]   file: /net/test/Tasks/RemoteCopyTask.cs
+      [ftp]   file: /net/test/Tests/ftptasktests.cs
+      [ftp]   file: /net/test/Types/Connection.cs
+      [ftp]   file: /net/test/Types/GetFileSet.cs
+      [ftp]   file: /net/test/Types/PutFileSet.cs
+      [ftp]   file: /net/test/Types/RemotePath.cs
+      [ftp]   file: /net/test/Types/Text.cs
+      [ftp]   file: /net/test/Types/TransferFileSet.cs
+      [ftp]   file: /net/test/Util/FTPTaskException.cs
+      [ftp]   file: /net/test/Util/RemoteDirectoryScanner.cs
+      [ftp]   file: /net/test/AssemblyInfo.cs
+      [ftp] </Get>: 14 files received.
+      [ftp]
+      [ftp]   file: ftp_session_1.txt
+      [ftp]   file: ftp_session_2.txt
+      [ftp]   file: /net/AssemblyInfo.cs
+      [ftp] AssemblyInfo.cs could not be downloaded.
+      [ftp] AssemblyInfo.cs: The system cannot find the file specified.
+      [ftp] CWD command successful.
+      [ftp] CWD command successful.
+      [ftp] Disconnecting from 'localhost'
+
+BUILD SUCCEEDED
+
+Total time: 1.9 seconds.
+
+
+C:\dev\nantftptask\trunk\Tests>

@@ -286,7 +286,7 @@ namespace Sourceforge.NAnt.Ftp.Types {
 
                 _hasScanned = true;
             } catch (Exception ex) {
-                throw new BuildException("Error creating Get.", Location, ex);
+                throw new BuildException("Error scanning remote filesystem.", Location, ex);
             }
 
             if (FailOnEmpty && _scanner.FileNames.Count == 0) {
@@ -392,7 +392,7 @@ namespace Sourceforge.NAnt.Ftp.Types {
 					}
 					lastPath = rpath.Dir;
 				}
-				Conn.Get(rpath.Name,
+				Conn.Connection.Get(rpath.Name,
 				          LocalPath.ToString(),
 				    	  rpath.Dir,
 				    	  FTPTask.ParseTransferType(TransferType), 

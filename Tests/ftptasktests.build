@@ -14,11 +14,12 @@
 	<connection id="myConn" server="${remotehost}" username="${username}" password="${password}" />	
 	<connection id="myConn2" server="${remotehost}" username="${username}" password="prompt" />	
 	<connection id="myConn3" server="${remotehost}" username="${username}" />
+	<connection id="myConn4" server="${remotehost}" />
 	
 
 	<target name="test" depends="" >
 		<ftp exec="true"
-			 connection="myConn"
+			 connection="myConn2"
 			 remotedir="${remote-dir}"
 			 showdironconnect="false" 
 			 >
@@ -26,15 +27,19 @@
 			<put type="ascii" update="true">
 				<include name="..\AssemblyInfo.cs" />
 			</put>
-			<put type="b" localdir=".." remotedir="test">
+			-->
+			<put type="a" localdir=".." remotedir="test">
 				<include name="**\*.cs" />
 			</put>
-			<get type="bin" localdir="incoming" remotedir="test" failonempty="true">
+			<get type="a" localdir="incoming" remotedir="test" failonempty="true">
 				<include name="**\*.cs" />
 			</get>
+			 <!--
 			<get type="a" localdir="incoming\types" failonempty="true" >
 				<include name="..\AssemblyInfo.cs" />
 			</get>
+			-->
+			 <!--
 			-->
 			<up-ascii>
 			   <include name="*.txt"/>

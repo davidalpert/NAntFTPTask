@@ -38,7 +38,7 @@ namespace Sourceforge.NAnt.Ftp.Types {
 			
 			// transfer the files
 			foreach (string fileName in FileNames) {
-				Conn.Put(fileName,
+				Conn.Connection.Put(fileName,
 				    	  LocalPath.ToString(), 
 				    	  RemotePathString, 
 				    	  FTPTask.ParseTransferType(TransferType), 

@@ -305,7 +305,7 @@ namespace Sourceforge.NAnt.Ftp.Util {
             _searchDirIsRecursive = new ArrayList();
             _scannedDirectories = new DirScannerStringCollection(_conn);
 
-           	_conn.Log(_conn.Level, "Scanning remotely for <get ... /> include patterns...");
+           	_conn.Log(_conn.LevelExec, "Scanning remotely for <get ... /> include patterns...");
 
 #if DEBUG_REGEXES
             Console.WriteLine("*********************************************************************");
@@ -610,7 +610,7 @@ namespace Sourceforge.NAnt.Ftp.Util {
             //
 //            int dirCount = 0;
 //            int fileCount = 0;
-			RemotePath[] list = RemotePath.FromFTPFileArray(path, _conn.DirDetails(path));
+			RemotePath[] list = RemotePath.FromFTPFileArray(path, _conn.Connection.DirDetails(path));
 			            
             //foreach (RemotePath dir in _conn.GetDirs(currentDir.FullPath))
             foreach (RemotePath dir in list)
@@ -636,7 +636,7 @@ namespace Sourceforge.NAnt.Ftp.Util {
 	                if (!caseSensitive)
 	                    filename = filename.ToLower();
 	                if (IsPathIncluded(filename, caseSensitive, includedPatterns, excludedPatterns)) {
-	                	_conn.Log(_conn.Level, " + -- including {0}", file.FullPath);
+	                	_conn.Log(_conn.LevelExec, " + -- including {0}", file.FullPath);
 	                	_fileNames.Add(file);
 	                }
             	}
@@ -807,7 +807,7 @@ namespace Sourceforge.NAnt.Ftp.Util {
 
             // Escape the rest of the regular expression special characters.
             // NOTE: Characters other than . $ ^ { [ ( | ) * + ? \ match themselves.
-            // TODO: Decide if ] and } are missing from this list, the above
+            // to-do: Decide if ] and } are missing from this list, the above
             // list of characters was taking from the .NET SDK docs.
             pattern.Replace(".", @"\.");
             pattern.Replace("$", @"\$");
