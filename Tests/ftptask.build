@@ -11,17 +11,73 @@
 	<loadtasks assembly="..\bin\debug\ftptask.dll" />
 	<connection id="myConn" server="${remotehost}" username="${username}" password="${password}" />
 
-	<target name="test" depends="" >
+	<target name="test" depends="test12" >
+		<ftp connection="myConn"
+			 remotepath="/net"
+			 showdironconnect="true">
+			<put type="ascii">
+				<include name="..\AssemblyInfo.cs" />
+			</put>
+			<get type="a">
+				<include name="..\AssemblyInfo.cs" />
+			</get>
+			<put type="b">
+				<include name="..\AssemblyInfo.cs" />
+			</put>
+			<get type="bin">
+				<include name="..\AssemblyInfo.cs" />
+			</get>
+		</ftp>
+	</target>
+
+	<target name="test12" depends="test11" >
+		<ftp connection="myConn"
+			 remotepath="/net"
+			 showdironconnect="false">
+			<put>
+				<include name="..\AssemblyInfo.cs" />
+			</put>
+			<get if="false">
+				<include name="..\AssemblyInfo.cs" />
+			</get>
+			<put unless="true">
+				<include name="..\AssemblyInfo.cs" />
+			</put>
+			<put>
+				<include name="..\AssemblyInfo.cs" />
+			</put>
+			<get>
+				<include name="..\AssemblyInfo.cs" />
+			</get>
+		</ftp>
+	</target>
+
+	<target name="test11" depends="test10" >
+		<ftp connection="myConn"
+			 connectmode="passive"
+			 remotepath="/net"
+			 showdironconnect="false">
+			<put>
+				<include name="..\AssemblyInfo.cs" />
+			</put>
+			<get>
+				<include name="..\AssemblyInfo.cs" />
+			</get>
+		</ftp>
+	</target>
+
+	<target name="test10" depends="test9" >
 		<ftp connection="myConn"
 			 remotepath="/net"
 			 showdironconnect="false">
 			<put />
+			<get />
 		</ftp>
 	</target>
 
-	<target name="test9" depends="test8" >
+	<target name="test9" depends="" >
 		<ftp connection="myConn"
-			 remotepath="/net"
+			 remotepath="\net"
 			 showdironconnect="true">
 		</ftp>
 	</target>

@@ -1,5 +1,5 @@
 <Combine fileversion="1.0" name="NAnt FTP Task" description="">
-  <StartMode startupentry="NAnt FTP Task" single="True">
+  <StartMode startupentry="ftptask" single="True">
     <Execute entry="ftptask" type="None" />
   </StartMode>
   <Entries>
