@@ -1,12 +1,10 @@
 <?xml version="1.0"?>
 <project name="ftp tasks for nant" default="build">
 	<property name="nant-core" value="c:\usr\local\nant-0.85-rc1\bin\NAnt.Core.dll" />
-	<property name="ftpclient" value="..\FTPClient\ftpclient.dll" />
-	<property name="ftpclient_buildfile" value="..\FTPClient\ftpclient.build" />
 
 	<property name="project.debug" value="true" />
 
-	<target name="build" depends="ftpclient">
+	<target name="build" >
 	
 		<csc target="library" debug="${project.debug}" output="FTPTasks.dll">
 			<sources>
@@ -15,23 +13,14 @@
 			</sources>
 			<references>
 				<include name="${nant-core}" />
-				<include name="${ftpclient}" />
 			</references>
 		</csc>
 		
 	</target>
 
-	<target name="ftpclient">
-		<nant buildfile="${ftpclient_buildfile}" />
-	</target>
-	
 	<target name="clean">
 		<delete file="FTPTasks.dll" failonerror="false"/>
 		<delete file="FTPTasks.pdb" failonerror="false"/>
 	</target>
 
-	<target name="cleanall" depends="clean">
-		<nant buildfile="${ftpclient_buildfile}" target="clean" />
-	</target>
-	
 </project>
