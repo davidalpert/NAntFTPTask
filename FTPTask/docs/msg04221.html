@@ -1,0 +1,242 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><!-- MHonArc v2.6.10 --><!--X-Subject: [nant&#45;dev] FTP Task &#45; new version --><!--X-From-R13: Enfpun Oaqerf <fnNcebtenzzref&#45;jbeyq.pbz> --><!--X-Date: Sat, 19 Jun 2004 05:53:30 &#45;0700 --><!--X-Message-Id: 20040619125219.GA8515@programmers&#45;world.com --><!--X-Content-Type: text/plain --><!--X-Head-End-->
+
+<title>[nant-dev] FTP Task - new version</title><link rel="StyleSheet" href="msg04221_files/style.css"></head>
+
+
+
+
+
+
+
+
+<body>
+<!--htdig_noindex-->
+<center>
+<a href="http://www.mail-archive.com/top.html"><img src="msg04221_files/logo.gif" alt="Mail Archive" border="0"></a>
+<h1><span class="idxtitle">nant-developers</span></h1>
+</center>
+<!--/htdig_noindex-->
+<!--X-Body-Begin-->
+<!--X-User-Header-->
+<!--X-User-Header-End-->
+<!--X-TopPNI-->
+<!--htdig_noindex-->
+<center>
+<table border="0" cellpadding="1" cellspacing="0" width="90%">
+<tbody><tr align="center" valign="middle"> 
+
+ <td align="center" nowrap="nowrap" width="30%">
+    <a href="http://www.mail-archive.com/nant-developers@lists.sourceforge.net/msg04220.html">&lt;--</a>  
+    <a href="http://www.mail-archive.com/nant-developers@lists.sourceforge.net/maillist.html#04221"><b>Chronological</b></a>
+    <a href="http://www.mail-archive.com/nant-developers@lists.sourceforge.net/msg04222.html">--&gt;</a>
+ </td> 
+
+ <td align="center" nowrap="nowrap" width="30%">
+    <form action="/cgi-bin/htsearch" method="get">
+    <input name="method" value="and" type="hidden">
+    <input name="format" value="short" type="hidden">
+    <input name="config" value="nant-developers_lists_sourceforge_net" type="hidden">
+    <input name="restrict" value="" type="hidden">
+    <input name="exclude" value="" type="hidden">
+    Find&nbsp;<input name="words" value="" size="15" type="text">
+    </form>
+ </td>
+
+ <td align="center" nowrap="nowrap" width="30%">
+  <a href="http://www.mail-archive.com/nant-developers@lists.sourceforge.net/msg04219.html">&lt;--</a>  
+  <a href="http://www.mail-archive.com/nant-developers@lists.sourceforge.net/index.html#04221"><b>Thread</b></a>
+  <a href="http://www.mail-archive.com/nant-developers@lists.sourceforge.net/msg04222.html">--&gt;</a>  
+ </td> 
+
+</tr>
+</tbody></table>
+<!--/htdig_noindex-->
+
+</center>
+<h1>[nant-dev] FTP Task - new version</h1>
+<hr>
+<ul>
+<li>From: Sascha Andres
+</li><li>Subject: [nant-dev] FTP Task - new version
+</li><li>Date: Sat, 19 Jun 2004 05:53:30 -0700
+</li></ul>
+<hr>
+
+<!--X-TopPNI-End-->
+<!--X-MsgBody-->
+<!--X-Subject-Header-Begin-->
+ 
+<!--X-Subject-Header-End-->
+<!--X-Head-of-Message-->
+<!--X-Head-of-Message-End-->
+<!--X-Head-Body-Sep-Begin-->
+ 
+<!--X-Head-Body-Sep-End-->
+<!--X-Body-of-Message-->
+<table border="0" cellpadding="0" cellspacing="20" width="100%"><tbody><tr>
+<td valign="top" width="100%">
+
+<pre>Hi,
+
+I reworked my ftp-up and ftp-down task. The zip file
+containing the code for both tasks is offline. Instead there
+is a new file online at
+<a href="http://www.livingit.de/downloads/ftp-task.zip">http://www.livingit.de/downloads/ftp-task.zip</a>.
+
+It provides one task &lt;ftp&gt; capable of up-/downloading
+ascii/binary files to an anonymous/authenticated ftp server.
+
+In short there are those properties in ftp:
+
+server = nema or ip of the ftp server
+remotepath = directory to upload to or to download from
+port = give a different port than 21
+
+You can authenticate with a credentials subelement. It
+evaluates the username and password properties. username
+defaults to anonymous, password to [EMAIL PROTECTED]
+
+You have 4 filesets:
+
+up-binary, up-ascii, down-binary and down-ascii
+
+If downloading use the basedir property to set the local
+directory. This path will be stripped for the files to
+download. Instead the remotepath property is used.
+
+A short exapmple:
+
+&lt;ftp server="my-ftp.de" remotepath="www/"&gt;
+        &lt;credentials username="user" password="pass" /&gt;
+        &lt;up-binary&gt;
+                &lt;include name="test.zip" /&gt;
+        &lt;/up-binary&gt;
+        &lt;up-ascii&gt;
+                &lt;include name="ascii.txt" /&gt;
+        &lt;/up-ascii&gt;
+        &lt;down-binary&gt;
+                &lt;include name="test2.zip" /&gt;
+        &lt;/down-binary&gt;
+        &lt;down-ascii basedir="C:\"&gt;
+                &lt;include name="ascii2.txt" /&gt;
+        &lt;/down-ascii&gt;
+&lt;/ftp&gt;
+
+Open for completion: Read a subelement &lt;script&gt; that
+contains simple ftp commands and execute them.
+
+The files are processed in the following order:
+
+1 upload binary
+2 upload ascii
+3 download binary
+4 download ascii
+
+After that a future script element will be processed.
+
+Open for any suggestions,
+Sascha
+
+-- 
+sa at programmers-world dot com <a href="http://www.livingit.de/">http://www.livingit.de</a>
+Internet sites:
+  <a href="http://www.not2long.net/">http://www.not2long.net</a> - Make long links short
+  Boomarks online: <a href="http://www.mobile-bookmarks.info/">http://www.mobile-bookmarks.info</a>
+
+
+-------------------------------------------------------
+This SF.Net email is sponsored by The 2004 JavaOne(SM) Conference
+Learn from the experts at JavaOne(SM), Sun's Worldwide Java Developer
+Conference, June 28 - July 1 at the Moscone Center in San Francisco, CA
+REGISTER AND SAVE! <a href="http://java.sun.com/javaone/sf">http://java.sun.com/javaone/sf</a> Priority Code NWMGYKND
+_______________________________________________
+nant-developers mailing list
+[EMAIL PROTECTED]
+<a href="https://lists.sourceforge.net/lists/listinfo/nant-developers">https://lists.sourceforge.net/lists/listinfo/nant-developers</a>
+</pre>
+</td>
+<td align="right" valign="top">
+<table border="0">
+  <tbody><tr>
+    <td align="center" valign="top">
+<script type="text/javascript"><!--
+google_ad_client = "pub-7266757337600734";
+google_alternate_ad_url = "http://www.mail-archive.com/blank.png";
+google_ad_width = 160;
+google_ad_height = 600;
+google_ad_format = "160x600_as";
+google_ad_channel = "1143599908";
+google_color_border = ["336699","000000"];
+google_color_bg = ["FFFFFF","F0F0F0"];
+google_color_link = "0000FF";
+google_color_url = "008000";
+google_color_text = "000000";
+//--></script>
+<script type="text/javascript" src="msg04221_files/show_ads">
+</script><iframe name="google_ads_frame" src="msg04221_files/ads.htm" marginwidth="0" marginheight="0" vspace="0" hspace="0" allowtransparency="true" frameborder="0" height="600" scrolling="no" width="160">&lt;img&gt;</iframe>
+    </td>
+  </tr>
+</tbody></table>
+</td>
+</tr></tbody></table>
+<!--X-Body-of-Message-End-->
+<!--X-MsgBody-End-->
+<!--X-Follow-Ups-->
+<hr>
+<!--htdig_noindex-->
+<ul>
+<li><span class="curmsg"><strong>[nant-dev] FTP Task - new version</strong>,
+<em>Sascha Andres</em></span>
+<ul>
+<li><strong><a name="04222" href="http://www.mail-archive.com/nant-developers@lists.sourceforge.net/msg04222.html">Re: [nant-dev] FTP Task - new version</a></strong>,
+<em>Sascha Andres</em>
+</li>
+</ul>
+</li>
+</ul>
+
+<!--X-Follow-Ups-End-->
+<!--X-References-->
+<!--X-References-End-->
+<!--X-BotPNI-->
+<br>
+<center>
+<table width="90%">
+<tbody><tr>
+
+ <td align="center" nowrap="nowrap" width="30%">
+    <a href="http://www.mail-archive.com/nant-developers@lists.sourceforge.net/msg04220.html">&lt;--</a>  
+    <a href="http://www.mail-archive.com/nant-developers@lists.sourceforge.net/maillist.html#04221"><b>Chronological</b></a>
+    <a href="http://www.mail-archive.com/nant-developers@lists.sourceforge.net/msg04222.html">--&gt;</a>
+ </td> 
+
+ <td align="center" nowrap="nowrap" width="30%">
+ </td> 
+
+ <td align="center" nowrap="nowrap" width="30%">
+  <a href="http://www.mail-archive.com/nant-developers@lists.sourceforge.net/msg04219.html">&lt;--</a>  
+  <a href="http://www.mail-archive.com/nant-developers@lists.sourceforge.net/index.html#04221"><b>Thread</b></a> 
+  <a href="http://www.mail-archive.com/nant-developers@lists.sourceforge.net/msg04222.html">--&gt;</a>  
+ </td> 
+
+</tr>
+</tbody></table>
+
+<p>
+  </p><form method="post" action="/cgi-bin/Nomailto.pl">
+  <input name="user" value="sa" type="hidden">
+  <input name="host" value="programmers-world.com" type="hidden">
+  <input name="subject" value="[nant-dev] FTP Task - new version" type="hidden">
+  <input name="msgid" value="[EMAIL PROTECTED]" type="hidden">
+  Reply via email to<br>
+  <input value=" Sascha Andres " type="submit">
+  </form>
+
+</center>
+
+<!--X-BotPNI-End-->
+<!--X-User-Footer-->
+<!--X-User-Footer-End-->
+<!--/htdig_noindex-->
+</body></html>

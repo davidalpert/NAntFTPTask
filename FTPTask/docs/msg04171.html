@@ -1,0 +1,266 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><!-- MHonArc v2.6.10 --><!--X-Subject: [nant&#45;dev] ftp task --><!--X-From-R13: Enfpun Oaqerf <fnNcebtenzzref&#45;jbeyq.pbz> --><!--X-Date: Thu, 03 Jun 2004 10:25:31 &#45;0700 --><!--X-Message-Id: 20040603172418.GA13006@programmers&#45;world.com --><!--X-Content-Type: text/plain --><!--X-Head-End-->
+
+<title>[nant-dev] ftp task</title><link rel="StyleSheet" href="msg04171_files/style.css"></head>
+
+
+
+
+
+
+
+
+<body>
+<!--htdig_noindex-->
+<center>
+<a href="http://www.mail-archive.com/top.html"><img src="msg04171_files/logo.gif" alt="Mail Archive" border="0"></a>
+<h1><span class="idxtitle">nant-developers</span></h1>
+</center>
+<!--/htdig_noindex-->
+<!--X-Body-Begin-->
+<!--X-User-Header-->
+<!--X-User-Header-End-->
+<!--X-TopPNI-->
+<!--htdig_noindex-->
+<center>
+<table border="0" cellpadding="1" cellspacing="0" width="90%">
+<tbody><tr align="center" valign="middle"> 
+
+ <td align="center" nowrap="nowrap" width="30%">
+    <a href="http://www.mail-archive.com/nant-developers@lists.sourceforge.net/msg04170.html">&lt;--</a>  
+    <a href="http://www.mail-archive.com/nant-developers@lists.sourceforge.net/maillist.html#04171"><b>Chronological</b></a>
+    <a href="http://www.mail-archive.com/nant-developers@lists.sourceforge.net/msg04172.html">--&gt;</a>
+ </td> 
+
+ <td align="center" nowrap="nowrap" width="30%">
+    <form action="/cgi-bin/htsearch" method="get">
+    <input name="method" value="and" type="hidden">
+    <input name="format" value="short" type="hidden">
+    <input name="config" value="nant-developers_lists_sourceforge_net" type="hidden">
+    <input name="restrict" value="" type="hidden">
+    <input name="exclude" value="" type="hidden">
+    Find&nbsp;<input name="words" value="" size="15" type="text">
+    </form>
+ </td>
+
+ <td align="center" nowrap="nowrap" width="30%">
+  <a href="http://www.mail-archive.com/nant-developers@lists.sourceforge.net/msg04167.html">&lt;--</a>  
+  <a href="http://www.mail-archive.com/nant-developers@lists.sourceforge.net/index.html#04171"><b>Thread</b></a>
+  <a href="http://www.mail-archive.com/nant-developers@lists.sourceforge.net/msg04172.html">--&gt;</a>  
+ </td> 
+
+</tr>
+</tbody></table>
+<!--/htdig_noindex-->
+
+</center>
+<h1>[nant-dev] ftp task</h1>
+<hr>
+<ul>
+<li>From: Sascha Andres
+</li><li>Subject: [nant-dev] ftp task
+</li><li>Date: Thu, 03 Jun 2004 10:25:31 -0700
+</li></ul>
+<hr>
+
+<!--X-TopPNI-End-->
+<!--X-MsgBody-->
+<!--X-Subject-Header-Begin-->
+ 
+<!--X-Subject-Header-End-->
+<!--X-Head-of-Message-->
+<!--X-Head-of-Message-End-->
+<!--X-Head-Body-Sep-Begin-->
+ 
+<!--X-Head-Body-Sep-End-->
+<!--X-Body-of-Message-->
+<table border="0" cellpadding="0" cellspacing="20" width="100%"><tbody><tr>
+<td valign="top" width="100%">
+
+<pre>Hi,
+
+I've done a small start for the ftp task. Well, it's a small
+start.  Basicly I'm capable of downloading / uploading one
+file at a time.
+
+I used code from
+<a href="http://sourceforge.net/projects/dotnetftpclient/">http://sourceforge.net/projects/dotnetftpclient/</a> to get this
+tasks running. My tests run smoothly, but there are some
+features that are missing to call this complete. I post it
+here, because this work could complement the release plan,
+so if you're interested in taking this into the nant sources
+- take it. This doesn't mean I wouldn't participate further
+in developing this tasks ;).
+
+I splitted the ftp into ftpdown and ftpup, that made the
+start easier. And IMHO two tasks are easier than one task
+with a switch.
+
+Some errorhandling is missing (no connection to server). So
+expect it to crash hard if something does'nt run as
+expected.
+
+Here is a short overview of what is implemented right now:
+
+ftpup task
+----------
+
+optional attributes:
+        * user
+          defaulting to anonymous
+        * password
+          defaulting to [EMAIL PROTECTED]
+        * remotefile
+          Give a path and file name for remote server
+
+required attributes:
+        * file
+          local file to upload
+        * server
+          server to upload to
+
+ftpdown task
+------------
+
+optional attributes:
+        * user
+          defaulting to anonymous
+        * password
+          defaulting to [EMAIL PROTECTED]
+        * file
+          how to save file
+
+required attributes:
+        * server
+          server to upload to
+        * remotefile 
+          what file to download
+
+The folowing points are open but known how to implement:
+        - ftp mode  (active/passive)
+        - file mode (binary / ascii)
+        - fileset               (download/upload more than one file
+
+Currently I'm not sure how to implement a complete ftp
+script, that is doing more than one ftp command (create dir,
+delete file, etc) without reconnecting everytime. I could
+imagine something like a fileset for implementing custom ftp
+commands, but I'm not yet sure about this. I tend to give
+that task a name of it's own - say ftpscript. In my personal
+priority list it's last, since I need upload most and
+downloading a file is somehow the same.
+
+The used ftp code and the task code can be downloaded (url
+see below). There are no binaries in it (neither for the ftp
+library nor for the nant tasks). But there are build scripts
+in the subdirectories. Those scripts should be
+self-explanatory.
+
+You can download the code at
+<a href="http://www.livingit.de/downloads/nant-tasks.zip">http://www.livingit.de/downloads/nant-tasks.zip</a>
+
+Comments and reactions welcome,
+
+Sascha
+-- 
+sa at programmers-world dot com <a href="http://www.livingit.de/">http://www.livingit.de</a>
+Internet sites:
+  <a href="http://www.not2long.net/">http://www.not2long.net</a> - Make long links short
+  Boomarks online: <a href="http://www.mobile-bookmarks.info/">http://www.mobile-bookmarks.info</a>
+
+
+-------------------------------------------------------
+This SF.Net email is sponsored by the new InstallShield X.
+&gt;From Windows to Linux, servers to mobile, InstallShield X is the one
+installation-authoring solution that does it all. Learn more and
+evaluate today! <a href="http://www.installshield.com/Dev2Dev/0504">http://www.installshield.com/Dev2Dev/0504</a>
+_______________________________________________
+nant-developers mailing list
+[EMAIL PROTECTED]
+<a href="https://lists.sourceforge.net/lists/listinfo/nant-developers">https://lists.sourceforge.net/lists/listinfo/nant-developers</a>
+</pre>
+</td>
+<td align="right" valign="top">
+<table border="0">
+  <tbody><tr>
+    <td align="center" valign="top">
+<script type="text/javascript"><!--
+google_ad_client = "pub-7266757337600734";
+google_alternate_ad_url = "http://www.mail-archive.com/blank.png";
+google_ad_width = 160;
+google_ad_height = 600;
+google_ad_format = "160x600_as";
+google_ad_channel = "1143599908";
+google_color_border = ["336699","000000"];
+google_color_bg = ["FFFFFF","F0F0F0"];
+google_color_link = "0000FF";
+google_color_url = "008000";
+google_color_text = "000000";
+//--></script>
+<script type="text/javascript" src="msg04171_files/show_ads">
+</script><iframe name="google_ads_frame" src="msg04171_files/ads.htm" marginwidth="0" marginheight="0" vspace="0" hspace="0" allowtransparency="true" frameborder="0" height="600" scrolling="no" width="160">&lt;img&gt;</iframe>
+    </td>
+  </tr>
+</tbody></table>
+</td>
+</tr></tbody></table>
+<!--X-Body-of-Message-End-->
+<!--X-MsgBody-End-->
+<!--X-Follow-Ups-->
+<hr>
+<!--htdig_noindex-->
+<ul>
+<li><span class="curmsg"><strong>[nant-dev] ftp task</strong>,
+<em>Sascha Andres</em></span>
+<ul>
+<li><strong><a name="04172" href="http://www.mail-archive.com/nant-developers@lists.sourceforge.net/msg04172.html">Re: [nant-dev] ftp task</a></strong>,
+<em>Sascha Andres</em>
+</li>
+</ul>
+</li>
+</ul>
+
+<!--X-Follow-Ups-End-->
+<!--X-References-->
+<!--X-References-End-->
+<!--X-BotPNI-->
+<br>
+<center>
+<table width="90%">
+<tbody><tr>
+
+ <td align="center" nowrap="nowrap" width="30%">
+    <a href="http://www.mail-archive.com/nant-developers@lists.sourceforge.net/msg04170.html">&lt;--</a>  
+    <a href="http://www.mail-archive.com/nant-developers@lists.sourceforge.net/maillist.html#04171"><b>Chronological</b></a>
+    <a href="http://www.mail-archive.com/nant-developers@lists.sourceforge.net/msg04172.html">--&gt;</a>
+ </td> 
+
+ <td align="center" nowrap="nowrap" width="30%">
+ </td> 
+
+ <td align="center" nowrap="nowrap" width="30%">
+  <a href="http://www.mail-archive.com/nant-developers@lists.sourceforge.net/msg04167.html">&lt;--</a>  
+  <a href="http://www.mail-archive.com/nant-developers@lists.sourceforge.net/index.html#04171"><b>Thread</b></a> 
+  <a href="http://www.mail-archive.com/nant-developers@lists.sourceforge.net/msg04172.html">--&gt;</a>  
+ </td> 
+
+</tr>
+</tbody></table>
+
+<p>
+  </p><form method="post" action="/cgi-bin/Nomailto.pl">
+  <input name="user" value="sa" type="hidden">
+  <input name="host" value="programmers-world.com" type="hidden">
+  <input name="subject" value="[nant-dev] ftp task" type="hidden">
+  <input name="msgid" value="[EMAIL PROTECTED]" type="hidden">
+  Reply via email to<br>
+  <input value=" Sascha Andres " type="submit">
+  </form>
+
+</center>
+
+<!--X-BotPNI-End-->
+<!--X-User-Footer-->
+<!--X-User-Footer-End-->
+<!--/htdig_noindex-->
+</body></html>

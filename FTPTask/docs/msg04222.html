@@ -1,0 +1,214 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><!-- MHonArc v2.6.10 --><!--X-Subject: Re: [nant&#45;dev] FTP Task &#45; new version --><!--X-From-R13: Enfpun Oaqerf <fnNcebtenzzref&#45;jbeyq.pbz> --><!--X-Date: Sun, 20 Jun 2004 00:52:26 &#45;0700 --><!--X-Message-Id: 20040620075137.GA5563@programmers&#45;world.com --><!--X-Content-Type: text/plain --><!--X-Reference: 20040619125219.GA8515@programmers&#45;world.com --><!--X-Head-End-->
+
+<title>Re: [nant-dev] FTP Task - new version</title><link rel="StyleSheet" href="msg04222_files/style.css"></head>
+
+
+
+
+
+
+
+
+
+<body>
+<!--htdig_noindex-->
+<center>
+<a href="http://www.mail-archive.com/top.html"><img src="msg04222_files/logo.gif" alt="Mail Archive" border="0"></a>
+<h1><span class="idxtitle">nant-developers</span></h1>
+</center>
+<!--/htdig_noindex-->
+<!--X-Body-Begin-->
+<!--X-User-Header-->
+<!--X-User-Header-End-->
+<!--X-TopPNI-->
+<!--htdig_noindex-->
+<center>
+<table border="0" cellpadding="1" cellspacing="0" width="90%">
+<tbody><tr align="center" valign="middle"> 
+
+ <td align="center" nowrap="nowrap" width="30%">
+    <a href="http://www.mail-archive.com/nant-developers@lists.sourceforge.net/msg04221.html">&lt;--</a>  
+    <a href="http://www.mail-archive.com/nant-developers@lists.sourceforge.net/maillist.html#04222"><b>Chronological</b></a>
+    <a href="http://www.mail-archive.com/nant-developers@lists.sourceforge.net/msg04223.html">--&gt;</a>
+ </td> 
+
+ <td align="center" nowrap="nowrap" width="30%">
+    <form action="/cgi-bin/htsearch" method="get">
+    <input name="method" value="and" type="hidden">
+    <input name="format" value="short" type="hidden">
+    <input name="config" value="nant-developers_lists_sourceforge_net" type="hidden">
+    <input name="restrict" value="" type="hidden">
+    <input name="exclude" value="" type="hidden">
+    Find&nbsp;<input name="words" value="" size="15" type="text">
+    </form>
+ </td>
+
+ <td align="center" nowrap="nowrap" width="30%">
+  <a href="http://www.mail-archive.com/nant-developers@lists.sourceforge.net/msg04221.html">&lt;--</a>  
+  <a href="http://www.mail-archive.com/nant-developers@lists.sourceforge.net/index.html#04222"><b>Thread</b></a>
+  <a href="http://www.mail-archive.com/nant-developers@lists.sourceforge.net/msg04223.html">--&gt;</a>  
+ </td> 
+
+</tr>
+</tbody></table>
+<!--/htdig_noindex-->
+
+</center>
+<h1>Re: [nant-dev] FTP Task - new version</h1>
+<hr>
+<ul>
+<li>From: Sascha Andres
+</li><li>Subject: Re: [nant-dev] FTP Task - new version
+</li><li>Date: Sun, 20 Jun 2004 00:52:26 -0700
+</li></ul>
+<hr>
+
+<!--X-TopPNI-End-->
+<!--X-MsgBody-->
+<!--X-Subject-Header-Begin-->
+ 
+<!--X-Subject-Header-End-->
+<!--X-Head-of-Message-->
+<!--X-Head-of-Message-End-->
+<!--X-Head-Body-Sep-Begin-->
+ 
+<!--X-Head-Body-Sep-End-->
+<!--X-Body-of-Message-->
+<table border="0" cellpadding="0" cellspacing="20" width="100%"><tbody><tr>
+<td valign="top" width="100%">
+
+<pre>Hi,
+
+I did a first hack on the scripting support. The task now
+excutes in the following order:
+ 
+1 upload binary
+2 upload ascii
+3 download binary
+4 download ascii
+5 script
+
+A short example:
+
+&lt;ftp server="my-ftp.de" remotepath="/pub/"&gt;
+        &lt;up-binary&gt;
+                &lt;include name="test.zip" /&gt;
+        &lt;/up-binary&gt;
+        &lt;script&gt;&lt;![CDATA[
+        pwd
+        cwd /pub
+        pwd
+        ]]&gt;&lt;/script&gt;
+&lt;/ftp&gt;
+
+I put it up on
+&lt;<a href="http://www.livingit.de/downloads/ftp-task.zip">http://www.livingit.de/downloads/ftp-task.zip</a>&gt;.
+
+Definitly untested are any calls for put or get in the
+scripting section. Use the filesets to up-/download.
+
+-sa
+
+-- 
+sa at programmers-world dot com <a href="http://www.livingit.de/">http://www.livingit.de</a>
+Internet sites:
+  <a href="http://www.not2long.net/">http://www.not2long.net</a> - Make long links short
+  Boomarks online: <a href="http://www.mobile-bookmarks.info/">http://www.mobile-bookmarks.info</a>
+
+
+-------------------------------------------------------
+This SF.Net email is sponsored by The 2004 JavaOne(SM) Conference
+Learn from the experts at JavaOne(SM), Sun's Worldwide Java Developer
+Conference, June 28 - July 1 at the Moscone Center in San Francisco, CA
+REGISTER AND SAVE! <a href="http://java.sun.com/javaone/sf">http://java.sun.com/javaone/sf</a> Priority Code NWMGYKND
+_______________________________________________
+nant-developers mailing list
+[EMAIL PROTECTED]
+<a href="https://lists.sourceforge.net/lists/listinfo/nant-developers">https://lists.sourceforge.net/lists/listinfo/nant-developers</a>
+</pre>
+</td>
+<td align="right" valign="top">
+<table border="0">
+  <tbody><tr>
+    <td align="center" valign="top">
+<script type="text/javascript"><!--
+google_ad_client = "pub-7266757337600734";
+google_alternate_ad_url = "http://www.mail-archive.com/blank.png";
+google_ad_width = 160;
+google_ad_height = 600;
+google_ad_format = "160x600_as";
+google_ad_channel = "1143599908";
+google_color_border = ["336699","000000"];
+google_color_bg = ["FFFFFF","F0F0F0"];
+google_color_link = "0000FF";
+google_color_url = "008000";
+google_color_text = "000000";
+//--></script>
+<script type="text/javascript" src="msg04222_files/show_ads">
+</script><iframe name="google_ads_frame" src="msg04222_files/ads.htm" marginwidth="0" marginheight="0" vspace="0" hspace="0" allowtransparency="true" frameborder="0" height="600" scrolling="no" width="160">&lt;img&gt;</iframe>
+    </td>
+  </tr>
+</tbody></table>
+</td>
+</tr></tbody></table>
+<!--X-Body-of-Message-End-->
+<!--X-MsgBody-End-->
+<!--X-Follow-Ups-->
+<hr>
+<!--htdig_noindex-->
+<ul>
+<li><strong><a name="04221" href="http://www.mail-archive.com/nant-developers@lists.sourceforge.net/msg04221.html">[nant-dev] FTP Task - new version</a></strong>,
+<em>Sascha Andres</em>
+<ul>
+<li><span class="curmsg"><strong>Re: [nant-dev] FTP Task - new version</strong>,
+<em>Sascha Andres</em></span>
+</li>
+</ul>
+</li>
+</ul>
+
+<!--X-Follow-Ups-End-->
+<!--X-References-->
+<!--X-References-End-->
+<!--X-BotPNI-->
+<br>
+<center>
+<table width="90%">
+<tbody><tr>
+
+ <td align="center" nowrap="nowrap" width="30%">
+    <a href="http://www.mail-archive.com/nant-developers@lists.sourceforge.net/msg04221.html">&lt;--</a>  
+    <a href="http://www.mail-archive.com/nant-developers@lists.sourceforge.net/maillist.html#04222"><b>Chronological</b></a>
+    <a href="http://www.mail-archive.com/nant-developers@lists.sourceforge.net/msg04223.html">--&gt;</a>
+ </td> 
+
+ <td align="center" nowrap="nowrap" width="30%">
+ </td> 
+
+ <td align="center" nowrap="nowrap" width="30%">
+  <a href="http://www.mail-archive.com/nant-developers@lists.sourceforge.net/msg04221.html">&lt;--</a>  
+  <a href="http://www.mail-archive.com/nant-developers@lists.sourceforge.net/index.html#04222"><b>Thread</b></a> 
+  <a href="http://www.mail-archive.com/nant-developers@lists.sourceforge.net/msg04223.html">--&gt;</a>  
+ </td> 
+
+</tr>
+</tbody></table>
+
+<p>
+  </p><form method="post" action="/cgi-bin/Nomailto.pl">
+  <input name="user" value="sa" type="hidden">
+  <input name="host" value="programmers-world.com" type="hidden">
+  <input name="subject" value="Re: [nant-dev] FTP Task - new version" type="hidden">
+  <input name="msgid" value="[EMAIL PROTECTED]" type="hidden">
+  Reply via email to<br>
+  <input value=" Sascha Andres " type="submit">
+  </form>
+
+</center>
+
+<!--X-BotPNI-End-->
+<!--X-User-Footer-->
+<!--X-User-Footer-End-->
+<!--/htdig_noindex-->
+</body></html>
