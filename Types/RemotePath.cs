@@ -29,8 +29,12 @@ namespace Sourceforge.NAnt.Ftp.Util {
 		const char DOS_SEP = '\\';
 		const char VOL_SEP = ':';
 
-		public static string Combine(string dir, string name) {
-			return dir + DIR_SEP.ToString() + name;
+		public static string Combine(string p1, string p2) {
+			if (RPath.IsPathRooted(p2)) {
+				return p2;
+			} else {			
+				return p1 + RPath.DirectorySeparatorChar.ToString() + p2;
+			}
 		}
 		public static char DirectorySeparatorChar {
 			get { return DIR_SEP;}
@@ -40,6 +44,45 @@ namespace Sourceforge.NAnt.Ftp.Util {
 		}
 		public static bool IsPathRooted(string path) {
 			return path.StartsWith(DIR_SEP.ToString()) || path.StartsWith(DOS_SEP.ToString()); 
+		}
+		public static string StripSingleDotReferences(string path) {
+			const string doubleText = "|--DOUBLE--DOTS--|";
+			const string doubleDots = "..";
+			string singleDot  = "." +RPath.DirectorySeparatorChar.ToString();
+			
+			// sub out any double-dot references
+			path = path.Replace(doubleDots, doubleText);
+			
+			{
+				path = path.Replace(singleDot , String.Empty);
+
+				// a trailing . at this point is redundant.
+				char [] trim1 = {'.'};
+				path = path.TrimEnd(trim1);
+				
+				if (path.Length>1) {
+					// then a trailing slash is redundant (i.e. not root)
+					char [] trim2 = {RPath.DirectorySeparatorChar};
+					path = path.TrimEnd(trim2);
+				}
+			}
+			
+			// replace any double-dot references
+			path = path.Replace(doubleText, doubleDots);
+
+			return path;
+		}
+		public static string FixSeps(string path) {
+			return path.Replace(DOS_SEP, RPath.DirectorySeparatorChar);
+		}
+		public static string RemoveDoubleSeps(string path) {
+			return path.Replace(RPath.DirectorySeparatorChar.ToString()+RPath.DirectorySeparatorChar.ToString(), RPath.DirectorySeparatorChar.ToString());
+		}
+		public static string Clean(string path) {
+			path = RPath.FixSeps(path);
+			path = RPath.StripSingleDotReferences(path);
+			path = RPath.RemoveDoubleSeps(path);
+			return path;
 		}
 	}
 //	public class RemotePathArray : ArrayList {

@@ -503,15 +503,15 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 		}
 		
 		public void CWD(string remotePath) {
-			remotePath = remotePath.Replace(DOS_DIR_SEPERATOR, DIR_SEPERATOR);
-			if (remotePath!=String.Empty) {
-				this.Log(Level.Info, "Changing remote directory to '{0}'", remotePath);
+			remotePath = RPath.Clean(remotePath);
+			if (remotePath!=String.Empty && remotePath!="." && remotePath!=PWD) {
+				this.Log(Level.Info, " + Changing remote directory to '{0}'", remotePath);
 				if (IsConnected) {
-					this.Log(Level.Verbose, " + Attempting CWD...");
+					this.Log(Level.Verbose, " +   Attempting CWD...");
 					_client.ChDir(remotePath);
-					this.Log(Level.Verbose, " + CWD successful.");
+					this.Log(Level.Verbose, " +   CWD successful.");
 				} else {
-					this.Log(Level.Debug, "Not connected.");
+					this.Log(Level.Debug, " + Not connected.");
 				}
 			}
 		}
@@ -522,7 +522,7 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 					CWD(remotePath);
 				} catch (FTPException fex) {
 					this.Log(Level.Info, fex.Message);
-					this.Log(Level.Info, "Creating {0} remotely.", remotePath);
+					this.Log(Level.Info, " + Creating {0} remotely.", remotePath);
 					MkDir(remotePath);
 					CWD(remotePath);
 				}
@@ -671,12 +671,21 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 		// process the transferfilesets
 		private void DoTransfers() {
 			foreach (TransferFileSet tfs in _transferList) {
-				this.Log(Level.Info, "Processing a {0}FileSet.", tfs.Direction);
-				this.Log(Level.Info, " +    Local Path: "+tfs.LocalPath.ToString());
-				this.Log(Level.Info, " +   Remote Path: "+tfs.RemotePathString);
-				this.Log(Level.Info, " + Transfer Type: "+tfs.TransferType);
+				string dirtext = "transmitted";
+				string dir = "Put";
+				if (tfs.Direction==TransferDirection.GET) {
+					dirtext = "received";
+					dir = "Get";
+				}
+
+				this.Log(Level.Verbose, "Processing a {0}FileSet.", dir);
+				this.Log(Level.Verbose, " +    Local Path: "+tfs.LocalPath.ToString());
+				this.Log(Level.Verbose, " +   Remote Path: "+tfs.RemotePathString);
+				this.Log(Level.Verbose, " + Transfer Type: "+tfs.TransferType);
 				
-				tfs.Transfer(this);
+				int count = tfs.Transfer(this);
+				
+				this.Log(Level.Info, "<{0}> complete: {1} files {2}.", dir, count, dirtext);
 			}
 		}
 
@@ -756,7 +765,7 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 			}
 		}
 		
-		// get one file
+		// get one file from the PWD to a localpath (PWD is arranged in GetFileSet.TransferFiles
 		public void Get(string fileName,
 		                 string localpath, 
 		                 string remotepath,
@@ -764,74 +773,35 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 		                 bool flatten, 
 		                 bool createDirsOnDemand) {
 
-			// TODO: HERE!  woohoo!  the remote parsing works for one test-case!
+			// woohoo!  the remote parsing works for two test-cases!
 			
-#if true
-			char [] dirseps = {DOS_DIR_SEPERATOR, DIR_SEPERATOR};
-
-			string localFilePath = String.Empty;	// path to 'fileName' locally, relative to 'localpath'
-			string remoteFilePath = String.Empty;	// path to 'fileName' remotely, relative to 'remotepath'
+			if (RPath.IsPathRooted(remotepath)) {
+				// strip the initial directoryseperatorchar off 
+				// this converts a remotepath rooted in the remote filesystem root
+				// to a local path relative to the local-dir attribute.
+				remotepath = remotepath.Remove(0,1);
+			}
 			
-			// convert fileName into relative paths...
-			if (Path.GetDirectoryName(fileName).StartsWith(localpath)) {
-				
-				// our abs path is longer than localpath, 
-				// so the relative path is simple.
+			DirectoryInfo dirInfo = new DirectoryInfo(Path.Combine(localpath, remotepath));
 			
-				localFilePath = fileName.Replace(localpath, String.Empty).Remove(0,1);
+			this.Log(Level.Info,    "Getting {0}", fileName);
+			this.Log(Level.Verbose, "   from {0}", PWD);
+			this.Log(Level.Info   , "     to {0}",dirInfo.FullName);
 			
-			} else if (localpath.StartsWith(Path.GetDirectoryName(fileName))) {
+			if (IsConnected) {
 
-				// our abs path is shorter than the localpath
-				// so our relative path is preceded by '..' references.
-				
-				localpath = localpath.Replace(Path.GetDirectoryName(fileName), String.Empty);
-
-				int z = -1;
-
-				z = localpath.IndexOfAny(dirseps);
-				while( z >-1 ) {
-					localFilePath += ".."+Path.DirectorySeparatorChar;
-					localpath = localpath.Remove(z,1);
-					z = localpath.IndexOfAny(dirseps);
+				if (!dirInfo.Exists) {
+					if (!createDirsOnDemand) {
+						throw new FTPException("Local directory "+dirInfo.FullName+" does not exist to receive incoming FTP transfer.");
+					}
+					try {
+						dirInfo.Create();
+					} catch (Exception ex) {
+						throw new FTPException("Local directory "+dirInfo.FullName+" could not be created to receive incoming FTP transfer: ", ex.Message);
+					}
 				}
-				localFilePath += Path.GetFileName(fileName);
+				_client.Get(dirInfo.FullName + fileName, fileName);
 			}
-			
-			// mirror the remote file path from the local file path, flattening if requested
-			if (flatten) {
-				remoteFilePath = Path.GetFileName(localFilePath);
-			} else {
-				remoteFilePath = localFilePath;
-			}
-			
-			remoteFilePath = remoteFilePath.Replace(DOS_DIR_SEPERATOR, DIR_SEPERATOR);
-			
-			this.Log(Level.Info, "{0}ting {1}\n   from {2}\n     to {3} ...", 
-								 "Get",
-								 Path.GetFileName(fileName),
-								 localFilePath,
-			         			 remoteFilePath);
-#endif
-//			if (IsConnected) {
-//				// store the pwd
-//				string pwd = PWD;
-//				
-//				// change to the requested directory
-//				string[] dirs = Path.GetDirectoryName(remoteFilePath).Split(dirseps);
-//				foreach(string dir in dirs) {
-//					CWD(dir, createDirsOnDemand);
-//				}
-//				
-//				this.Log(Level.Info, "Putting the file as '{0}'", FtpType);
-//				_client.TransferType = FtpType;
-//				_client.Put(fileName, Path.GetFileName(remoteFilePath));
-//	
-//				if (PWD!=pwd) {
-//					this.Log(Level.Info, "Restoring the remote dir to {0}", pwd);
-//					CWD(pwd);
-//				}
-//			}
 		}
 		
 		/// <summary>Download one file</summary>

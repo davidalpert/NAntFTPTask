@@ -369,19 +369,32 @@ namespace Sourceforge.NAnt.Ftp.Types {
 		}
 		#endregion
 		
-		public override void TransferFiles(FTPTask super) {
+		public override int TransferFiles(FTPTask super) {
 
 			_scanner.Conn = super;
 			
+			string owd = super.PWD;
+			string lastPath = ".";
+			
 			// transfer the files
 			foreach (RemotePath rpath in FileNames) {
-				super.Get(rpath.FullPath,
-				    	  LocalPath.ToString(), 
-				    	  RemotePathString, 
+				if (rpath.Dir!=lastPath) {
+					if (RPath.IsPathRooted(rpath.Dir)) {
+						super.CWD(rpath.Dir);
+					} else {
+						super.CWD(RPath.Combine(owd, rpath.Dir));
+					}
+					lastPath = rpath.Dir;
+				}
+				super.Get(rpath.Name,
+				          LocalPath.ToString(),
+				    	  rpath.Dir,
 				    	  FTPTask.ParseTransferType(TransferType), 
 				    	  Flatten,
 				    	  CreateDirsOnDemand);
-			}						
+			}
+			super.CWD(owd);
+			return FileNames.Length;
 		}
 
 	}

@@ -31,7 +31,7 @@ namespace Sourceforge.NAnt.Ftp.Types {
 			this.Direction = TransferDirection.PUT;
 		}
 		
-		public override void TransferFiles(FTPTask super) {
+		public override int TransferFiles(FTPTask super) {
 
 			// transfer the files
 			foreach (string fileName in FileNames) {
@@ -41,7 +41,8 @@ namespace Sourceforge.NAnt.Ftp.Types {
 				    	  FTPTask.ParseTransferType(TransferType), 
 				    	  Flatten,
 				    	  CreateDirsOnDemand);
-			}						
+			}
+			return FileNames.Count;
 		}
 	}
 }

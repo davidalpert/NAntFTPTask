@@ -305,6 +305,8 @@ namespace Sourceforge.NAnt.Ftp.Util {
             _searchDirIsRecursive = new ArrayList();
             _scannedDirectories = new DirScannerStringCollection(_conn);
 
+            _conn.Log(Level.Info, "Scanning remotely for <get ... /> include patterns...");
+
 #if DEBUG_REGEXES
             Console.WriteLine("*********************************************************************");
             Console.WriteLine("DirectoryScanner.Scan()");
@@ -634,7 +636,8 @@ namespace Sourceforge.NAnt.Ftp.Util {
 	                if (!caseSensitive)
 	                    filename = filename.ToLower();
 	                if (IsPathIncluded(filename, caseSensitive, includedPatterns, excludedPatterns)) {
-	                    _fileNames.Add(file);
+	                	_conn.Log(Level.Info, " + -- including {0}", file.FullPath);
+	                	_fileNames.Add(file);
 	                }
             	}
             }
