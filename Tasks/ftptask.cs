@@ -536,7 +536,7 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 					this.Log(Level.Info, " + : {0}",itemname);
 				}
 				this.Log(Level.Info, "Remote Directory Listing 2:");
-				FTPFile[] files = _client.DirDetails("/david");
+				FTPFile[] files = _client.DirDetails(".");
 				foreach (FTPFile file in files) {
 					this.Log(Level.Info, " + : {0} -- {1}",file.Dir, file.Name);
 				}
