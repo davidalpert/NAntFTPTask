@@ -31,18 +31,17 @@ namespace Sourceforge.NAnt.Ftp.Types {
 			this.Direction = TransferDirection.PUT;
 		}
 		
-		public override int TransferFiles(FTPTask super) {
+		public override void TransferFiles() {
 
 			// transfer the files
 			foreach (string fileName in FileNames) {
-				super.Put(fileName, 
+				Conn.Put(fileName, 
 				    	  LocalPath.ToString(), 
 				    	  RemotePathString, 
 				    	  FTPTask.ParseTransferType(TransferType), 
 				    	  Flatten,
 				    	  CreateDirsOnDemand);
 			}
-			return FileNames.Count;
 		}
 	}
 }

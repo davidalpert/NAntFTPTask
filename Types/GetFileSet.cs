@@ -41,6 +41,7 @@ namespace Sourceforge.NAnt.Ftp.Types {
 		#region Private members
         private bool _hasScanned;
         private RemoteDirectoryScanner _scanner = new RemoteDirectoryScanner();
+        
         // handled the same in local and remote operations
         // -- private bool _defaultExcludes = true;
         // -- private bool _failOnEmpty;
@@ -256,7 +257,7 @@ namespace Sourceforge.NAnt.Ftp.Types {
         #region Public Instance Methods
 
         public bool RemoteDirectoryExists(string dirname) {
-        	return _scanner.Conn.remoteDirExists(dirname);
+        	return _scanner.Client.remoteDirExists(dirname);
         }
         
         public override void Scan() {
@@ -369,32 +370,36 @@ namespace Sourceforge.NAnt.Ftp.Types {
 		}
 		#endregion
 		
-		public override int TransferFiles(FTPTask super) {
+		public override void InitScanner() {
+			// overridden by PutFileSet and GetFileSet			
+			_scanner.Client = this.Conn;
+		}
+		public override void TransferFiles() {
 
-			_scanner.Conn = super;
-			
-			string owd = super.PWD;
+			string owd = Conn.PWD;
 			string lastPath = ".";
-			
+
 			// transfer the files
 			foreach (RemotePath rpath in FileNames) {
 				if (rpath.Dir!=lastPath) {
 					if (RPath.IsPathRooted(rpath.Dir)) {
-						super.CWD(rpath.Dir);
+						Conn.CWD_Quiet(rpath.Dir);
 					} else {
-						super.CWD(RPath.Combine(owd, rpath.Dir));
+						Conn.CWD_Quiet(RPath.Combine(owd, rpath.Dir));
 					}
 					lastPath = rpath.Dir;
 				}
-				super.Get(rpath.Name,
+				Conn.Get(rpath.Name,
 				          LocalPath.ToString(),
 				    	  rpath.Dir,
 				    	  FTPTask.ParseTransferType(TransferType), 
 				    	  Flatten,
 				    	  CreateDirsOnDemand);
 			}
-			super.CWD(owd);
-			return FileNames.Length;
+			Conn.CWD_Quiet(owd);
+		}
+		public override int NumFiles {
+			get { return this.FileNames.Length;}
 		}
 
 	}

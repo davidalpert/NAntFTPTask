@@ -51,10 +51,16 @@ namespace Sourceforge.NAnt.Ftp.Types {
 		private bool _createdirsondemand=true;
 		private TransferDirection _transferDirection;
 		private string _baseRemoteDirectory = ".";
-		
+		private FTPTask _conn;
 		#endregion
 		
 		#region Public Instance Constructors
+		
+		public FTPTask Conn {
+			get {return _conn;}
+			set {_conn = value;}
+		}
+		
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Connection" /> class.
 		/// </summary>
@@ -63,22 +69,28 @@ namespace Sourceforge.NAnt.Ftp.Types {
 		}
 		#endregion Public Instance Constructors
 		   
-		public int Transfer(FTPTask super) {
-			// store the PWD and change to the remote path
-			string pwd = super.PWD;
-			super.CWD(RemotePathString, CreateDirsOnDemand);
-			
-			int numfiles = TransferFiles(super);
-			
-			// and restore the PWD
-			super.CWD(pwd);
-			
-			return numfiles;
+		public virtual int NumFiles {
+			get { return this.FileNames.Count;}
 		}
-		
-		public virtual int TransferFiles(FTPTask super) {
+		public void Transfer(FTPTask super) {
+			this.Conn = super;
+			InitScanner();
+			if (!super.Debug) {
+				// store the PWD and change to the remote path
+				string pwd = super.PWD;
+				super.CWD(RemotePathString, CreateDirsOnDemand);
+				
+				TransferFiles();
+				
+				// and restore the PWD
+				super.CWD_Quiet(pwd);
+			}
+		}
+		public virtual void InitScanner() {
+			// overridden if we need a remote scanner
+		}
+		public virtual void TransferFiles() {
 			// overridden by PutFileSet and GetFileSet
-			return FileNames.Count;
 		}
 		
 		public TransferDirection Direction {

@@ -84,6 +84,7 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 		private string 	_remotePath = EMPTY_STRING;
 		private string 	_localPath 	= ".";
 		private bool	_showDirOnConnect = false;
+		private bool    _createDirsOnDemand = false;
 		
 		private bool	_debug		= false;
 		
@@ -149,6 +150,18 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 			}
 		} // server
 		
+		
+		/// <summary>The property</summary>
+		[TaskAttribute("createDirsOnDemand", Required=false)]
+		[BooleanValidator()]
+		public bool createDirsOnDemand {
+			get {
+				return _createDirsOnDemand;
+			} set {
+					_createDirsOnDemand = value;
+				}
+		} // createDirsOnDemand
+
 		/// <summary>The property</summary>
 		[TaskAttribute("remotepath", Required=false)]
 		public string remotepath {
@@ -200,6 +213,18 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 		public bool IsConnected {
 			get { return _client!=null;}
 		}
+
+		public Level Level {
+			get { 
+				if (this.Debug) {
+					// we are debugging ftp includes so we need more logging info
+					return Level.Info;
+				} else {
+					// hide the extra logging info unless the user specifically wants it
+					return Level.Verbose;
+				}
+			}
+		}
 		#endregion
 
 		#region /////////////////////// Build Elements		
@@ -210,31 +235,6 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 			get { return _connection; }
 			set { _connection = value; }
 		} // credentials
-
-#if false
-		/// <summary>
-        /// The items to include in the fileset.
-        /// </summary>
-        [BuildElementArray("include")]
-        public Include[] IncludeElements {
-            set {
-                foreach (Include include in value) {
-                    if (include.IfDefined && !include.UnlessDefined) {
-                        if (include.AsIs) {
-                            logger.Debug(string.Format(CultureInfo.InvariantCulture, "Including AsIs=", include.Pattern));
-                            AsIs.Add(include.Pattern);
-                        } else if (include.FromPath) {
-                            logger.Debug(string.Format(CultureInfo.InvariantCulture, "Including FromPath=", include.Pattern));
-                            PathFiles.Add(include.Pattern);
-                        } else {
-                            logger.Debug(string.Format(CultureInfo.InvariantCulture, "Including pattern", include.Pattern));
-                            Includes.Add(include.Pattern);
-                        }
-                    }
-                }
-            }
-        }
-#endif
 
 		[BuildElementArray("put")]
 		public TransferFileSet[] PutSets {
@@ -355,10 +355,16 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 				try {
 					ftpConnect();
 					
+					string pwd = PWD;
 					CWD(_remotePath);
-				
+			
 					if (_showDirOnConnect) {
 						ShowDir(".");
+					}
+					
+					if (PWD!=pwd) {
+						// we've changed a directory and done some output, so let's insert a line break.
+						this.Log(Level.Info,"");
 					}
 									
 					this.ExecuteChildTasks();
@@ -426,8 +432,13 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 		private void ftpConnect() {
 			if (_debug) {
 				this.Log(Level.Info, "-------------- Debugging the ftp query --------------");
+				this.Log(Level.Info, "Connection will be attempted to scan remotely for <get> sets");
+				this.Log(Level.Info, "but no transfers will be attempted in either direction");
+				this.Log(Level.Info, "and neither local nor remote file trees will be modified.");
+				this.Log(Level.Info, "-----------------------------------------------------\n");				
 			}
-			else if (!IsConnected) {
+			
+			if (!IsConnected) {
 				this.Log(Level.Info, "Connecting to '{0}' as '{1}' ...", _server, _user);
 				this.Log(Level.Verbose, "Instantiating the FTPClient & opening the connection...");
 				_client = new FTPClient(_server);
@@ -502,13 +513,22 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 			}
 		}
 		
-		public void CWD(string remotePath) {
-			remotePath = RPath.Clean(remotePath);
-			if (remotePath!=String.Empty && remotePath!="." && remotePath!=PWD) {
-				this.Log(Level.Info, " + Changing remote directory to '{0}'", remotePath);
+		public void CWD_Quiet(string path) {
+			ChDir(path, Level.Verbose);
+		}
+		public void CWD(string path, Level loglevel) {
+			ChDir(path, loglevel);
+		}
+		public void CWD(string path) {
+			ChDir(path, Level.Info);
+		}
+		public void ChDir(string path, Level level) {
+			path = RPath.Clean(path);
+			if (path!=String.Empty && path!="." && path!=PWD) {
+				this.Log(level, " + Changing remote directory to '{0}'", path);
 				if (IsConnected) {
 					this.Log(Level.Verbose, " +   Attempting CWD...");
-					_client.ChDir(remotePath);
+					_client.ChDir(path);
 					this.Log(Level.Verbose, " +   CWD successful.");
 				} else {
 					this.Log(Level.Debug, " + Not connected.");
@@ -516,16 +536,18 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 			}
 		}
 
-		public void CWD(string remotePath, bool createOnDemand) {
-			if (createOnDemand) {
+		public void CWD(string path, bool createOnDemand) {
+			if (createOnDemand || this.createDirsOnDemand) {
 				try {
-					CWD(remotePath);
+					CWD(path, this.Level);
 				} catch (FTPException fex) {
-					this.Log(Level.Info, fex.Message);
-					this.Log(Level.Info, " + Creating {0} remotely.", remotePath);
-					MkDir(remotePath);
-					CWD(remotePath);
+					this.Log(this.Level, fex.Message);
+					this.Log(this.Level, " + Creating {0} remotely.", PWD+path);
+					MkDir(path);
+					CWD_Quiet(path);
 				}
+			} else {
+				CWD(path, this.Level);
 			}
 		}
 
@@ -575,14 +597,14 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 			string pwd = PWD;
 			string result;
 			try {
-				CWD(rpath);
+				CWD_Quiet(rpath);
 				result = PWD;
 			} catch (FTPException fex) {
 				fex.ToString();
 				// path does not exist
 				result = String.Empty;
 			} finally {
-				CWD(pwd);
+				CWD_Quiet(pwd);
 			}
 			return result;
 		}
@@ -650,12 +672,12 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 				if (IsConnected) {
 					string pwd = PWD;
 					try {
-						CWD(remoteDir);
+						CWD_Quiet(remoteDir);
 					} catch (FTPException fex) {
 						fex.ToString();
 						exist = false;
 					} finally {
-						CWD(pwd);
+						CWD_Quiet(pwd);
 					}
 				} else {
 					exist = false;
@@ -673,19 +695,28 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 			foreach (TransferFileSet tfs in _transferList) {
 				string dirtext = "transmitted";
 				string dir = "Put";
+				string from = tfs.LocalPath.ToString();
+				string to = _server+":/"+RPath.Combine(PWD,tfs.RemotePathString);
+				
 				if (tfs.Direction==TransferDirection.GET) {
 					dirtext = "received";
 					dir = "Get";
+					from = to;
+					to = tfs.LocalPath.ToString();
+				}
+				
+				if (_debug) {
+					dirtext = "included";
 				}
 
-				this.Log(Level.Verbose, "Processing a {0}FileSet.", dir);
-				this.Log(Level.Verbose, " +    Local Path: "+tfs.LocalPath.ToString());
-				this.Log(Level.Verbose, " +   Remote Path: "+tfs.RemotePathString);
-				this.Log(Level.Verbose, " + Transfer Type: "+tfs.TransferType);
+				this.Log(Level.Info, "<{0}>.", dir);
+				this.Log(Level.Info, "  from: "+from);
+				this.Log(Level.Info, "    to: "+to);
+				this.Log(Level.Info, "    as: "+FTPTask.ParseTransferType(tfs.TransferType));
 				
-				int count = tfs.Transfer(this);
+				tfs.Transfer(this);
 				
-				this.Log(Level.Info, "<{0}> complete: {1} files {2}.", dir, count, dirtext);
+				this.Log(Level.Info, "</{0}>: {1} files {2}.\n", dir, tfs.NumFiles, dirtext);
 			}
 		}
 
@@ -737,7 +768,7 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 			
 			remoteFilePath = remoteFilePath.Replace(DOS_DIR_SEPERATOR, DIR_SEPERATOR);
 			
-			this.Log(Level.Info, "{0}ting {1}\n     to {2} ...", 
+			this.Log(this.Level, "{0}ting {1}\n     to {2} ...", 
 								 "Put",
 //			         			 localFilePath,
 //			         			 remoteFilePath);
@@ -748,19 +779,21 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 				// store the pwd
 				string pwd = PWD;
 				
-				// change to the requested directory
-				string[] dirs = Path.GetDirectoryName(remoteFilePath).Split(dirseps);
-				foreach(string dir in dirs) {
-					CWD(dir, createDirsOnDemand);
+				if (!this.Debug) {
+					// change to the requested directory, creating paths as required && requested
+					string[] dirs = Path.GetDirectoryName(remoteFilePath).Split(dirseps);
+					foreach(string dir in dirs) {
+						CWD(dir, createDirsOnDemand);
+					}
 				}
 				
-				this.Log(Level.Info, "Putting the file as '{0}'", FtpType);
+				this.Log(Level.Verbose, "Putting the file as '{0}'", FtpType);
 				_client.TransferType = FtpType;
 				_client.Put(fileName, Path.GetFileName(remoteFilePath));
 	
 				if (PWD!=pwd) {
-					this.Log(Level.Info, "Restoring the remote dir to {0}", pwd);
-					CWD(pwd);
+					this.Log(Level.Verbose, "Restoring the remote dir to {0}", pwd);
+					CWD_Quiet(pwd);
 				}
 			}
 		}
@@ -783,10 +816,10 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 			}
 			
 			DirectoryInfo dirInfo = new DirectoryInfo(Path.Combine(localpath, remotepath));
-			
-			this.Log(Level.Info,    "Getting {0}", fileName);
-			this.Log(Level.Verbose, "   from {0}", PWD);
-			this.Log(Level.Info   , "     to {0}",dirInfo.FullName);
+	
+			this.Log(this.Level,      "Getting {0}", fileName);
+			this.Log(Level.Verbose,   "   from {0}", PWD);
+			this.Log(this.Level,      "     to {0}",dirInfo.FullName);
 			
 			if (IsConnected) {
 

@@ -15,18 +15,18 @@
 	
 
 	<target name="test" depends="" >
-		<ftp debug="false"
+		<ftp debug="true"
 			 connection="myConn"
 			 remotepath="${remote-dir}"
 			 showdironconnect="false" 
 			 >
-			 <!--
 			<put type="ascii">
 				<include name="..\AssemblyInfo.cs" />
 			</put>
 			<put type="b" local-path=".." remote-path="test">
 				<include name="**\*.cs" />
 			</put>
+			 <!--
 			-->
 			<get type="a" local-path="incoming" failonempty="true" >
 				<include name="..\AssemblyInfo.cs" />

@@ -146,7 +146,7 @@ namespace Sourceforge.NAnt.Ftp.Util {
         public RemoteDirectoryScanner (FTPTask supervisor) {
         	_conn = supervisor;
         }
-        public FTPTask Conn { 
+        public FTPTask Client { 
         	get {return _conn;}
         	set {_conn = value;} 
         }
@@ -305,7 +305,7 @@ namespace Sourceforge.NAnt.Ftp.Util {
             _searchDirIsRecursive = new ArrayList();
             _scannedDirectories = new DirScannerStringCollection(_conn);
 
-            _conn.Log(Level.Info, "Scanning remotely for <get ... /> include patterns...");
+           	_conn.Log(_conn.Level, "Scanning remotely for <get ... /> include patterns...");
 
 #if DEBUG_REGEXES
             Console.WriteLine("*********************************************************************");
@@ -636,7 +636,7 @@ namespace Sourceforge.NAnt.Ftp.Util {
 	                if (!caseSensitive)
 	                    filename = filename.ToLower();
 	                if (IsPathIncluded(filename, caseSensitive, includedPatterns, excludedPatterns)) {
-	                	_conn.Log(Level.Info, " + -- including {0}", file.FullPath);
+	                	_conn.Log(_conn.Level, " + -- including {0}", file.FullPath);
 	                	_fileNames.Add(file);
 	                }
             	}
