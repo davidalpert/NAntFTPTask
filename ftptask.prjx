@@ -12,6 +12,7 @@
     <File name=".\ftptask.build" subtype="Code" buildaction="Nothing" dependson="" data="" />
     <File name=".\Tests\ftptask.build" subtype="Code" buildaction="Nothing" dependson="" data="" />
     <File name=".\Types\TransferFileSet.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+    <File name=".\AssemblyInfo.subwcrev" subtype="Code" buildaction="Nothing" dependson="" data="" />
   </Contents>
   <References>
     <Reference type="Assembly" refto="c:\usr\local\nant-0.85-rc1\bin\NAnt.Core.dll" localcopy="False" />

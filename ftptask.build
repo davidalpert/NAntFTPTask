@@ -26,7 +26,7 @@
   <property name="extension.debug" value="dll">
   </property>
   <!--The initialisation target.-->
-  <target name="init.debug" if="${debug}">
+  <target name="init.debug" depends="subwcrev" if="${debug}">
     <mkdir dir="${outputdir.debug}" />
   </target>
   <!--The 'clean' target.  Here we delete the built output files and extra files which are not directly specified in 
@@ -80,10 +80,10 @@
   <property name="assembly.release" value="ftptask">
   </property>
   <!--The output file's extension.-->
-  <property name="extension.release" value="exe">
+  <property name="extension.release" value="dll">
   </property>
   <!--The initialisation target.-->
-  <target name="init.release" unless="${debug}">
+  <target name="init.release" depends="subwcrev" unless="${debug}">
     <mkdir dir="${outputdir.release}" />
   </target>
   <!--The 'clean' target.  Here we delete the built output files and extra files which are not directly specified in 
@@ -102,7 +102,7 @@
   <!--The 'build' target.-->
   <target name="build.release" depends="init.release, gacreferences.release" unless="${debug}">
     <!--Compiles the code -->
-    <csc target="exe" output="${outputdir.release}\${assembly.release}.${extension.release}" warninglevel="4" debug="False" optimize="True" unsafe="False" checked="False" noconfig="False" nostdlib="False" define="" warnaserror="False">
+    <csc target="library" output="${outputdir.release}\${assembly.release}.${extension.release}" warninglevel="4" debug="False" optimize="True" unsafe="False" checked="False" noconfig="False" nostdlib="False" define="" warnaserror="False">
       <sources>
         <include name=".\AssemblyInfo.cs" />
         <include name=".\Tasks\ftptask.cs" />
@@ -124,5 +124,10 @@
   </target>
   <!--Generates a property for each Gac reference.  The property name is set to the name of the assembly-->
   <target name="gacreferences.release" unless="${debug}">
+  </target>
+  <!-- Automatically updates AssemblyInfo.cs using subwcrev -->
+  <target name="subwcrev">
+	<exec program="subwcrev"
+	      commandline=". AssemblyInfo.subwcrev AssemblyInfo.cs" />
   </target>
 </project>
