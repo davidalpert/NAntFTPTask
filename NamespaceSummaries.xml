@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<namespaces>
+    <namespace name="Sourceforge.NAnt.Ftp">
+        Classes that implement an FTP task for NAnt.
+    </namespace>
+    <namespace name="Sourceforge.NAnt.Ftp.Enum">
+        Enumerations for FTPTask.
+    </namespace>
+    <namespace name="Sourceforge.NAnt.Ftp.Tasks">
+        NAnt task classes for FTPTask.
+    </namespace>
+    <namespace name="Sourceforge.NAnt.Ftp.Types">
+        NAnt types for FTPTask.
+    </namespace>
+    <namespace name="Sourceforge.NAnt.Ftp.Tests">
+	Unit tests for FTPTask.
+    </namespace>
+    <namespace name="Sourceforge.NAnt.Ftp.Util">
+        Utility classes for FTPTask.
+    </namespace>
+</namespaces>
+

@@ -38,7 +38,7 @@ using EnterpriseDT.Net.Ftp;
 namespace Sourceforge.NAnt.Ftp.Types {
 
 	/// <summary>
-	/// A base class for the <see cref="Put"/> and <see cref="Get"/> elements of an <see cref="FTPTask"/>.
+	/// A base class for the <see cref="PutFileSet"/> and <see cref="GetFileSet"/> elements of an <see cref="FTPTask"/>.
 	/// </summary>
 	/// <remarks>
 	/// <para>
@@ -52,6 +52,7 @@ namespace Sourceforge.NAnt.Ftp.Types {
 		private bool _ifDefined=true;
 		private bool _unlessDefined;
 		private bool _flatten=false;
+		private bool _update=false;
 		private bool _createdirsondemand=true;
 		private TransferDirection _transferDirection;
 		private string _baseRemoteDirectory = ".";
@@ -79,7 +80,7 @@ namespace Sourceforge.NAnt.Ftp.Types {
 		public void Transfer(FTPTask super) {
 			this.Conn = super;
 			InitScanner();
-			if (!super.Debug) {
+			if (super.Exec) {
 				// store the PWD and change to the remote path
 				string pwd = super.PWD;
 				super.CWD(RemotePathString, CreateDirsOnDemand);
@@ -164,6 +165,14 @@ namespace Sourceforge.NAnt.Ftp.Types {
         	set { this.TransferType = value;}
         }
         
+        
+        /// <summary>If <b>true</b> files are only transferred if the source file is newer than the destination file.</summary>
+        [TaskAttribute("update")]
+        [BooleanValidator()]
+        public bool Update {
+        	get {return _update;}
+        	set {_update = value;}
+        }
         #endregion
 
 		#region If/Unless Attributes

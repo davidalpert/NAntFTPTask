@@ -29,21 +29,22 @@ namespace Sourceforge.NAnt.Ftp.Types {
 	/// A specially derived <b>FileSet</b> element that is used in the &lt;ftp&gt; task <see cref="FTPTask"/>.
 	/// </summary>
 	[ElementName("put")]
-	public class Put : TransferFileSet {
-		public Put() {
+	public class PutFileSet : TransferFileSet {
+		public PutFileSet() {
 			this.Direction = TransferDirection.PUT;
 		}
 		
 		public override void TransferFiles() {
-
+			
 			// transfer the files
 			foreach (string fileName in FileNames) {
-				Conn.Put(fileName, 
+				Conn.Put(fileName,
 				    	  LocalPath.ToString(), 
 				    	  RemotePathString, 
 				    	  FTPTask.ParseTransferType(TransferType), 
 				    	  Flatten,
-				    	  CreateDirsOnDemand);
+				    	  CreateDirsOnDemand,
+				    	  Update);
 			}
 		}
 	}

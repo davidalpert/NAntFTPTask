@@ -20,7 +20,7 @@
           <a href="../tasks/index.html">Task Reference</a>
           <img alt="-&gt;" src="../images/arrow.gif" /> &lt;ftp&gt;</td>
         <td class="NavBar-Cell" align="right">
-                        v1.0.39.85</td>
+                        v1.0.40.85</td>
       </tr>
     </table>
     <h1>&lt;ftp&gt;</h1>
@@ -64,15 +64,21 @@
           <td style="text-align: center;">False</td>
         </tr>
         <tr>
-          <td valign="top">debug</td>
+          <td valign="top">exec</td>
           <td style="text-align: center;">bool</td>
-          <td>If this is <b xmlns="">true</b>, establish the remote connection but do not transfer any files or modify local or remote directory structures. Instead, display a list of the files included in the transfer operation. This is useful for debugging include patterns on either local or remote filesystems.</td>
+          <td>If this is <b xmlns="">true</b>, execute the file transfers. If it is <b xmlns="">false</b>, establish the remote connection but do not transfer any files or modify local or remote directory structures. Instead, display a list of the files included in the transfer operation. This is useful for debugging include patterns on either local or remote filesystems. Default is true.</td>
           <td style="text-align: center;">False</td>
         </tr>
         <tr>
           <td valign="top">localdir</td>
           <td style="text-align: center;">string</td>
           <td>The directory to use as a base path on the local filesystem.</td>
+          <td style="text-align: center;">False</td>
+        </tr>
+        <tr>
+          <td valign="top">logfiles</td>
+          <td style="text-align: center;">bool</td>
+          <td>If this is <b xmlns="">true</b>, each file transfer is individually recorded in logging output. Default is <b xmlns="">true</b>.</td>
           <td style="text-align: center;">False</td>
         </tr>
         <tr>
@@ -126,6 +132,16 @@
     <h3>Nested Elements:</h3>
     <!--Element-->
     <h4>
+      <a id="script">
+      </a>
+                    &lt;<a href="../types/text.html">script</a>&gt;
+                </h4>
+    <div class="nested-element">
+      <p />
+    </div>
+    <h4>&lt;/script&gt;</h4>
+    <!--Element-->
+    <h4>
       <a id="connection">
       </a>
                     &lt;<a href="../types/connection.html">connection</a>&gt;
@@ -136,7 +152,7 @@
     <h4>
       <a id="put">
       </a>
-                    &lt;<a href="../elements/Sourceforge.NAnt.Ftp.Types.TransferFileSet.html">put</a>&gt;
+                    &lt;<a href="../types/put.html">put</a>&gt;
                 </h4>
     <div class="nested-element">
       <p> A PutFileSet (derived from <a href="../elements/Sourceforge.NAnt.Ftp.Types.TransferFileSet.html">TransferFileSet</a>) that contains a list of <b xmlns="">Include</b> statements that are processed (scanned) against the local filesystem relative to the <b xmlns="">localpath</b> value. </p>
@@ -148,7 +164,7 @@
     <h4>
       <a id="get">
       </a>
-                    &lt;<a href="../elements/Sourceforge.NAnt.Ftp.Types.TransferFileSet.html">get</a>&gt;
+                    &lt;<a href="../types/get.html">get</a>&gt;
                 </h4>
     <div class="nested-element">
       <p> A Get (derived from <a href="../elements/Sourceforge.NAnt.Ftp.Types.TransferFileSet.html">TransferFileSet</a>) that contains a list of <b xmlns="">Include</b> statements that are processed (scanned) against the remote filesystem relative to the <b xmlns="">remotepath</b> value. </p>
@@ -245,7 +261,7 @@
     </ul>
     <h3>Requirements</h3>
     <div style="margin-left: 20px;">
-      <b>Assembly:</b> ftptask (1.0.39.85)
+      <b>Assembly:</b> ftptask (1.0.40.85)
             </div>
   </body>
 </html>

@@ -165,7 +165,7 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 		/// <summary>pass for anon ftp</summary>
 		private const string ANONYMOUS_PASS = "anonymous@unknown.org";
 		/// <summary>the name of the script block</summary>
-		private const string SCRIPT_NODE_NAME = "nant:script";
+		private const string SCRIPT_NODE_NAME = "script";
 		/// <summary>the name of a put block</summary>
 		private const string PUT_NODE_NAME = "nant:put";
 		/// <summary>the name of a get block</summary>
@@ -187,8 +187,8 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 		private string 	_localPath 	= ".";
 		private bool	_showDirOnConnect = false;
 		private bool    _createDirsOnDemand = false;
-		
-		private bool	_debug		= false;
+		private bool	_logfiles	= true;
+		private bool	_exec		= true;
 		
 		private FTPConnectMode 	_connectMode = FTPConnectMode.PASV;
 		private Connection 		_connection	 = null;
@@ -277,8 +277,8 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 			get {
 				return _remotePath;
 			} set {
-					_remotePath = value;
-				}
+				_remotePath = RPath.Clean(value);
+			}
 		} // remotepath
 		
 		/// <summary>The directory to use as a base path on the local filesystem.</summary>
@@ -291,14 +291,25 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 				}
 		} // localpath
 
-		/// <summary>If this is <b>true</b>, establish the remote connection but do not transfer any files or modify local or remote directory structures.  Instead, display a list of the files included in the transfer operation.  This is useful for debugging include patterns on either local or remote filesystems.</summary>
-		[TaskAttribute("debug", Required=false)]
+		/// <summary>If this is <b>true</b>, execute the file transfers.  If it is <b>false</b>, establish the remote connection but do not transfer any files or modify local or remote directory structures.  Instead, display a list of the files included in the transfer operation.  This is useful for debugging include patterns on either local or remote filesystems.  Default is true.</summary>
+		[TaskAttribute("exec", Required=false)]
 		[BooleanValidator()]
-		public bool Debug {
+		public bool Exec {
 			get {
-				return _debug;
+				return _exec;
 			} set {
-					_debug = value;
+					_exec = value;
+				}
+		} // localpath
+
+		/// <summary>If this is <b>true</b>, each file transfer is individually recorded in logging output.  Default is <b>true</b>.</summary>
+		[TaskAttribute("logfiles", Required=false)]
+		[BooleanValidator()]
+		public bool LogFiles {
+			get {
+				return _logfiles;
+			} set {
+					_logfiles = value;
 				}
 		} // localpath
 
@@ -325,8 +336,19 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 
 		public Level Level {
 			get { 
-				if (this.Debug) {
+				if (this.Exec) {
+					// hide the extra logging info unless the user specifically wants it
+					return Level.Verbose;
+				} else {
 					// we are debugging ftp includes so we need more logging info
+					return Level.Info;
+				}
+			}
+		}
+		public Level LevelLogfiles {
+			get { 
+				if (this.LogFiles) {
+					// we want more logging info
 					return Level.Info;
 				} else {
 					// hide the extra logging info unless the user specifically wants it
@@ -337,6 +359,15 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 		#endregion
 
 		#region /////////////////////// Build Elements		
+		
+		[BuildElement("script")]
+		public Text Script {
+			get {Text t = new Text();
+				 t.InnerText = _script;
+				 return t;}
+			set {_script = ((Text)value).InnerText;}
+		}
+		
 		/// <summary>The network credentials used for authenticating the request with
 		/// the Internet resource.</summary>
 		[BuildElement("connection")]
@@ -359,7 +390,7 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 		/// </para>
 		/// </summary>
 		[BuildElementArray("put")]
-		public TransferFileSet[] PutSets {
+		public PutFileSet[] PutSets {
             set {
 // these accessors are ignored.  puts and gets are grabbed from the XML the InitTask routine.
 //                foreach (TransferFileSet putset in value) {
@@ -384,7 +415,7 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 		/// </para>
 		/// </summary>
 		[BuildElementArray("get")]
-		public TransferFileSet[] GetSets {
+		public GetFileSet[] GetSets {
             set {
 // these accessors are ignored.  puts and gets are grabbed from the XML the InitTask routine.
 //                foreach (TransferFileSet getset in value) {
@@ -453,7 +484,7 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 				if (1 == scriptList.Count) {
 					_script = scriptList.Item(0).InnerText;
 				} else {
-					throw new BuildException("Only one <script> block allowed.", Location);
+					throw new BuildException("Only one <ftpscript> block allowed.", Location);
 				} // if
 			} // if
 			scriptList = null;
@@ -517,32 +548,32 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 						foreach(string fileName in _uploadBinary.FileNames) {
 							try {
 								uploadFile(fileName, FTPTransferType.BINARY);
-							} catch {
-								this.Log(Level.Info, "{0} could not be uploaded.", fileName);
+							} catch (Exception ex) {
+								this.Log(Level.Info, "{0} could not be uploaded.\n{1}", fileName, ex.Message);
 							} // try
 						} // foreach
 		
 						foreach(string fileName in _uploadAscii.FileNames) {
 							try {
 								uploadFile(fileName, FTPTransferType.ASCII);
-							} catch {
-								this.Log(Level.Info, "{0} could not be uploaded.", fileName);
+							} catch (Exception ex) {
+								this.Log(Level.Info, "{0} could not be uploaded.\n{1}", fileName, ex.Message);
 							} // try
 						} // foreach
 		
 						foreach(string fileName in _downloadBinary.Includes) {
 							try {
 								downloadFile(fileName, FTPTransferType.BINARY);
-							} catch {
-								this.Log(Level.Info, "{0} could not be downloaded.", fileName);
+							} catch (Exception ex) {
+								this.Log(Level.Info, "{0} could not be downloaded.\n{1}", fileName, ex.Message);
 							} // try
 						} // foreach
 		
 						foreach(string fileName in _downloadAscii.Includes) {
 							try {
 								downloadFile(fileName, FTPTransferType.ASCII);
-							} catch {
-								this.Log(Level.Info, "{0} could not be downloaded.", fileName);
+							} catch (Exception ex) {
+								this.Log(Level.Info, "{0} could not be downloaded.\n{1}", fileName, ex.Message);
 							} // try
 						} // foreach
 		
@@ -570,7 +601,7 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 
 		/// <summary>Connect to server</summary>
 		private void ftpConnect() {
-			if (_debug) {
+			if (!_exec) {
 				this.Log(Level.Info, "-------------- Debugging the ftp query --------------");
 				this.Log(Level.Info, "Connection will be attempted to scan remotely for <get> sets");
 				this.Log(Level.Info, "but no transfers will be attempted in either direction");
@@ -865,7 +896,7 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 					to = tfs.LocalPath.ToString();
 				}
 				
-				if (_debug) {
+				if (!_exec) {
 					dirtext = "included";
 				}
 
@@ -886,7 +917,8 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 		                 string remotepath,
 		                 FTPTransferType FtpType, 
 		                 bool flatten, 
-		                 bool createDirsOnDemand) {
+		                 bool createDirsOnDemand,
+		                 bool updateOnly) {
 
 			char [] dirseps = {DOS_DIR_SEPERATOR, DIR_SEPERATOR};
 
@@ -894,7 +926,11 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 			string remoteFilePath = String.Empty;	// path to 'fileName' remotely, relative to 'remotepath'
 			
 			// convert fileName into relative paths...
-			if (Path.GetDirectoryName(fileName).StartsWith(localpath)) {
+			if (Path.GetDirectoryName(fileName).Length==0) {
+				
+				localFilePath = Path.GetFileName(fileName);
+				
+			} else if (Path.GetDirectoryName(fileName).StartsWith(localpath)) {
 				
 				// our abs path is longer than localpath, 
 				// so the relative path is simple.
@@ -928,28 +964,32 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 			
 			remoteFilePath = remoteFilePath.Replace(DOS_DIR_SEPERATOR, DIR_SEPERATOR);
 			
-			this.Log(this.Level, "{0}ting {1}\n     to {2} ...", 
-								 "Put",
-//			         			 localFilePath,
-//			         			 remoteFilePath);
-			         			 fileName,
-			         			 remotepath+DIR_SEPERATOR+remoteFilePath);
+			this.Log(this.LevelLogfiles, "  file: {0}", localFilePath);
+			this.Log(this.Level,         "    to: {0}", Path.Combine(remotepath, remoteFilePath));
 
 			if (IsConnected) {
 				// store the pwd
 				string pwd = PWD;
 				
-				if (!this.Debug) {
+				if (this.Exec) {
 					// change to the requested directory, creating paths as required && requested
 					string[] dirs = Path.GetDirectoryName(remoteFilePath).Split(dirseps);
 					foreach(string dir in dirs) {
 						CWD(dir, createDirsOnDemand);
 					}
 				}
-				
-				this.Log(Level.Verbose, "Putting the file as '{0}'", FtpType);
-				_client.TransferType = FtpType;
-				_client.Put(fileName, Path.GetFileName(remoteFilePath));
+				if (updateOnly 
+				    && (DateTime.Compare(_client.ModTime(Path.GetFileName(remoteFilePath)),
+				                         (new FileInfo(fileName)).LastWriteTime
+				                        )>=0
+				       )
+				   ) {
+					this.Log(this.LevelLogfiles, "Remote file is newer.");
+				} else {
+					this.Log(Level.Verbose, "Putting the file as '{0}'", FtpType);
+					_client.TransferType = FtpType;
+					_client.Put(fileName, Path.GetFileName(remoteFilePath));
+				}
 	
 				if (PWD!=pwd) {
 					this.Log(Level.Verbose, "Restoring the remote dir to {0}", pwd);
@@ -964,7 +1004,8 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 		                 string remotepath,
 		                 FTPTransferType FtpType, 
 		                 bool flatten, 
-		                 bool createDirsOnDemand) {
+		                 bool createDirsOnDemand,
+		                 bool updateOnly) {
 
 			// woohoo!  the remote parsing works for two test-cases!
 			
@@ -977,9 +1018,11 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 			
 			DirectoryInfo dirInfo = new DirectoryInfo(Path.Combine(localpath, remotepath));
 	
-			this.Log(this.Level,      "Getting {0}", fileName);
-			this.Log(Level.Verbose,   "   from {0}", PWD);
-			this.Log(this.Level,      "     to {0}",dirInfo.FullName);
+			this.Log(this.LevelLogfiles, "  file: {0}", RPath.Combine(PWD,fileName));
+			this.Log(this.Level,         "    to: {0}", Path.Combine(dirInfo.FullName, fileName));
+//			this.Log(this.Level,      "Getting {0}", fileName);
+//			this.Log(Level.Verbose,   "   from {0}", PWD);
+//			this.Log(this.Level,      "     to {0}",dirInfo.FullName);
 			
 			if (IsConnected) {
 
@@ -993,7 +1036,7 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 						throw new FTPException("Local directory "+dirInfo.FullName+" could not be created to receive incoming FTP transfer: ", ex.Message);
 					}
 				}
-				_client.Get(dirInfo.FullName + fileName, fileName);
+				_client.Get(Path.Combine(dirInfo.FullName,fileName), fileName);
 			}
 		}
 		
@@ -1001,41 +1044,51 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 		/// <param name="FileName">Download this filename</param>
 		/// <param name="FtpType">using ascii or binary</param>
 		private void downloadFile(string FileName, FTPTransferType FtpType) {
-			string onlyFileName = EMPTY_STRING;
-			string localRemoteFile = EMPTY_STRING;
-			string downloadTo = EMPTY_STRING;
-			FileSet workingFileset = null;
 
-			if (FTPTransferType.ASCII == FtpType) {
-				workingFileset = _downloadAscii;
-			} else {
-				workingFileset = _downloadBinary;
-			} // if
-			FileInfo fi = new FileInfo(FileName);
-			onlyFileName = fi.Name;
-			fi = null;
-
-			if (!_remotePath.Equals(EMPTY_STRING)) {
-				if (_remotePath.EndsWith(DIR_SEPERATOR.ToString())) {
-					localRemoteFile = _remotePath + onlyFileName;
-				} else {
-					localRemoteFile = _remotePath + DIR_SEPERATOR + onlyFileName;
-				} // if
-				fi = null;
-			} // if
-
-			if (!workingFileset.BaseDirectory.FullName.EndsWith(DIR_SEPERATOR.ToString()) &&
-			    !workingFileset.BaseDirectory.FullName.EndsWith(DOS_DIR_SEPERATOR.ToString())) {
-				downloadTo = workingFileset.BaseDirectory.FullName.Replace("\\", "/") + DIR_SEPERATOR + onlyFileName;
-			} else {
-				downloadTo = workingFileset.BaseDirectory.FullName.Replace("\\", "/") + onlyFileName;
-			} // if
-
-			this.Log(Level.Verbose, "Downloading file {0} to {1}", localRemoteFile, downloadTo);
-
-			_client.TransferType = FtpType;
-			_client.Get(downloadTo, localRemoteFile);
-			//_ftpConn.GetFile(localRemoteFile, downloadTo, FtpType);
+			this.Get(Path.GetFileName(FileName),
+			         Path.GetDirectoryName(FileName),
+			         ".",
+			         FtpType,
+			         false,
+			         false,
+			         false);
+			       
+			         
+//			string onlyFileName = EMPTY_STRING;
+//			string localRemoteFile = EMPTY_STRING;
+//			string downloadTo = EMPTY_STRING;
+//			FileSet workingFileset = null;
+//
+//			if (FTPTransferType.ASCII == FtpType) {
+//				workingFileset = _downloadAscii;
+//			} else {
+//				workingFileset = _downloadBinary;
+//			} // if
+//			FileInfo fi = new FileInfo(FileName);
+//			onlyFileName = fi.Name;
+//			fi = null;
+//
+//			if (!_remotePath.Equals(EMPTY_STRING)) {
+//				if (_remotePath.EndsWith(DIR_SEPERATOR.ToString())) {
+//					localRemoteFile = _remotePath + onlyFileName;
+//				} else {
+//					localRemoteFile = _remotePath + DIR_SEPERATOR + onlyFileName;
+//				} // if
+//				fi = null;
+//			} // if
+//
+//			if (!workingFileset.BaseDirectory.FullName.EndsWith(DIR_SEPERATOR.ToString()) &&
+//			    !workingFileset.BaseDirectory.FullName.EndsWith(DOS_DIR_SEPERATOR.ToString())) {
+//				downloadTo = workingFileset.BaseDirectory.FullName.Replace("\\", "/") + DIR_SEPERATOR + onlyFileName;
+//			} else {
+//				downloadTo = workingFileset.BaseDirectory.FullName.Replace("\\", "/") + onlyFileName;
+//			} // if
+//
+//			this.Log(Level.Verbose, "Downloading file {0} to {1}", localRemoteFile, downloadTo);
+//
+//			_client.TransferType = FtpType;
+//			_client.Get(downloadTo, localRemoteFile);
+//			//_ftpConn.GetFile(localRemoteFile, downloadTo, FtpType);
 			return;
 		} // downloadFile()
 
@@ -1043,33 +1096,43 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 		/// <param name="FileName">the file to upload</param>
 		/// <param name="FtpType">use this type (ascii/binary)</param>
 		private void uploadFile(string FileName, FTPTransferType FtpType) {
-			string localRemoteFile = EMPTY_STRING;
-			if (!_remotePath.Equals(EMPTY_STRING)) {
-				FileInfo fi = new System.IO.FileInfo(FileName);
-				if (!fi.Exists) {
-					this.Log(Level.Verbose, "Upload aborted: file does not exist");
-					return;
-				} // if
-				if (_remotePath.EndsWith(DIR_SEPERATOR.ToString())) {
-					localRemoteFile = _remotePath + fi.Name;
-				} else {
-					localRemoteFile = _remotePath + DIR_SEPERATOR + fi.Name;
-				} // if
-				fi = null;
-			} else {
-				FileInfo fi = new System.IO.FileInfo(FileName);
-				if (!fi.Exists) {
-					this.Log(Level.Verbose, "Upload aborted: file does not exist");
-					return;
-				} // if
-				localRemoteFile = fi.Name;
-				fi = null;
-			} // if
-
-			this.Log(Level.Verbose, "Uploading file {0} to {1}", FileName, localRemoteFile);
-			_client.TransferType = FtpType;
-			_client.Put(localRemoteFile, FileName);
-			//_ftpConn.SendFile(FileName, localRemoteFile, FtpType);
+			
+			this.Put(Path.GetFileName(FileName),
+			         Path.GetDirectoryName(FileName),
+			         "",
+			         FtpType,
+			         false,
+			         false,
+			         false);
+			         
+//			
+//			string localRemoteFile = EMPTY_STRING;
+//			if (!_remotePath.Equals(EMPTY_STRING)) {
+//				FileInfo fi = new System.IO.FileInfo(FileName);
+//				if (!fi.Exists) {
+//					this.Log(Level.Verbose, "Upload aborted: file does not exist");
+//					return;
+//				} // if
+//				if (_remotePath.EndsWith(DIR_SEPERATOR.ToString())) {
+//					localRemoteFile = _remotePath + fi.Name;
+//				} else {
+//					localRemoteFile = _remotePath + DIR_SEPERATOR + fi.Name;
+//				} // if
+//				fi = null;
+//			} else {
+//				FileInfo fi = new System.IO.FileInfo(FileName);
+//				if (!fi.Exists) {
+//					this.Log(Level.Verbose, "Upload aborted: file does not exist");
+//					return;
+//				} // if
+//				localRemoteFile = fi.Name;
+//				fi = null;
+//			} // if
+//
+//			this.Log(Level.Verbose, "Uploading file {0} to {1}", FileName, localRemoteFile);
+//			_client.TransferType = FtpType;
+//			_client.Put(localRemoteFile, FileName);
+//			//_ftpConn.SendFile(FileName, localRemoteFile, FtpType);
 			return;
 		} // uploadFile()
 		#endregion
@@ -1162,22 +1225,40 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 		#region scripting
 		private void script() {
 // scripting disabled for connecting to edtFTPnet-1.1.3
-//			if (!_script.Equals(EMPTY_STRING)) {
-//				string [] lines = Cut(_script, Environment.NewLine);
-//
-//				foreach(string line in lines) {
-//					if (!line.Trim().Equals(EMPTY_STRING)) {
-////						this.Log(Level.Verbose, "{0}Executing {1}", this.LogPrefix, line.Trim());
-//						ArrayList listReturn = _ftpConn.SendCommand(line.Trim());
-//						foreach(object returned in listReturn) {
-//							this.Log(Level.Info, "{0}{1}", this.LogPrefix, returned);
-//						} // foreach
-//						listReturn.Clear();
-//						listReturn = null;
-//					} // if
-//				} // foreach
-//			} // if
-//			return;
+			if (!_script.Equals(EMPTY_STRING)) {
+				string [] lines = Cut(_script, Environment.NewLine);
+
+				// store the strict return code state
+				bool strict = _client.StrictReturnCodes;
+				
+				// turn strict return codes off so that we can match more easily
+				_client.StrictReturnCodes = false;
+				string [] validCodes = {
+					"100",  // The requested action is being initiated, expect another reply before proceeding with a new command.
+					"200",	// The requested action has been successfully completed.
+					"300",	// The command has been accepted, but the requested action is dormant, pending receipt of further information.
+					"400",	// The command was not accepted and the requested action did not take place, but the error condition is temporary and the action may be requested again.
+					"500"	// The command was not accepted and the requested action did not take place
+				};
+					
+				foreach(string line in lines) {
+					if (!line.Trim().Equals(EMPTY_STRING)) {
+						this.Log(Level.Verbose, "Executing {0}", line.Trim());
+						//ArrayList listReturn = _client.SendCommand(line.Trim());
+						string returned = _client.Quote(line.Trim(), validCodes);
+						//foreach(object returned in listReturn) {
+							this.Log(Level.Info, "{0}", returned);
+						//} // foreach
+						//listReturn.Clear();
+						//listReturn = null;
+					} // if
+				} // foreach
+				
+				// restore the original strict state
+				_client.StrictReturnCodes = strict;
+				
+			} // if
+			return;
 		} // script()
 
 		/// <summary>Cut a text like Split but with a seperator longer than one char.</summary>

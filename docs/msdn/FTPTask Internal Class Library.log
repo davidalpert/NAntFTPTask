@@ -1,0 +1,15 @@
+Microsoft HTML Help Compiler 4.74.8702
+
+Compiling c:\dev\nantftptask\trunk\docs\msdn\ndoc_msdn_temp\FTPTask Internal Class Library.chm
+
+HHC4006: Warning: The file "Sourceforge.NAnt.Ftp.Tasks.FTPTask.script.html" is already listed in the [FILES] section of the project file.
+
+Compile time: 0 minutes, 19 seconds
+298	Topics
+1,921	Local links
+297	Internet links
+8	Graphics
+
+
+Created c:\dev\nantftptask\trunk\docs\msdn\ndoc_msdn_temp\FTPTask Internal Class Library.chm, 163,390 bytes
+Compression decreased file by 881,111 bytes.

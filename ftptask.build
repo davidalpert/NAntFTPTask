@@ -9,11 +9,12 @@
         <include name=".\Tests\ftptasktests.cs" />
         <include name=".\Types" />
         <include name=".\Tasks" />
-        <include name=".\Types\Connection.cs" />
-        <include name=".\Types\TransferFileSet.cs" />
         <include name=".\Util" />
         <include name=".\Util\RemoteDirectoryScanner.cs" />
         <include name=".\Types\PutFileSet.cs" />
+        <include name=".\Types\Connection.cs" />
+        <include name=".\Types\Text.cs" />
+        <include name=".\Types\TransferFileSet.cs" />
         <include name=".\Types\GetFileSet.cs" />
         <include name=".\Types\RemotePath.cs" />
         <include name=".\Enum" />
@@ -55,7 +56,7 @@
   <property name="extension.debug" value="dll">
   </property>
   <!--The initialisation target.-->
-  <target name="init.debug" depends="subwcrev">
+  <target name="init.debug" >
     <mkdir dir="${outputdir.debug}" />
   </target>
   <!--The 'clean' target.  Here we delete the built output files and extra files which are not directly specified in 
@@ -78,9 +79,20 @@
     </delete>
   </target>
   <!--The 'build' target.-->
-  <target name="build.debug" depends="init.debug, gacreferences.debug" >
+  <target name="build.debug" depends="revfile, init.debug, gacreferences.debug" >
+        <uptodate property="debug.uptodate">
+            <targetfiles>
+		    <include name="${outputdir.debug}\${assembly.debug}.${extension.debug}" />
+            </targetfiles>
+	    <sourcefiles refid="sources"/>
+        </uptodate>
+	<if test="${debug.uptodate}">
+		<echo message="Build is up-to-date." />
+	</if>
+        <if test="${not(debug.uptodate)}">
     <!--Compiles the code -->
-    <csc target="library" doc="${outputdir.debug}\${assembly.debug}.xml" output="${outputdir.debug}\${assembly.debug}.${extension.debug}" warninglevel="4" debug="True" optimize="False" unsafe="False" checked="True" noconfig="False" nostdlib="False" define="DEBUG" warnaserror="False">
+    <nant buildfile="ftptask.build" target="subwcrev" />
+    <csc target="library" nowarn="1591" doc="${outputdir.debug}\${assembly.debug}.xml" output="${outputdir.debug}\${assembly.debug}.${extension.debug}" warninglevel="4" debug="True" optimize="False" unsafe="False" checked="True" noconfig="False" nostdlib="False" define="DEBUG" warnaserror="False">
 	    <nowarn>
 		    <CompilerWarning number="1591" />
 	    </nowarn>
@@ -98,6 +110,7 @@
     <copy todir="${outputdir.debug}" flatten="true" overwrite="true">
 	<fileset refid="refs.debug-localcopy" />
    </copy>
+   </if>
   </target>
   <!--The test target.  Only supports Nunit 2 -->
   <target name="test.debug" depends="build.debug" >
@@ -170,28 +183,27 @@
     </delete>
   </target>
   <!--The 'build' target.-->
-  <target name="build.release" depends="init.release, gacreferences.release" unless="${debug}">
+  <target name="build.release" depends="revfile, init.release, gacreferences.release" unless="${debug}">
+        <uptodate property="release.uptodate">
+            <targetfiles>
+		    <include name="${outputdir.release}\${assembly.release}.${extension.release}" />
+            </targetfiles>
+	    <sourcefiles refid="sources"/>
+        </uptodate>
+	<if test="${release.uptodate}">
+		<echo message="Build is up-to-date." />
+	</if>
+        <if test="${not(release.uptodate)}">
     <!--Compiles the code -->
-    <csc target="library" output="${outputdir.release}\${assembly.release}.${extension.release}" warninglevel="4" debug="False" optimize="True" unsafe="False" checked="False" noconfig="False" nostdlib="False" define="" warnaserror="False">
-      <sources>
-        <include name=".\AssemblyInfo.cs" />
-        <include name=".\Tasks\ftptask.cs" />
-        <include name=".\Tests" />
-        <include name=".\Tests\ftptasktests.cs" />
-        <include name=".\Types" />
-        <include name=".\Tasks" />
-        <include name=".\Types\Connection.cs" />
-        <include name=".\Types\TransferFileSet.cs" />
-        <include name=".\Util" />
-        <include name=".\Util\RemoteDirectoryScanner.cs" />
-        <include name=".\Types\PutFileSet.cs" />
-        <include name=".\Types\GetFileSet.cs" />
-        <include name=".\Types\RemotePath.cs" />
-        <include name=".\Enum" />
-        <include name=".\Enum\TransferDirection.cs" />
-      </sources>
+    <nant buildfile="ftptask.build" target="subwcrev" />
+    <csc target="library" nowarn="1591" doc="${outputdir.release}\${assembly.release}.xml" output="${outputdir.release}\${assembly.release}.${extension.release}" warninglevel="4" debug="False" optimize="True" unsafe="False" checked="False" noconfig="False" nostdlib="False" define="" warnaserror="False">
+	    <nowarn>
+		    <CompilerWarning number="1591" />
+	    </nowarn>
+	    <sources refid="sources" />
       <references>
         <include name=".\lib\debug\edtftpnet-1.1.3.dll" />
+
         <include name=".\lib\ConsolePasswordInput.dll" />
         <include name="${utils::get-gacpath( 'nunit.framework, Version=2.2.0.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77' ) }" />
         <include name="c:\usr\local\nant-0.85-rc1\build\net-1.1.win32\nant-0.85-debug\bin\NAnt.Core.Tests.dll" />
@@ -203,6 +215,7 @@
     <copy todir="${outputdir.release}" flatten="true" overwrite="true">
 	<fileset refid="refs.release-localcopy" />
    </copy>
+   </if>
   </target>
   <!--The test target.  Only supports Nunit 2 -->
   <target name="test.release" depends="build.release" unless="${debug}">
@@ -267,40 +280,40 @@
 	<property name="version"	value="0.0.0.0" unless="${file::exists(assemblyFile)}"/>
 	<property name="outputdir.zip"	value="bin\zips-v${version}" />
 	<property name="ziproot"	value="bin\ftptask-v${version}" />
-  <property name="build.dir" value="./bin/debug" />
+  <property name="build.dir" value="./bin/release" />
   <property name="project.version" value="${version}" />
   <property name="project.release.type" value="rc1" />
-  <property name="project.config" value="build.debug" />
+  <property name="project.config" value="build.release" />
   <property name="doc.dir" value="${project::get-base-directory()}\docs" />
 <property name="link.sdkdoc.version" value="SDK_v1_0" />
 <property name="link.sdkdoc.web" value="true" />
 <property name="project.version.full" value="${version}" />
 
-    <target name="userdoc" depends="build.debug" description="Builds user documentation">
+    <target name="doc" depends="userdoc, msdndoc" />
+
+    <target name="userdoc" depends="build.release" description="Builds user documentation">
 	    <echo message="Creating task and type documentation from ${build.dir}" />
         <exec program="nant.exe" useruntimeengine="true">
             <arg value="-indent:1" />
             <arg value="-buildfile:ftptask.build" />
-            <arg value="-D:project.version=${project.version}" />
-            <arg value="-D:project.release.type=${project.release.type}" />
             <arg value="-targetframework:${framework::get-target-framework()}" />
-            <arg value="${project.config}" />
             <arg value="self-userdoc" />
         </exec>
     </target>
     <target name="self-userdoc"> 
         <!-- use ndoc and NAnt.Documenter to build user doc if they need it -->
-	<echo message="doc.dir = ${doc.dir}" />
         <uptodate property="help.uptodate">
             <targetfiles>
-		    <include name="${doc.dir}/help/*.html" />
+		    <include name="${doc.dir}/help/*/*.html" />
+		    <include name="${doc.dir}/help/*.xsd" />
             </targetfiles>
             <sourcefiles basedir="${build.dir}">
                 <!-- make sure the tasks/types are not new -->
                 <include name="ftptask.dll" />
             </sourcefiles>
         </uptodate>
-        <if test="${not(help.uptodate)}">
+	<if test="${not(help.uptodate)}">
+		<nantschema output="${doc.dir}/help/NAnt.xsd" />
             <ndoc>
                 <assemblies basedir="${build.dir}">
                   <include name="ftptask.dll" />
@@ -328,6 +341,62 @@
                 </documenters>
             </ndoc>
         </if>
+    </target>
+    <target name="msdndoc" depends="build.release" description="Builds msdn documentation">
+	    <echo message="Creating MSDN class documentation from ${build.dir}" />
+        <exec program="nant.exe" useruntimeengine="true">
+            <arg value="-indent:1" />
+            <arg value="-buildfile:ftptask.build" />
+            <arg value="-targetframework:${framework::get-target-framework()}" />
+            <arg value="self-msdndoc" />
+        </exec>
+    </target>
+    <target name="self-msdndoc"> 
+	    <!-- update internal documentation, if required -->
+        <uptodate property="docs.msdn.uptodate">
+            <targetfiles>
+		    <include name="${doc.dir}/msdn/*.html" />
+            </targetfiles>
+            <sourcefiles basedir="${build.dir}">
+                <!-- make sure the tasks/types are not new -->
+                <include name="ftptask.dll" />
+            </sourcefiles>
+        </uptodate>
+        <if test="${not(docs.msdn.uptodate)}">
+<ndoc>
+    <assemblies basedir="${build.dir}">
+	<include name="${assembly.release}.${extension.release}" />
+    </assemblies>
+    <summaries basedir="${build.dir}">
+        <include name="NamespaceSummary.xml" />
+    </summaries>
+    <documenters>
+        <documenter name="MSDN">
+		<property name="OutputDirectory" value="${doc.dir}/msdn" />
+            <property name="HtmlHelpName" value="FTPTask Internal Class Library" />
+            <property name="HtmlHelpCompilerFilename" value="hhc.exe" />
+            <property name="IncludeFavorites" value="False" />
+            <property name="Title" value="FTPTask Internal Class Library" />
+            <property name="SplitTOCs" value="False" />
+            <property name="DefaulTOC" value="" />
+            <property name="ShowVisualBasic" value="false" />
+            <property name="ShowMissingSummaries" value="false" />
+            <property name="ShowMissingRemarks" value="false" />
+            <property name="ShowMissingParams" value="false" />
+            <property name="ShowMissingReturns" value="True" />
+            <property name="ShowMissingValues" value="false" />
+            <property name="DocumentInternals" value="True" />
+            <property name="DocumentProtected" value="True" />
+            <property name="DocumentPrivates" value="True" />
+            <property name="DocumentEmptyNamespaces" value="False" />
+            <property name="IncludeAssemblyVersion" value="True" />
+            <property name="CopyrightText" value="This code is licensed according to the GPL." />
+	    <property name="CopyrightHref" value="http://www.spinthemoose.com/~ftptask/license.html" />
+         </documenter>
+    </documenters> 
+</ndoc>
+</if> 
+	    
         <!-- copy doc files from source-->
         <copy todir="${build.dir}">
             <fileset>
@@ -336,11 +405,21 @@
                 <exclude name="**/bin/**" />
             </fileset>
         </copy>
-	<echo message="User documentation: file://${doc.dir}/index.html" />
+	<echo message="User documentation: file://${doc.dir}/msdn/index.html" />
     </target>
 
 	<target name="zip"
 		depends="userdoc">
+		<uptodate property="zip.uptodate">
+		    <targetfiles>
+			    <include name="${ziproot}*.zip" />
+		    </targetfiles>
+		    <sourcefiles basedir="${build.dir}">
+			<!-- make sure the tasks/types are not new -->
+			<include name="ftptask.dll" />
+		    </sourcefiles>
+		</uptodate>
+		<if test="${not(zip.uptodate)}">
 		<property name="zipfile-bin"	value="${ziproot}-bin.zip" />
 		<property name="zipfile-src"	value="${ziproot}-src.zip" />
 		<property name="zipfile-libsrc"	value="${ziproot}-libsrc.zip" />
@@ -350,6 +429,7 @@
 				<include name="docs\*.*" />
 				<include name="readme.txt"/>
 				<exclude name="**\.svn\*.*"/>
+				<exclude name="docs\msdn\**" />
 			</fileset>
 		</zip>
 		<zip zipfile="${zipfile-src}">
@@ -368,11 +448,19 @@
 				<exclude name="**\.svn\*.*"/>
 			</fileset>
 		</zip>
+	       </if>
 	</target>
 
+	  <property name="rev.file" value="AssemblyInfo.cs" />
+	  <property name="rev.file.src" value="AssemblyInfo.src" />
+	  <target name="revfile" >
+		  <if test="${not(file::exists(rev.file))}" >
+			<nant buildfile="ftptask.build" target="subwcrev" />
+		  </if>
+	  </target>
 	<target name="subwcrev">
 		<exec program="subwcrev"
-			commandline=". AssemblyInfo.subwcrev AssemblyInfo.cs" 
+			commandline=". ${rev.file.src} ${rev.file}" 
 			failonerror="false" />
 	</target>
 
@@ -389,14 +477,9 @@
 			    username="anonymous" 
 			    password="david@spinthemoose.com"
 			    />
-		<connection id="test2" 
-			    server="localhost" 
-			    username="anonymous" 
-			    />
-		    <ftp connection="test2" 
-			    remotedir="ftptask"
+		    <ftp connection="ftptask" 
 			    createdirs="true"
-			    debug="false" >
+			    exec="true">
 			<put type="ascii"
 			     localdir="docs"
 			 >
@@ -405,6 +488,7 @@
 				<exclude name="**\*.pdf" />
 				<exclude name="**\*.chm" />
 				<exclude name="**\images\**" />
+				<exclude name="docs\msdn\**" />
 			</put>
 			<put type="bin" 
 			     localdir="docs"
@@ -420,6 +504,7 @@
 			</put>
 		</ftp>
 	</target>
-
-
+	<target name="touch">
+		<touch file="AssemblyInfo.src"/>
+	</target>
 </project>

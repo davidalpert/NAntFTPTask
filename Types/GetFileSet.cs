@@ -39,7 +39,7 @@ namespace Sourceforge.NAnt.Ftp.Types {
 	/// A specially derived <b>FileSet</b> element that is used in the &lt;ftp&gt; task.
 	/// </summary>
 	[ElementName("get")]
-	public class Get : TransferFileSet {
+	public class GetFileSet : TransferFileSet {
 		
 		#region Private members
         private bool _hasScanned;
@@ -204,7 +204,7 @@ namespace Sourceforge.NAnt.Ftp.Types {
         /// A shallow copy of the <see cref="FileSet" />.
         /// </returns>
         public override object Clone() {
-            Get clone = new Get();
+            GetFileSet clone = new GetFileSet();
             CopyTo(clone);
             return clone;
         }
@@ -305,7 +305,7 @@ namespace Sourceforge.NAnt.Ftp.Types {
         /// Copies all instance data of the <see cref="FileSet" /> to a given
         /// <see cref="FileSet" />.
         /// </summary>
-        protected void CopyTo(Get clone) {
+        protected void CopyTo(GetFileSet clone) {
             base.CopyTo(clone);
 
             clone._hasScanned = _hasScanned;
@@ -368,7 +368,7 @@ namespace Sourceforge.NAnt.Ftp.Types {
         #endregion Public Static Methods
 
         #region Public Instance Constructors
-		public Get() {
+		public GetFileSet() {
 			this.Direction = TransferDirection.GET;
 		}
 		#endregion
@@ -397,7 +397,8 @@ namespace Sourceforge.NAnt.Ftp.Types {
 				    	  rpath.Dir,
 				    	  FTPTask.ParseTransferType(TransferType), 
 				    	  Flatten,
-				    	  CreateDirsOnDemand);
+				    	  CreateDirsOnDemand,
+				    	  Update);
 			}
 			Conn.CWD_Quiet(owd);
 		}

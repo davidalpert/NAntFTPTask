@@ -1,0 +1,118 @@
+<html dir="LTR">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+    <meta name="vs_targetSchema" content="http://schemas.microsoft.com/intellisense/ie5" />
+    <title>FTPTask Class</title>
+    <xml>
+    </xml>
+    <link rel="stylesheet" type="text/css" href="MSDN.css" />
+  </head>
+  <body id="bodyID" class="dtBODY">
+    <div id="nsbanner">
+      <div id="bannerrow1">
+        <table class="bannerparthead" cellspacing="0">
+          <tr id="hdr">
+            <td class="runninghead">FTPTask Internal Class Library</td>
+            <td class="product">
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div id="TitleRow">
+        <h1 class="dtH1">FTPTask Class</h1>
+      </div>
+    </div>
+    <div id="nstext">
+      <p> Transfer files over an FTP connection. </p>
+      <p>For a list of all members of this type, see <a href="Sourceforge.NAnt.Ftp.Tasks.FTPTaskMembers.html">FTPTask Members</a>.</p>
+      <p>
+        <a href="ms-help://MS.NETFrameworkSDKv1.1/cpref/html/frlrfSystemObjectClassTopic.htm">System.Object</a>
+        <br />   NAnt.Core.Element<br />      NAnt.Core.Task<br />         NAnt.Core.TaskContainer<br />            <b>Sourceforge.NAnt.Ftp.Tasks.FTPTask</b></p>
+      <div class="syntax">
+        <div>public class FTPTask<b> : <a href="NAnt.Core.TaskContainer.html">TaskContainer</a></b></div>
+      </div>
+      <H4 class="dtH4">Thread Safety</H4>
+      <P>Public static (<b>Shared</b> in Visual Basic) members of this type are 
+				safe for multithreaded operations. Instance members are <b>not</b> guaranteed to be 
+				thread-safe.</P>
+      <h4 class="dtH4">Remarks</h4>
+      <p> When you use an <b>FTPTask</b> task, you must specify connection details, either through including a <a href="Sourceforge.NAnt.Ftp.Tasks.FTPTask.Connection.html">Connection</a> element as a child of the ftp task or through specifying in the <b>connection</b> attribute the <b>id</b> of a previously declared <b>Connection</b> element. </p>
+      <p> The <b>up-ascii</b>, <b>up-binary</b>, <b>down-ascii</b>, and <b>down-binary</b> children have been depricated in favor of multiple <a href="Sourceforge.NAnt.Ftp.Types.TransferFileSet.html">TransferFileSet</a> elements that are included through any number of <a href="Sourceforge.NAnt.Ftp.Tasks.FTPTask.Get.html">Get</a> and <a href="Sourceforge.NAnt.Ftp.Tasks.FTPTask.Put.html">Put</a> elements. </p>
+      <p> Transfer type (Ascii/Binary) is now specified as through the <b>Type</b> attribute of the <b>Get</b> and <b>Put</b> elements. </p>
+      <h4>Include Scanning</h4>
+      <p>
+        <b>Put</b> elements are a derived version of <b>TransferFileSet</b> that scan local directories just as a <b>FileSet</b> does. </p>
+      <p>
+        <b>Get</b> elements are a derived version of <b>TransferFileSet</b> that process include statements using the same algorithm as a <b>FileSet</b> only they scan <b>remote</b> directories on the server. This allows you to use NAnt's <b>FileSet</b> pattern matching to selectively get a batch of files from a remote filesystem. </p>
+      <blockquote class="dtBlock">
+        <b>Note</b>   <b>Get</b> and <b>Put</b> children are processed in the order they are listed. All paths in these elements and their include statements are to the ftp node's localpath and remotepath attributes. </blockquote>
+      <h4 class="dtH4">Example</h4>
+      <p>
+        <p> Put a single file to a remote host. </p>
+        <pre class="code">
+&lt;connection id="myconn" server="upload.sourceforge.net" username="anonymous" password="david@spinthemoose.com" /&gt;
+&lt;ftp  
+    connection="myconn"
+    remotepath="incoming"
+    localpath="c:\dev\nantftptask\trunk"
+    &gt;
+    &lt;put type="ascii"&gt;
+       &lt;include name="readme.txt" /&gt;
+    &lt;/put&gt;
+&lt;/ftp&gt;
+    </pre>
+        <p>Put a set of binary files to a .</p>
+        <pre class="code">
+  &lt;connection id="sourceforge 
+          server="upload.sourceforge.net" 
+          username="anonymous" 
+          password="david@spinthemoose.com" /&gt;
+  &lt;ftp connection="sourceforge" &gt;
+      &lt;put type="bin" local-path="." remote-path="incoming" flatten="true"&gt;
+          &lt;include name="${ziproot}*.zip"/&gt;
+      &lt;/put&gt;
+  &lt;/ftp&gt;
+  </pre>
+        <p> Debug a request to copy all php files from a remote directory. This will list the files included as the remote directories are scanned. </p>
+        <pre class="code">
+    
+        &lt;connection id="myConn" server="${remotehost}" username="${username}" /&gt;
+
+        &lt;ftp debug="true"
+             connection="myConn"
+             remotepath="${remote-dir}"
+             showdironconnect="false" 
+             &gt;
+            &lt;get type="ascii" local-path="incoming" remote-path="." failonempty="true"&gt;
+                &lt;include name="**\*.php" /&gt;
+            &lt;/get&gt;
+        &lt;/ftp&gt;
+    </pre>
+        <blockquote class="dtBlock">
+          <b>Note</b>    When a password is not supplied, the connection is established then logging output asks for password input from the console. Any text typed when answering this reques is masked thanks to <b>Lim Bio Liong's</b> CodeProject article <i>'.NET Console Password Input By Masking Keyed-In Characters'</i> (<a href="http://www.codeproject.com/dotnet/ConsolePasswordInput.asp">http://www.codeproject.com/dotnet/ConsolePasswordInput.asp</a> - accessed on 12/18/2004) </blockquote>
+      </p>
+      <h4 class="dtH4">Requirements</h4>
+      <p>
+        <b>Namespace: </b>
+        <a href="Sourceforge.NAnt.Ftp.Tasks.html">Sourceforge.NAnt.Ftp.Tasks</a>
+      </p>
+      <p>
+        <b>Assembly: </b>ftptask (in ftptask.dll)
+					</p>
+      <h4 class="dtH4">See Also</h4>
+      <p>
+        <a href="Sourceforge.NAnt.Ftp.Tasks.FTPTaskMembers.html">FTPTask Members</a> | <a href="Sourceforge.NAnt.Ftp.Tasks.html">Sourceforge.NAnt.Ftp.Tasks Namespace</a></p>
+      <object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e" viewastext="true" style="display: none;">
+        <param name="Keyword" value="FTPTask class, about FTPTask class">
+        </param>
+      </object>
+      <hr />
+      <div id="footer">
+        <p>
+          <a href="http://www.spinthemoose.com/~ftptask/license.html">This code is licensed according to the GPL.</a>
+        </p>
+        <p>Generated from assembly ftptask [1.0.40.85]</p>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,75 @@
+<html dir="LTR">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+    <meta name="vs_targetSchema" content="http://schemas.microsoft.com/intellisense/ie5" />
+    <title>RemoteDirectoryScanner.ParseSearchDirectoryAndPattern Method</title>
+    <xml>
+    </xml>
+    <link rel="stylesheet" type="text/css" href="MSDN.css" />
+  </head>
+  <body id="bodyID" class="dtBODY">
+    <div id="nsbanner">
+      <div id="bannerrow1">
+        <table class="bannerparthead" cellspacing="0">
+          <tr id="hdr">
+            <td class="runninghead">FTPTask Internal Class Library</td>
+            <td class="product">
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div id="TitleRow">
+        <h1 class="dtH1">RemoteDirectoryScanner.ParseSearchDirectoryAndPattern Method </h1>
+      </div>
+    </div>
+    <div id="nstext">
+      <p> Given a NAnt search pattern returns a search directory and an regex search pattern. </p>
+      <div class="syntax">new private <a href="ms-help://MS.NETFrameworkSDKv1.1/cpref/html/frlrfSystemVoidClassTopic.htm">void</a> ParseSearchDirectoryAndPattern(<br />   <a href="ms-help://MS.NETFrameworkSDKv1.1/cpref/html/frlrfSystemBooleanClassTopic.htm">bool</a> <i>isInclude</i>,<br />   <a href="ms-help://MS.NETFrameworkSDKv1.1/cpref/html/frlrfSystemStringClassTopic.htm">string</a> <i>originalNAntPattern</i>,<br />   out <a href="ms-help://MS.NETFrameworkSDKv1.1/cpref/html/frlrfSystemStringClassTopic.htm">string</a> <i>searchDirectory</i>,<br />   out <a href="ms-help://MS.NETFrameworkSDKv1.1/cpref/html/frlrfSystemBooleanClassTopic.htm">bool</a> <i>recursive</i>,<br />   out <a href="ms-help://MS.NETFrameworkSDKv1.1/cpref/html/frlrfSystemBooleanClassTopic.htm">bool</a> <i>isRegex</i>,<br />   out <a href="ms-help://MS.NETFrameworkSDKv1.1/cpref/html/frlrfSystemStringClassTopic.htm">string</a> <i>regexPattern</i><br />);</div>
+      <h4 class="dtH4">Parameters</h4>
+      <dl>
+        <dt>
+          <i>isInclude</i>
+        </dt>
+        <dd>Whether this pattern is an include or exclude pattern</dd>
+        <dt>
+          <i>originalNAntPattern</i>
+        </dt>
+        <dd>NAnt searh pattern (relative to the Basedirectory OR absolute, relative paths refering to parent directories ( ../ ) also supported)</dd>
+        <dt>
+          <i>searchDirectory</i>
+        </dt>
+        <dd>Out. Absolute canonical path to the directory to be searched</dd>
+        <dt>
+          <i>recursive</i>
+        </dt>
+        <dd>Out. Whether the pattern is potentially recursive or not</dd>
+        <dt>
+          <i>isRegex</i>
+        </dt>
+        <dd>Out. Whether this is a regex pattern or not</dd>
+        <dt>
+          <i>regexPattern</i>
+        </dt>
+        <dd>Out. Regex search pattern (absolute canonical path)</dd>
+      </dl>
+      <h4 class="dtH4">See Also</h4>
+      <p>
+        <a href="Sourceforge.NAnt.Ftp.Util.RemoteDirectoryScanner.html">RemoteDirectoryScanner Class</a> | <a href="Sourceforge.NAnt.Ftp.Util.html">Sourceforge.NAnt.Ftp.Util Namespace</a></p>
+      <object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e" viewastext="true" style="display: none;">
+        <param name="Keyword" value="ParseSearchDirectoryAndPattern method">
+        </param>
+        <param name="Keyword" value="ParseSearchDirectoryAndPattern method, RemoteDirectoryScanner class">
+        </param>
+        <param name="Keyword" value="RemoteDirectoryScanner.ParseSearchDirectoryAndPattern method">
+        </param>
+      </object>
+      <hr />
+      <div id="footer">
+        <p>
+          <a href="http://www.spinthemoose.com/~ftptask/license.html">This code is licensed according to the GPL.</a>
+        </p>
+        <p>Generated from assembly ftptask [1.0.40.85]</p>
+      </div>
+    </div>
+  </body>
+</html>

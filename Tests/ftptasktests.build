@@ -17,31 +17,41 @@
 	
 
 	<target name="test" depends="" >
-		<ftp debug="true"
+		<ftp exec="true"
 			 connection="myConn"
-			 remotepath="${remote-dir}"
+			 remotedir="${remote-dir}"
 			 showdironconnect="false" 
 			 >
-			<put type="ascii">
-				<include name="..\AssemblyInfo.cs" />
-			</put>
-			<put type="b" local-path=".." remote-path="test">
-				<include name="**\*.cs" />
-			</put>
 			 <!--
-			-->
-			<get type="a" local-path="incoming" failonempty="true" >
+			<put type="ascii" update="true">
 				<include name="..\AssemblyInfo.cs" />
-			</get>
-			<get type="bin" local-path="incoming" remote-path="test" failonempty="true">
+			</put>
+			<put type="b" localdir=".." remotedir="test">
+				<include name="**\*.cs" />
+			</put>
+			<get type="bin" localdir="incoming" remotedir="test" failonempty="true">
 				<include name="**\*.cs" />
 			</get>
+			<get type="a" localdir="incoming\types" failonempty="true" >
+				<include name="..\AssemblyInfo.cs" />
+			</get>
+			-->
+			<up-ascii>
+			   <include name="*.txt"/>
+			</up-ascii>
+			<down-ascii>
+			   <include name="AssemblyInfo.cs"/>
+			</down-ascii>
+			<script> 
+			   cwd test
+			   cwd /
+			</script>
 		</ftp>
 	</target>
 
 	<target name="test12" depends="" >
 		<ftp connection="myConn"
-			 remotepath="./net"
+			 remotedir="./net"
 			 showdironconnect="false"
 			 failonerror="false">
 			<put>
@@ -65,7 +75,7 @@
 	<target name="test11" depends="test10" >
 		<ftp connection="myConn"
 			 connectmode="passive"
-			 remotepath="./net"
+			 remotedir="./net"
 			 showdironconnect="false">
 			<put>
 				<include name="..\AssemblyInfo.cs" />
@@ -78,7 +88,7 @@
 
 	<target name="test10" depends="test9" >
 		<ftp connection="myConn"
-			 remotepath="./net"
+			 remotedir="./net"
 			 showdironconnect="false">
 			<put />
 			<get />
@@ -87,33 +97,33 @@
 
 	<target name="test9" depends="" >
 		<ftp connection="myConn"
-			 remotepath="\net"
+			 remotedir="\net"
 			 showdironconnect="true">
 		</ftp>
 	</target>
 
 	<target name="test8" depends="test7" >
 		<ftp connection="myConn"
-			 remotepath="/net">
+			 remotedir="/net">
 		</ftp>
 	</target>
 
 	<target name="test7" depends="test6" >
 		<ftp connection="myConn"
-			 remotepath="${remote-dir}">
+			 remotedir="${remote-dir}">
 		</ftp>
 	</target>
 
 	<target name="test6" depends="test5" >
 		<ftp connection="myConn"
-			 remotepath="/net"
+			 remotedir="/net"
 			 localpath="..">
 		</ftp>
 	</target>
 
 	<target name="test5" depends="test4" >
 		<ftp connection="myConn"
-			 remotepath="net">
+			 remotedir="net">
 		</ftp>
 	</target>
 

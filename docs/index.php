@@ -4,7 +4,7 @@
         <title>FTPTask - An FTP task for NAnt</title>
         <meta http-equiv="Content-Language" content="en-ca" />
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <link href="help\style.css" type="text/css" rel="stylesheet" />
+        <link href="help/style.css" type="text/css" rel="stylesheet" />
     </head>
     <body>
         <table class="NavBar" cellspacing="0" cellpadding="2" width="100%" border="0">
@@ -22,32 +22,32 @@
             NAnt is ? Then you need to go <a href="http://nant.sourceforge.net/">here.</a>        </p>
         <h2>News</h2>
         <p>
-            <img alt=">" src="help%5Cimages%5Cbullet.gif" />
+            <img alt=">" src="help/images/bullet.gif" />
             <span style="font-weight:bold; font-style:italic; color:red;">2004/12/24:
         </span><br />
-&nbsp;        FTPTask v1.0.37.85 is available NOW !<br />
+&nbsp;        FTPTask v1.0.40.85 is available NOW !<br />
         &nbsp;&nbsp;A list of the new features is available <a href="releasenotes.html">here</a>. </p>
         <h2>Getting Started</h2>
         <p>
-            <img alt=">" src="help%5Cimages%5Cbullet.gif" />
+            <img alt=">" src="help/images/bullet.gif" />
         Download one of the following distribution files</p>
         <ul>
 <?php
-$d = dir("/etc");
-echo "Handle: ".$d->handle."<br>\n";
-echo "Path: ".$d->path."<br>\n";
+$d = dir(".");
 while (false !== ($entry = $d->read())) {
-    echo $entry."<br>\n";
+    if (preg_match('/\.zip$/',$entry)>0) {
+		echo "<li>".$entry."</li>\n";
+	}
 }
 $d->close();
 ?>
         </ul>
         <p>&nbsp;&nbsp;(Source code for the 3rd party libraries is included in the 'libsrc.zip' files.) </p>
         <p>
-            <img alt=">" src="help%5Cimages%5Cbullet.gif" />
+            <img alt=">" src="help/images/bullet.gif" />
         Read the <a href="help/index.html">user documentation</a>.</p>
         <p>
-            <img alt=">" src="help%5Cimages%5Cbullet.gif" />
+            <img alt=">" src="help/images/bullet.gif" />
             Want to contribute or submit patches? Send email to <a href="mailto:ftptask@spinthemoose.com">ftptask@spinthemoose.com</a></p>
         <h2>User Information</h2>
         <ul>
