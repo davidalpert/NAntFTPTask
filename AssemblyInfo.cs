@@ -6,12 +6,12 @@ using System.Runtime.CompilerServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 //
-[assembly: AssemblyTitle("")]
-[assembly: AssemblyDescription("")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyTitle("FTPTask")]
+[assembly: AssemblyDescription("An FTP task for the NAnt build tool.")]
+[assembly: AssemblyConfiguration("Last Modified on 2004/12/18 19:14:30")]
+[assembly: AssemblyCompany("Developed by:\nSascha Andres (sa@programmers-world.com)\nDavid Alpert (david@spinthemoose.com)")]
 [assembly: AssemblyProduct("")]
-[assembly: AssemblyCopyright("")]
+[assembly: AssemblyCopyright("GPL - 2004")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]		
 
@@ -26,7 +26,7 @@ using System.Runtime.CompilerServices;
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
 
-[assembly: AssemblyVersion("1.0.*")]
+[assembly: AssemblyVersion("1.0.19")]
 
 //
 // In order to sign your assembly you must specify a key to use. Refer to the 

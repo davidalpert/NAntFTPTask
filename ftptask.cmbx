@@ -1,19 +1,15 @@
 <Combine fileversion="1.0" name="NAnt FTP Task" description="">
-  <StartMode startupentry="NAnt FTP Task" single="True">
-    <Execute entry="ftpclient" type="None" />
+  <StartMode startupentry="ftptask" single="True">
     <Execute entry="ftptask" type="None" />
   </StartMode>
   <Entries>
-    <Entry filename=".\FTPClient\ftpclient.prjx" />
-    <Entry filename=".\FTPTask\ftptask.prjx" />
+    <Entry filename=".\ftptask.prjx" />
   </Entries>
   <Configurations active="Debug">
     <Configuration name="Release">
-      <Entry name="ftpclient" configurationname="Release" build="False" />
       <Entry name="ftptask" configurationname="Release" build="False" />
     </Configuration>
     <Configuration name="Debug">
-      <Entry name="ftpclient" configurationname="Debug" build="False" />
       <Entry name="ftptask" configurationname="Debug" build="False" />
     </Configuration>
   </Configurations>

@@ -1,0 +1,138 @@
+<?xml version="1.0"?>
+<project name="ftp tasks for nant" default="test">
+	<property name="project.debug" 		value="true" />
+	<property name="project.verbose" 	value="true" />
+	<property name="remotehost" 		value="spinthemoose.com" />
+	<property name="username" 			value="spinthemoose" />
+	<property name="password" 			value="media!moose" />
+	<property name="remote-dir" 		value="/net" />
+	<property name="local-dir" 			value="..\doc" />
+
+	<loadtasks assembly="..\bin\debug\ftptask.dll" />
+	<connection id="myConn" server="${remotehost}" username="${username}" password="${password}" />	
+	<connection id="myConn2" server="${remotehost}" username="${username}" password="prompt" />	
+	<connection id="myConn3" server="${remotehost}" username="${username}" />
+	
+
+	<target name="test" depends="" >
+		<ftp debug="false"
+			 connection="myConn"
+			 remotepath=".\net"
+			 showdironconnect="true" 
+			 >
+			<put type="ascii">
+				<include name="..\AssemblyInfo.cs" />
+			</put>
+			<put type="b" local-path=".." remote-path="test">
+				<include name="**\*.cs" />
+			</put>
+			<!--
+			<get type="a">
+				<include name="..\AssemblyInfo.cs" />
+			</get>
+			<get type="bin" >
+				<include name="..\AssemblyInfo.cs" />
+			</get>
+			-->
+		</ftp>
+	</target>
+
+	<target name="test12" depends="" >
+		<ftp connection="myConn"
+			 remotepath="./net"
+			 showdironconnect="false"
+			 failonerror="false">
+			<put>
+				<include name="..\AssemblyInfo.cs" />
+			</put>
+			<get if="false">
+				<include name="..\AssemblyInfo.cs" />
+			</get>
+			<put unless="true">
+				<include name="..\AssemblyInfo.cs" />
+			</put>
+			<put>
+				<include name="..\AssemblyInfo.cs" />
+			</put>
+			<get>
+				<include name="..\AssemblyInfo.cs" />
+			</get>
+		</ftp>
+	</target>
+
+	<target name="test11" depends="test10" >
+		<ftp connection="myConn"
+			 connectmode="passive"
+			 remotepath="./net"
+			 showdironconnect="false">
+			<put>
+				<include name="..\AssemblyInfo.cs" />
+			</put>
+			<get>
+				<include name="..\AssemblyInfo.cs" />
+			</get>
+		</ftp>
+	</target>
+
+	<target name="test10" depends="test9" >
+		<ftp connection="myConn"
+			 remotepath="./net"
+			 showdironconnect="false">
+			<put />
+			<get />
+		</ftp>
+	</target>
+
+	<target name="test9" depends="" >
+		<ftp connection="myConn"
+			 remotepath="\net"
+			 showdironconnect="true">
+		</ftp>
+	</target>
+
+	<target name="test8" depends="test7" >
+		<ftp connection="myConn"
+			 remotepath="/net">
+		</ftp>
+	</target>
+
+	<target name="test7" depends="test6" >
+		<ftp connection="myConn"
+			 remotepath="${remote-dir}">
+		</ftp>
+	</target>
+
+	<target name="test6" depends="test5" >
+		<ftp connection="myConn"
+			 remotepath="/net"
+			 localpath="..">
+		</ftp>
+	</target>
+
+	<target name="test5" depends="test4" >
+		<ftp connection="myConn"
+			 remotepath="net">
+		</ftp>
+	</target>
+
+	<target name="test4" depends="test3" >
+		<ftp connection="myConn" />
+	</target>
+
+	<target name="test3" depends="test2">
+		<ftp>
+			<connection refid="myConn" />
+		</ftp>
+	</target>
+
+	<target name="test2" depends="test1">
+		<ftp>
+			<connection server="${remotehost}" username="${username}" password="${password}" />
+		</ftp>
+	</target>
+
+	<target name="test1" failonerror="false">
+		<ftp />
+	</target>
+
+</project>
