@@ -48,13 +48,13 @@ namespace Tests.Sourceforge.NAnt.Ftp.Tasks {
         private const string _buildFormatStr = 
         	@"<?xml version='1.0'?>
 			<project name='ftp tasks for nant' default='test'>
-				<property name='debug' value='true' />
-				<property name='server' value='spinthemoose.com' />
-				<property name='username' value='spinthemoose' />
-				<property name='password' value='media!moose' />
-				
+				<property name='server'		value='localhost' />
+				<property name='username'	value='anonymous' />
+				<property name='password'	value='david@spinthemoose.com' />
+				<property name='tasklib'	value='c:\dev\nantftptask\trunk\bin\debug\ftptask.dll' />
+
 				<target name='test' >
-				    <loadtasks assembly='c:\dev\nant_ftp_task\trunk\bin\debug\ftptask.dll' />
+				    <loadtasks assembly='${tasklib}' />
 					{0}
 				</target>			
 			</project>
@@ -85,10 +85,10 @@ namespace Tests.Sourceforge.NAnt.Ftp.Tasks {
 
         #endregion Override implementation of BuildTestBase
 
-        #region Public Instance Methods
+        #region Connection Tests
 
         /// <summary>Test to make sure the <see cref="FTPTask">FtpTask</see> exists</summary>
-        /// <remarks>Throws a TestBuildException because no server has been defined.</remarks>
+        /// <remarks>Throws a TestBuildException because no connection has been defined.</remarks>
         [Test]
         [ExpectedException(typeof(TestBuildException))]
         public void Test_EmptyFtpElement() {        	
@@ -97,7 +97,7 @@ namespace Tests.Sourceforge.NAnt.Ftp.Tasks {
 				";
         	
         	runtest(test);
-            Assert.IsTrue(true, "ensure we make it here.");
+            Assert.IsTrue(false, "should not make it here - should throw exception instead.");
         }
 
         /// <summary>Test to make sure the <see cref="Connection">Connection</see> type exists</summary>
@@ -110,7 +110,7 @@ namespace Tests.Sourceforge.NAnt.Ftp.Tasks {
 				";
         	
         	runtest(test);
-            Assert.IsTrue(true, "ensure we make it here.");
+            Assert.IsTrue(false, "should not make it here - should throw exception instead.");
         }
 
         /// <summary>Testing <see cref="Connection">Connection</see> with server attribute.</summary>
@@ -123,10 +123,11 @@ namespace Tests.Sourceforge.NAnt.Ftp.Tasks {
 				";
         	
         	runtest(test);
-            Assert.IsTrue(true, "ensure we make it here.");
+            Assert.IsTrue(false, "should not make it here - should throw exception instead.");
         }
 
         /// <summary>Testing <see cref="Connection">Connection</see> with server and id attributes.</summary>
+		/// <remarks>Test passes.</remarks>
         [Test]
         public void Test_ConnectionWithIDServer() {        	
         	string test = @"
@@ -148,7 +149,21 @@ namespace Tests.Sourceforge.NAnt.Ftp.Tasks {
             Assert.IsTrue(true, "ensure we make it here.");
         }
 
-        /// <summary>Testing <see cref="Connection">Connection</see> with server, id, username, and password attributes.</summary>
+        /// <summary>Testing a connection with a <see cref="Connection">Connection</see> reference with server, id, and password attributes.</summary>
+        /// <remarks>Throws a TestBuildException because the connection cannot define a password without a username.</remarks>
+        [Test]
+        [ExpectedException(typeof(TestBuildException))]
+        public void Test_ConnectingWithServerPassword() {        	
+        	string test = @"
+				<connection id='myconn' server='${server}' password='${password}' />
+				<ftp connection='dummy' />
+				";
+        	
+        	runtest(test);
+            Assert.IsTrue(false, "should not make it here - should throw exception instead.");
+        }
+
+		/// <summary>Testing <see cref="Connection">Connection</see> with server, id, username, and password attributes.</summary>
         [Test]
         public void Test_ConnectionWithServerUsernamePassword() {        	
         	string test = @"
@@ -175,7 +190,8 @@ namespace Tests.Sourceforge.NAnt.Ftp.Tasks {
         }
 
         /// <summary>Testing a connection with a <see cref="Connection">Connection</see> reference with server and id attributes.</summary>
-        [Test]
+		/// <remarks>Should look to .connections file and then prompt for missing parameters.</remarks>
+		[Test]
         public void Test_ConnectingWithIDServer() {        	
         	string test = @"
 				<connection id='myconn' server='${server}' />
@@ -197,7 +213,7 @@ namespace Tests.Sourceforge.NAnt.Ftp.Tasks {
 				";
         	
         	runtest(test);
-            Assert.IsTrue(true, "ensure we make it here.");
+            Assert.IsTrue(false, "should not make it here - should throw exception instead.");
         }
 
         /// <summary>Testing <see cref="Connection">Connection</see> with server, id, username, and password attributes.</summary>
@@ -212,9 +228,114 @@ namespace Tests.Sourceforge.NAnt.Ftp.Tasks {
             Assert.IsTrue(true, "ensure we make it here.");
         }
 
-        #endregion
+        /// <summary>Testing <see cref="Connection">Connection</see> with server, id, username, and password attributes.</summary>
+        [Test]
+        public void Test_ConnectingWithInternalConnection() {        	
+        	string test = @"
+				<connection id='myconn' server='${server}' username='${username}' password='${password}' />
+				<ftp connection='myconn' />
+				";
+        	
+        	runtest(test);
+            Assert.IsTrue(true, "ensure we make it here.");
+        }
+
+		#endregion
         
-        #region Private Instance Methods
+        #region Internal Connection Tests
+
+        /// <summary>Test to make sure the <see cref="Connection">Connection</see> type exists</summary>
+        /// <remarks>Throws a TestBuildException because server is a required attribute of connection.</remarks>
+        [Test]
+        [ExpectedException(typeof(TestBuildException))]
+        public void Test_InternalConnectionType() {        	
+        	string test = @"
+				<ftp>
+					<connection />
+				</ftp>
+				";
+        	
+        	runtest(test);
+            Assert.IsTrue(false, "should not make it here - should throw exception instead.");
+        }
+
+        /// <summary>Testing <see cref="Connection">Connection</see> with server attribute.</summary>
+        /// <remarks>Throws a TestBuildException because id is a required attribute of connection.</remarks>
+        [Test]
+        [ExpectedException(typeof(TestBuildException))]
+        public void Test_InternalConnectionWithServer() {        	
+        	string test = @"
+				<ftp>
+					<connection server='${server}' />
+				</ftp>
+				";
+        	
+        	runtest(test);
+            Assert.IsTrue(false, "should not make it here - should throw exception instead.");
+        }
+
+        /// <summary>Testing <see cref="Connection">Connection</see> with server and id attributes.</summary>
+		/// <remarks>Test passes.</remarks>
+        [Test]
+        public void Test_InternalConnectionWithIDServer() {        	
+        	string test = @"
+				<ftp>
+					<connection id='myconn' server='${server}' />
+				</ftp>
+				";
+        	
+        	runtest(test);
+            Assert.IsTrue(true, "ensure we make it here.");
+        }
+
+        /// <summary>Testing <see cref="Connection">Connection</see> with server, id, and username attributes.</summary>
+        [Test]
+        public void Test_InternalConnectionWithServerUsername() {        	
+        	string test = @"
+				<ftp>
+					<connection id='myconn' server='${server}' username='${username}' />
+				</ftp>
+				";
+        	
+        	runtest(test);
+            Assert.IsTrue(true, "ensure we make it here.");
+        }
+
+        /// <summary>Testing a connection with a <see cref="Connection">Connection</see> reference with server, id, and password attributes.</summary>
+        /// <remarks>Throws a TestBuildException because the connection cannot define a password without a username.</remarks>
+        [Test]
+        [ExpectedException(typeof(TestBuildException))]
+        public void Test_InternalConnectingWithServerPassword() {        	
+        	string test = @"
+				<ftp>
+					<connection id='myconn' server='${server}' password='${password}' />
+				</ftp>
+				";
+        	
+        	runtest(test);
+            Assert.IsTrue(false, "should not make it here - should throw exception instead.");
+        }
+
+		/// <summary>Testing <see cref="Connection">Connection</see> with server, id, username, and password attributes.</summary>
+        [Test]
+        public void Test_InternalConnectionWithServerUsernamePassword() {        	
+        	string test = @"
+				<ftp>
+					<connection id='myconn' server='${server}' username='${username}' password='${password}' />
+				</ftp>
+				";
+        	
+        	runtest(test);
+            Assert.IsTrue(true, "ensure we make it here.");
+        }
+
+		#endregion
+
+		#region File Transfers
+
+		#endregion
+
+		#region Private Instance Methods
 
         // pop the test xml into the build file xml and run the build
         private string runtest(string testxml) {
@@ -228,6 +349,7 @@ namespace Tests.Sourceforge.NAnt.Ftp.Tasks {
         }
 
         #endregion Private Instance Methods
-    }
+ 		
+	}
 }
 #endif

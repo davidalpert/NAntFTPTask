@@ -87,8 +87,8 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
     /// <connection id="myconn" server="upload.sourceforge.net" username="anonymous" password="david@spinthemoose.com" />
     /// <ftp  
     ///     connection="myconn"
-    ///     remotepath="incoming"
-    ///     localpath="c:\dev\nantftptask\trunk"
+    ///     remotedir="incoming"
+    ///     localdir="c:\dev\nantftptask\trunk"
     ///     >
     ///     <put type="ascii">
     ///        <include name="readme.txt" />
@@ -106,7 +106,7 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
     ///			    username="anonymous" 
     ///			    password="david@spinthemoose.com" />
     ///		<ftp connection="sourceforge" >
-    ///			<put type="bin" local-path="." remote-path="incoming" flatten="true">
+    ///			<put type="bin" localdir="." remotedir="incoming" flatten="true">
     ///				<include name="${ziproot}*.zip"/>
     ///			</put>
     ///		</ftp>
@@ -125,10 +125,10 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
     ///	
     /// 	    <ftp debug="true"
     /// 	    	 connection="myConn"
-    /// 	    	 remotepath="${remote-dir}"
+    /// 	    	 remotedir="${remote-dir}"
     /// 	    	 showdironconnect="false" 
     /// 	    	 >
-    ///				<get type="ascii" local-path="incoming" remote-path="." failonempty="true">
+    ///				<get type="ascii" localdir="incoming" remotedir="." failonempty="true">
     ///					<include name="**\*.php" />
     ///				</get>
     ///		    </ftp>
@@ -1017,6 +1017,10 @@ namespace Sourceforge.NAnt.Ftp.Tasks {
 			}
 			
 			DirectoryInfo dirInfo = new DirectoryInfo(Path.Combine(localpath, remotepath));
+
+			if (flatten) {
+				dirInfo = new DirectoryInfo(localpath);
+			}
 	
 			this.Log(this.LevelLogfiles, "  file: {0}", RPath.Combine(PWD,fileName));
 			this.Log(this.Level,         "    to: {0}", Path.Combine(dirInfo.FullName, fileName));

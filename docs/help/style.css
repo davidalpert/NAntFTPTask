@@ -193,3 +193,31 @@ p.topicstatus {
     display: block;
     color: red;
 }
+
+dl.dist {
+	/*border:1px solid red;*/
+	margin-left:10px;
+	width:350px;
+}
+dl.dist dt {
+	/*border:1px solid yellow;*/
+	margin:0px;
+	margin-top:10px;
+	padding:0px;
+	background-color:#ccc;
+	border-width:1px;
+	border-style:solid;
+	border-top-color:#996;
+	border-left-color:#996;
+	border-right-color:#663;
+	border-bottom-color:#663;
+}
+dl.dist dt.first {
+	margin-top:0px;
+}
+dl.dist dd {
+	/*border:1px solid green;*/
+	margin:0px;
+	margin-left:10px;
+	padding:0px;
+}

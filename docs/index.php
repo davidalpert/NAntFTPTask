@@ -25,24 +25,66 @@
             <img alt=">" src="help/images/bullet.gif" />
             <span style="font-weight:bold; font-style:italic; color:red;">2004/12/24:
         </span><br />
-&nbsp;        FTPTask v1.0.40.85 is available NOW !<br />
+&nbsp;        FTPTask v1.0.85.41 is available NOW !<br />
         &nbsp;&nbsp;A list of the new features is available <a href="releasenotes.html">here</a>. </p>
         <h2>Getting Started</h2>
         <p>
             <img alt=">" src="help/images/bullet.gif" />
         Download one of the following distribution files</p>
-        <ul>
 <?php
-$d = dir(".");
-while (false !== ($entry = $d->read())) {
-    if (preg_match('/\.zip$/',$entry)>0) {
-		echo "<li>".$entry."</li>\n";
+function CollectReleases($theDir) {
+	$d = dir($theDir);
+	$r = array();	// result[version] = array of filenames matching '*v99.99.99.99*.zip'
+	$m = array();	// matches
+	while (false !== ($entry = $d->read())) {
+		if (preg_match('/v(\d+(\.\d+){1,4})[^.]*\.zip$/',$entry,$m)>0) {
+			if (!array_key_exists($m[1],$r)) {
+				$r[$m[1]] = array();
+			}
+			$r[$m[1]][] = $entry;
+		}
+	}
+	$d->close();
+	return $r;
+}
+
+function PrintReleasesDL($r, $onlyfirst=false) {
+	krsort($r);
+	echo "<dl class='dist'>\n";
+	$first=true;
+	foreach($r as $version => $files) {
+		echo '<dt'.($first?' class="first"':'').'>'.$version.'</dt>'."\n";
+		foreach($files as $file) {
+			echo '<dd><a href="'.$file.'">'.$file.'</a></dd>'."\n";
+		}
+		$first=false;
+		if ($onlyfirst) {
+			break;
+		}
+	}
+	echo "</dl>\n";
+}
+
+function PrintReleasesHH($r) {
+	krsort($r);
+	foreach($r as $version => $files) {
+		echo '<h4>'.$version.'</h4>'."\n";
+		echo "<ul>\n";
+		foreach($files as $file) {
+			echo '<li><a href="'.$file.'">'.$file.'</a></li>'."\n";
+		}
+		echo "</ul>\n";
 	}
 }
-$d->close();
+
+function GrabNewest($r) {
+	return array_pop($r);
+}
+
+$releases = CollectReleases('.');
+PrintReleasesDL($releases,true);
 ?>
-        </ul>
-        <p>&nbsp;&nbsp;(Source code for the 3rd party libraries is included in the 'libsrc.zip' files.) </p>
+        <p>&nbsp;&nbsp;(Source code for the 3rd party libraries is included in the 'srclibs.zip' files.) </p>
         <p>
             <img alt=">" src="help/images/bullet.gif" />
         Read the <a href="help/index.html">user documentation</a>.</p>

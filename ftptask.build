@@ -289,9 +289,9 @@
 <property name="link.sdkdoc.web" value="true" />
 <property name="project.version.full" value="${version}" />
 
-    <target name="doc" depends="userdoc, msdndoc" />
+    <target name="doc" depends="userdoc" />
 
-    <target name="userdoc" depends="build.release" description="Builds user documentation">
+    <target name="userdoc" depends="build" description="Builds user documentation">
 	    <echo message="Creating task and type documentation from ${build.dir}" />
         <exec program="nant.exe" useruntimeengine="true">
             <arg value="-indent:1" />
@@ -330,7 +330,7 @@
                         <!-- set the name and version of the product for which docs are generated -->
                         <property name="ProductName" value="NAnt FTPTasks" />
                         <property name="ProductVersion" value="${project.version.full}" />
-                        <property name="ProductUrl" value="http://www.spinthemoose.com/net/ftptasks" />                        
+                        <property name="ProductUrl" value="http://www.spinthemoose.com/ftptask" />                        
                         <property name="Preliminary" value="${not(project.release.type == 'release')}" />
                         <property name="DocumentAttributes" value="True" />
                         <property name="IncludeAssemblyVersion" value="True" />
@@ -342,7 +342,7 @@
             </ndoc>
         </if>
     </target>
-    <target name="msdndoc" depends="build.release" description="Builds msdn documentation">
+    <target name="msdndoc" depends="build" description="Builds msdn documentation">
 	    <echo message="Creating MSDN class documentation from ${build.dir}" />
         <exec program="nant.exe" useruntimeengine="true">
             <arg value="-indent:1" />
@@ -355,7 +355,7 @@
 	    <!-- update internal documentation, if required -->
         <uptodate property="docs.msdn.uptodate">
             <targetfiles>
-		    <include name="${doc.dir}/msdn/*.html" />
+		    <include name="${doc.dir}/msdn/**" />
             </targetfiles>
             <sourcefiles basedir="${build.dir}">
                 <!-- make sure the tasks/types are not new -->
@@ -422,14 +422,15 @@
 		<if test="${not(zip.uptodate)}">
 		<property name="zipfile-bin"	value="${ziproot}-bin.zip" />
 		<property name="zipfile-src"	value="${ziproot}-src.zip" />
-		<property name="zipfile-libsrc"	value="${ziproot}-libsrc.zip" />
+		<property name="zipfile-libsrc"	value="${ziproot}-srclibs.zip" />
 		<zip zipfile="${zipfile-bin}">
 			<fileset prefix="FTPTask">
-				<include name="bin\*.*" />
+				<include name="bin\**" />
 				<include name="docs\*.*" />
 				<include name="readme.txt"/>
 				<exclude name="**\.svn\*.*"/>
 				<exclude name="docs\msdn\**" />
+				<exclude name="bin\*.zip" />
 			</fileset>
 		</zip>
 		<zip zipfile="${zipfile-src}">
