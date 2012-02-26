@@ -1,0 +1,2396 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>edtftpnet-1.1.3</name>
+    </assembly>
+    <members>
+        <member name="T:EnterpriseDT.Net.Ftp.FTPPassiveDataSocket">
+            <summary>  Passive data socket handling class
+            
+            </summary>
+            <author>       Bruce Blackshaw
+            </author>
+            <version>      $Revision: 1.8 $
+            </version>
+        </member>
+        <member name="T:EnterpriseDT.Net.Ftp.FTPDataSocket">
+            <summary>  Interface for data socket classes, whether active or passive
+            
+            </summary>
+            <author>       Bruce Blackshaw
+            </author>
+            <version>      $Revision: 1.7 $
+            </version>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPDataSocket.sock">
+            <summary>  
+            The underlying socket 
+            </summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPDataSocket.timeout">
+            <summary>  
+            The timeout for the sockets
+            </summary>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPDataSocket.SetSocketTimeout(EnterpriseDT.Net.BaseSocket,System.Int32)">
+            <summary>  
+            Helper method to set a socket's timeout value
+            </summary>
+            <param name="sock">socket to set timeout for
+            </param>
+            <param name="timeout">timeout value to set
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPDataSocket.Close">
+            <summary>  Closes underlying socket(s)</summary>
+        </member>
+        <member name="P:EnterpriseDT.Net.Ftp.FTPDataSocket.Timeout">
+            <summary>   
+            Get/Set the TCP timeout on the underlying control socket.
+            </summary>
+        </member>
+        <member name="P:EnterpriseDT.Net.Ftp.FTPDataSocket.LocalPort">
+            <summary> 
+            Returns the local port to which this socket is bound. 
+            </summary>
+        </member>
+        <member name="P:EnterpriseDT.Net.Ftp.FTPDataSocket.DataStream">
+            <summary>  
+            Get the appropriate stream for reading or writing to
+            </summary>
+            <returns>  
+            input or output stream for underlying socket.
+            </returns>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPPassiveDataSocket.#ctor(EnterpriseDT.Net.BaseSocket)">
+            <summary>  
+            Constructor
+            </summary>
+            <param name="sock"> client socket to use
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPPassiveDataSocket.Close">
+            <summary>  
+            Closes underlying socket
+            </summary>
+        </member>
+        <member name="P:EnterpriseDT.Net.Ftp.FTPPassiveDataSocket.Timeout">
+            <summary>   
+            Set the TCP timeout on the underlying control socket.
+            </summary>
+        </member>
+        <member name="P:EnterpriseDT.Net.Ftp.FTPPassiveDataSocket.DataStream">
+            <summary>  
+            Gets the stream of the connection
+            </summary>
+        </member>
+        <member name="T:EnterpriseDT.Net.Ftp.FTPFile">
+            <summary>  
+            Represents a remote file (implementation)
+            </summary>
+            <author>
+            Bruce Blackshaw       
+            </author>
+            <version>      
+            $Revision: 1.4 $
+            </version>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPFile.UNKNOWN">
+            <summary> Unknown remote server type</summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPFile.WINDOWS">
+            <summary> Windows type</summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPFile.UNIX">
+            <summary> UNIX type</summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPFile.format">
+            <summary>Date format</summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPFile.type">
+            <summary> Type of file</summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPFile.isLink">
+            <summary> Is this file a symbolic link?</summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPFile.linkCount">
+            <summary> Number of links to file</summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPFile.permissions">
+            <summary> Permission bits string</summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPFile.isDir">
+            <summary> Is this a directory?</summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPFile.size">
+            <summary> Size of file</summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPFile.name">
+            <summary> File/dir name</summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPFile.linkedname">
+            <summary> Name of file this is linked to</summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPFile.owner">
+            <summary> Owner if known</summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPFile.group">
+            <summary> Group if known</summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPFile.lastModified">
+            <summary> Last modified</summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPFile.raw">
+            <summary> Raw string</summary>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPFile.#ctor(System.Int32,System.String,System.String,System.Int64,System.Boolean,System.DateTime@)">
+            <summary> 
+            Constructor
+            </summary>
+            <param name="type">         
+            type of file
+            </param>
+            <param name="raw">          
+            raw string returned from server
+            </param>
+            <param name="name">         
+            name of file
+            </param>
+            <param name="size">         
+            size of file
+            </param>
+            <param name="isDir">        
+            true if a directory
+            </param>
+            <param name="lastModified"> 
+            last modified timestamp
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPFile.ToString">
+            <returns> 
+            string representation
+            </returns>
+        </member>
+        <member name="P:EnterpriseDT.Net.Ftp.FTPFile.Type">
+            <summary> 
+            Get the type of file, eg UNIX
+            </summary>
+            <returns> the integer type of the file
+            </returns>
+        </member>
+        <member name="P:EnterpriseDT.Net.Ftp.FTPFile.Name">
+            <returns> 
+            Returns the name.
+            </returns>
+        </member>
+        <member name="P:EnterpriseDT.Net.Ftp.FTPFile.Raw">
+            <returns> 
+            Returns the raw server string.
+            </returns>
+        </member>
+        <member name="P:EnterpriseDT.Net.Ftp.FTPFile.LinkCount">
+            <returns> 
+            Returns or sets the number of links to the file
+            </returns>
+        </member>
+        <member name="P:EnterpriseDT.Net.Ftp.FTPFile.Link">
+            <returns> 
+            Is this file a link
+            </returns>
+        </member>
+        <member name="P:EnterpriseDT.Net.Ftp.FTPFile.LinkedName">
+            <returns> 
+            Returns the linked name.
+            </returns>
+        </member>
+        <member name="P:EnterpriseDT.Net.Ftp.FTPFile.Group">
+            <returns> 
+            Gets or sets the group.
+            </returns>
+        </member>
+        <member name="P:EnterpriseDT.Net.Ftp.FTPFile.Owner">
+            <returns> 
+            Gets or sets the owner.
+            </returns>
+        </member>
+        <member name="P:EnterpriseDT.Net.Ftp.FTPFile.Dir">
+            <returns> 
+            Gets or sets whether this is a directory
+            </returns>
+        </member>
+        <member name="P:EnterpriseDT.Net.Ftp.FTPFile.Permissions">
+            <returns> 
+            Gets or sets the permissions.
+            </returns>
+        </member>
+        <member name="P:EnterpriseDT.Net.Ftp.FTPFile.LastModified">
+            <returns> 
+            Gets last modified timestamp
+            </returns>
+        </member>
+        <member name="P:EnterpriseDT.Net.Ftp.FTPFile.Size">
+            <returns> 
+            Gets size of file
+            </returns>
+        </member>
+        <member name="T:EnterpriseDT.Net.BaseSocket">
+            <summary>  
+            Socket abstraction that simplifies socket code
+            </summary>
+            <author>   
+            Hans Andersen    
+            </author>
+            <version>      
+            $Revision: 1.2 $
+            </version>
+        </member>
+        <member name="M:EnterpriseDT.Net.BaseSocket.Accept">
+            <summary>
+            Creates a new Socket for a newly created connection
+            </summary>
+        </member>
+        <member name="M:EnterpriseDT.Net.BaseSocket.Bind(System.Net.EndPoint)">
+            <summary>
+            Associates a Socket with a local endpoint.
+            </summary>
+        </member>
+        <member name="M:EnterpriseDT.Net.BaseSocket.Close">
+            <summary>
+            Closes the Socket connection and releases all associated resources.
+            </summary>
+        </member>
+        <member name="M:EnterpriseDT.Net.BaseSocket.Connect(System.Net.EndPoint)">
+            <summary>
+            Establishes a connection to a remote endpoint
+            </summary>
+        </member>
+        <member name="M:EnterpriseDT.Net.BaseSocket.Listen(System.Int32)">
+            <summary>
+            Places socket in a listening state.
+            </summary>
+        </member>
+        <member name="M:EnterpriseDT.Net.BaseSocket.GetStream">
+            <summary>
+            Get the stream associated with the socket.
+            </summary>
+            <remarks>
+            The stream returned owns the socket, so closing the
+            stream will close the socket
+            </remarks>
+        </member>
+        <member name="M:EnterpriseDT.Net.BaseSocket.Receive(System.Byte[])">
+            <summary>
+            Receives data from a bound Socket.
+            </summary>
+        </member>
+        <member name="M:EnterpriseDT.Net.BaseSocket.Send(System.Byte[])">
+            <summary>
+            Sends data to a connected Socket.
+            </summary>
+        </member>
+        <member name="M:EnterpriseDT.Net.BaseSocket.SetSocketOption(System.Net.Sockets.SocketOptionLevel,System.Net.Sockets.SocketOptionName,System.Int32)">
+            <summary>
+            Sets a Socket option.
+            </summary>
+        </member>
+        <member name="P:EnterpriseDT.Net.BaseSocket.LocalEndPoint">
+            <summary>
+            Gets the local endpoint.
+            </summary>
+        </member>
+        <member name="T:EnterpriseDT.Net.StandardSocket">
+            <summary>  
+            Standard implementation of BaseSocket
+            </summary>
+            <author>   
+            Hans Andersen    
+            </author>
+            <version>      
+            $Revision: 1.2 $
+            </version>
+        </member>
+        <member name="F:EnterpriseDT.Net.StandardSocket.socket">
+            <summary>
+            The real socket this class is wrapping
+            </summary>
+        </member>
+        <member name="M:EnterpriseDT.Net.StandardSocket.#ctor(System.Net.Sockets.AddressFamily,System.Net.Sockets.SocketType,System.Net.Sockets.ProtocolType)">
+            <summary>
+            Initializes a new instance of the StandardSocket class
+            </summary>
+        </member>
+        <member name="M:EnterpriseDT.Net.StandardSocket.#ctor(System.Net.Sockets.Socket)">
+            <summary>
+            Initializes a new instance of the StandardSocket class
+            </summary>
+        </member>
+        <member name="M:EnterpriseDT.Net.StandardSocket.Accept">
+            <summary>
+            Creates a new Socket for a newly created connection
+            </summary>
+        </member>
+        <member name="M:EnterpriseDT.Net.StandardSocket.Bind(System.Net.EndPoint)">
+            <summary>
+            Associates a Socket with a local endpoint.
+            </summary>
+        </member>
+        <member name="M:EnterpriseDT.Net.StandardSocket.Close">
+            <summary>
+            Closes the Socket connection and releases all associated resources.
+            </summary>
+        </member>
+        <member name="M:EnterpriseDT.Net.StandardSocket.Connect(System.Net.EndPoint)">
+            <summary>
+            Establishes a connection to a remote endpoint
+            </summary>
+        </member>
+        <member name="M:EnterpriseDT.Net.StandardSocket.Listen(System.Int32)">
+            <summary>
+            Places socket in a listening state.
+            </summary>
+        </member>
+        <member name="M:EnterpriseDT.Net.StandardSocket.GetStream">
+            <summary>
+            Get the stream associated with the socket.
+            </summary>
+        </member>
+        <member name="M:EnterpriseDT.Net.StandardSocket.Receive(System.Byte[])">
+            <summary>
+            Receives data from a bound Socket.
+            </summary>
+        </member>
+        <member name="M:EnterpriseDT.Net.StandardSocket.Send(System.Byte[])">
+            <summary>
+            Sends data to a connected Socket.
+            </summary>
+        </member>
+        <member name="M:EnterpriseDT.Net.StandardSocket.SetSocketOption(System.Net.Sockets.SocketOptionLevel,System.Net.Sockets.SocketOptionName,System.Int32)">
+            <summary>
+            Sets a Socket option.
+            </summary>
+        </member>
+        <member name="P:EnterpriseDT.Net.StandardSocket.LocalEndPoint">
+            <summary>
+            Gets the local endpoint.
+            </summary>
+        </member>
+        <member name="T:EnterpriseDT.Util.Debug.StandardOutputAppender">
+            <summary>  Appends log statements to standard output
+            
+            </summary>
+            <author>       Bruce Blackshaw
+            </author>
+            <version>      $Revision: 1.4 $
+            </version>
+        </member>
+        <member name="T:EnterpriseDT.Util.Debug.Appender">
+            <summary>  Interface for classes that output log
+            statements 
+            
+            </summary>
+            <author>       Bruce Blackshaw
+            </author>
+            <version>      $Revision: 1.4 $
+            </version>
+        </member>
+        <member name="M:EnterpriseDT.Util.Debug.Appender.Close">
+            <summary> Close this appender</summary>
+        </member>
+        <member name="M:EnterpriseDT.Util.Debug.Appender.Log(System.String)">
+            <summary> Log a message
+            
+            </summary>
+            <param name="msg"> message to log
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Util.Debug.Appender.Log(System.Exception)">
+            <summary> 
+            Log a stack trace
+            </summary>
+            <param name="t"> throwable object
+            </param>
+        </member>
+        <member name="F:EnterpriseDT.Util.Debug.StandardOutputAppender.log">
+            <summary> 
+            Destination
+            </summary>
+        </member>
+        <member name="M:EnterpriseDT.Util.Debug.StandardOutputAppender.#ctor">
+            <summary> 
+            Constructor
+            </summary>
+        </member>
+        <member name="M:EnterpriseDT.Util.Debug.StandardOutputAppender.Log(System.String)">
+            <summary> 
+            Log a message
+            </summary>
+            <param name="msg"> message to log
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Util.Debug.StandardOutputAppender.Log(System.Exception)">
+            <summary> 
+            Log a stack trace
+            </summary>
+            <param name="t"> throwable object
+            </param>		
+        </member>
+        <member name="M:EnterpriseDT.Util.Debug.StandardOutputAppender.Close">
+            <summary> 
+            Close this appender
+            </summary>
+        </member>
+        <member name="T:EnterpriseDT.Net.Ftp.WindowsFileParser">
+            <summary>  
+            Represents a remote Windows file parser
+            </summary>
+            <author>       Bruce Blackshaw
+            </author>
+            <version>      $Revision: 1.5 $
+            </version>
+        </member>
+        <member name="T:EnterpriseDT.Net.Ftp.FTPFileParser">
+            <summary>  
+            Root class of all file parsers
+            </summary>
+            <author>       
+            Bruce Blackshaw
+            </author>
+            <version>      
+            $Revision: 1.5 $
+            </version>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPFileParser.MAX_FIELDS">
+            <summary> Maximum number of fields in raw string</summary>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPFileParser.Parse(System.String)">
+            <summary> Parse server supplied string
+            
+            </summary>
+            <param name="raw">  raw string to parse
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPFileParser.Split(System.String)">
+            <summary>
+            Splits string consisting of fields separated by
+            whitespace into an array of strings
+            </summary>
+            <param name="str">
+            string to split
+            </param>   
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.WindowsFileParser.DIR">
+            <summary> Directory field</summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.WindowsFileParser.MIN_EXPECTED_FIELD_COUNT">
+            <summary> Number of expected fields</summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.WindowsFileParser.log">
+            <summary> Logging object</summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.WindowsFileParser.format">
+            <summary>Date format</summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.WindowsFileParser.sep">
+            <summary>Splitter token</summary>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.WindowsFileParser.#ctor">
+            <summary> Default constructor</summary>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.WindowsFileParser.Parse(System.String)">
+            <summary> Parse server supplied string. Should be in
+            form 
+            <![CDATA[
+            05-17-03  02:47PM                70776 ftp.jar
+            08-28-03  10:08PM       <DIR>          EDT SSLTest
+            ]]>
+            </summary>
+            <param name="raw">  
+            raw string to parse
+            </param>
+        </member>
+        <member name="T:EnterpriseDT.Util.Debug.Level">
+            <summary>  
+            Simple debug level class. Uses the same interface (but
+            not implementation) as log4net, so that the debug
+            classes could be easily replaced by log4net 
+            </summary>
+            <author>       Bruce Blackshaw
+            </author>
+            <version>      $Revision: 1.4 $
+            </version>
+        </member>
+        <member name="F:EnterpriseDT.Util.Debug.Level.OFF">
+            <summary> Off level</summary>
+        </member>
+        <member name="F:EnterpriseDT.Util.Debug.Level.FATAL">
+            <summary> Fatal level</summary>
+        </member>
+        <member name="F:EnterpriseDT.Util.Debug.Level.ERROR">
+            <summary> OFF level</summary>
+        </member>
+        <member name="F:EnterpriseDT.Util.Debug.Level.WARN">
+            <summary> Warn level</summary>
+        </member>
+        <member name="F:EnterpriseDT.Util.Debug.Level.INFO">
+            <summary> Info level</summary>
+        </member>
+        <member name="F:EnterpriseDT.Util.Debug.Level.DEBUG">
+            <summary> Debug level</summary>
+        </member>
+        <member name="F:EnterpriseDT.Util.Debug.Level.ALL">
+            <summary> All level</summary>
+        </member>
+        <member name="F:EnterpriseDT.Util.Debug.Level.level">
+            <summary> The level's integer value</summary>
+        </member>
+        <member name="F:EnterpriseDT.Util.Debug.Level.levelStr">
+            <summary> The level's string representation</summary>
+        </member>
+        <member name="M:EnterpriseDT.Util.Debug.Level.#ctor(System.Int32,System.String)">
+            <summary> 
+            Private constructor so no-one outside the class can
+            create any more instances
+            </summary>
+            <param name="level">    level to set this instance at
+            </param>
+            <param name="levelStr">   string representation
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Util.Debug.Level.GetLevel">
+            <summary> 
+            Get integer log level
+            </summary>
+            <returns> log level
+            </returns>
+        </member>
+        <member name="M:EnterpriseDT.Util.Debug.Level.IsGreaterOrEqual(EnterpriseDT.Util.Debug.Level)">
+            <summary> Is this level greater or equal to the supplied level
+            
+            </summary>
+            <param name="l">     level to test against
+            </param>
+            <returns>  true if greater or equal to, false if less than
+            </returns>
+        </member>
+        <member name="M:EnterpriseDT.Util.Debug.Level.GetLevel(System.String)">
+            <summary> Get level from supplied string
+            
+            </summary>
+            <param name="level">level as a string
+            </param>
+            <returns> level object or null if not found
+            </returns>
+        </member>
+        <member name="M:EnterpriseDT.Util.Debug.Level.ToString">
+            <summary> String representation
+            
+            </summary>
+            <returns> string
+            </returns>
+        </member>
+        <member name="T:EnterpriseDT.Net.Ftp.FTPControlSocket">
+            <summary>  Supports client-side FTP operations
+            
+            </summary>
+            <author>              Bruce Blackshaw
+            </author>
+            <version>         $Revision: 1.11 $
+            
+            </version>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPControlSocket.EOL">
+            <summary>   Standard FTP end of line sequence</summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPControlSocket.CONTROL_PORT">
+            <summary>   The default and standard control port number for FTP</summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPControlSocket.DEBUG_ARROW">
+            <summary>   Used to flag messages</summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPControlSocket.PASSWORD_MESSAGE">
+            <summary>   Start of password message</summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPControlSocket.log">
+            <summary> Logging object</summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPControlSocket.strictReturnCodes">
+            <summary> Use strict return codes if true</summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPControlSocket.remoteHost">
+            <summary>Address of the remote host</summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPControlSocket.controlSock">
+            <summary>  The underlying socket.</summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPControlSocket.timeout">
+            <summary>  
+            The timeout for the control socket
+            </summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPControlSocket.writer">
+            <summary>  The write that writes to the control socket</summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPControlSocket.reader">
+            <summary>  The reader that reads control data from the
+            control socket
+            </summary>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPControlSocket.#ctor(System.Net.IPAddress,System.Int32,System.Int32)">
+            <summary>   
+            Constructor. Performs TCP connection and
+            sets up reader/writer. Allows different control
+            port to be used
+            </summary>
+            <param name="remoteHost">      
+            Remote inet address
+            </param>
+            <param name="controlPort">     
+            port for control stream
+            </param>
+            <param name="timeout">          
+            the length of the timeout, in milliseconds
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPControlSocket.#ctor">
+            <summary>   
+            Default constructor
+            </summary>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPControlSocket.Initialize(EnterpriseDT.Net.BaseSocket,System.Net.IPAddress,System.Int32,System.Int32)">
+            <summary>   
+            Performs TCP connection and sets up reader/writer. 
+            Allows different control port to be used
+            </summary>
+            <param name="sock">
+             Socket instance
+            </param>
+            <param name="remoteHost">     
+            address of remote host
+            </param>
+            <param name="controlPort">     
+            port for control stream
+            </param>
+            <param name="timeout">    
+            the length of the timeout, in milliseconds      
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPControlSocket.ConnectSocket(EnterpriseDT.Net.BaseSocket,System.Net.IPAddress,System.Int32)">
+            <summary>   
+            Establishes the socket connection
+            </summary>
+            <param name="socket">
+             Socket instance
+            </param>
+            <param name="address">     
+            IP address to connect to
+            </param>
+            <param name="port">    
+            port to connect to     
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPControlSocket.ValidateConnection">
+            <summary>   Checks that the standard 220 reply is returned
+            following the initiated connection
+            </summary>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPControlSocket.InitStreams">
+            <summary>  Obtain the reader/writer streams for this
+            connection
+            </summary>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPControlSocket.Logout">
+            <summary>  
+            Quit this FTP session and clean up.
+            </summary>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPControlSocket.CreateDataSocket(EnterpriseDT.Net.Ftp.FTPConnectMode)">
+            <summary>  
+            Request a data socket be created on the
+            server, connect to it and return our
+            connected socket.
+            </summary>
+            <param name="connectMode">  
+            The mode to connect in
+            </param>
+            <returns>  
+            connected data socket
+            </returns>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPControlSocket.CreateDataSocketActive">
+            <summary>  
+            Request a data socket be created on the Client
+            client on any free port, do not connect it to yet.
+            </summary>
+            <returns>  
+            not connected data socket
+            </returns>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPControlSocket.SetDataPort(System.Net.IPEndPoint)">
+            <summary>  
+            Sets the data port on the server, i.e. sends a PORT
+            command		
+            </summary>
+            <param name="ep">local endpoint
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPControlSocket.ToByteArray(System.UInt16)">
+            <summary>  
+            Convert a short into a byte array
+            </summary>
+            <param name="val">  value to convert
+            </param>
+            <returns>  a byte array
+            
+            </returns>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPControlSocket.CreateDataSocketPASV">
+            <summary>  
+            Request a data socket be created on the
+            server, connect to it and return our
+            connected socket.
+            </summary>
+            <returns>  connected data socket
+            </returns>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPControlSocket.NewPassiveDataSocket(System.String,System.Int32)">
+            <summary> Constructs a new <code>FTPDataSocket</code> object (client mode) and connect
+            to the given remote host and port number.
+            
+            </summary>
+            <param name="ipAddress">IP Address to connect to.
+            </param>
+            <param name="port">Remote port to connect to.
+            </param>
+            <returns> A new <code>FTPDataSocket</code> object (client mode) which is
+            connected to the given server.
+            </returns>
+            <throws>  SystemException Thrown if no TCP/IP connection could be made.  </throws>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPControlSocket.NewActiveDataSocket(System.Int32)">
+            <summary> 
+            Constructs a new <code>FTPDataSocket</code> object (server mode) which will
+            listen on the given port number.
+            </summary>
+            <param name="port">Remote port to listen on.
+            </param>
+            <returns> A new <code>FTPDataSocket</code> object (server mode) which is
+            configured to listen on the given port.
+            </returns>
+            <throws>  SystemException Thrown if an error occurred when creating the socket.  </throws>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPControlSocket.SendCommand(System.String)">
+            <summary>  Send a command to the FTP server and
+            return the server's reply as a structured
+            reply object
+            </summary>
+            <param name="command">  
+            command to send
+            </param>
+            <returns>  reply to the supplied command
+            </returns>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPControlSocket.WriteCommand(System.String)">
+            <summary>  Send a command to the FTP server. Don't
+            read the reply
+            
+            </summary>
+            <param name="command">  command to send
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPControlSocket.ReadReply">
+            <summary>  Read the FTP server's reply to a previously
+            issued command. RFC 959 states that a reply
+            consists of the 3 digit code followed by text.
+            The 3 digit code is followed by a hyphen if it
+            is a muliline response, and the last line starts
+            with the same 3 digit code.
+            
+            </summary>
+            <returns>  structured reply object
+            </returns>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPControlSocket.ValidateReply(System.String,System.String)">
+            <summary>  
+            Validate the response the host has supplied against the
+            expected reply. If we get an unexpected reply we throw an
+            exception, setting the message to that returned by the
+            FTP server
+            </summary>
+            <param name="reply">             the entire reply string we received
+            </param>
+            <param name="expectedReplyCode"> the reply we expected to receive
+            
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPControlSocket.ValidateReply(System.String,System.String[])">
+            <summary>  Validate the response the host has supplied against the
+            expected reply. If we get an unexpected reply we throw an
+            exception, setting the message to that returned by the
+            FTP server
+            
+            </summary>
+            <param name="reply">              the entire reply string we received
+            </param>
+            <param name="expectedReplyCodes"> array of expected replies
+            </param>
+            <returns>  an object encapsulating the server's reply
+            
+            </returns>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPControlSocket.ValidateReply(EnterpriseDT.Net.Ftp.FTPReply,System.String[])">
+            <summary>  Validate the response the host has supplied against the
+            expected reply. If we get an unexpected reply we throw an
+            exception, setting the message to that returned by the
+            FTP server
+            
+            </summary>
+            <param name="reply">              reply object
+            </param>
+            <param name="expectedReplyCodes"> array of expected replies
+            </param>
+            <returns>  reply object
+            
+            </returns>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPControlSocket.ValidateReply(EnterpriseDT.Net.Ftp.FTPReply,System.String)">
+            <summary>  Validate the response the host has supplied against the
+            expected reply. If we get an unexpected reply we throw an
+            exception, setting the message to that returned by the
+            FTP server
+            
+            </summary>
+            <param name="reply">              reply object
+            </param>
+            <param name="expectedReplyCode">  expected reply
+            </param>
+            <returns>  reply object
+            
+            </returns>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPControlSocket.ValidateReplyCode(EnterpriseDT.Net.Ftp.FTPReply,System.String)">
+            <summary> 
+            Validate reply object
+            </summary>
+            <param name="reply">               reference to reply object
+            </param>
+            <param name="expectedReplyCode">   expect reply code
+            </param>
+            <returns> true if valid, false if invalid
+            </returns>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPControlSocket.Log(System.String,System.Boolean)">
+            <summary>  
+            Log a message, checking for passwords
+            </summary>
+            <param name="msg">
+            message to log
+            </param>
+            <param name="command"> 
+            true if a response, false otherwise
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPControlSocket.SetSocketTimeout(EnterpriseDT.Net.BaseSocket,System.Int32)">
+            <summary>  
+            Helper method to set a socket's timeout value
+            </summary>
+            <param name="sock">
+            socket to set timeout for
+            </param>
+            <param name="timeout">
+            timeout value to set
+            </param>
+        </member>
+        <member name="E:EnterpriseDT.Net.Ftp.FTPControlSocket.CommandSent">
+            <summary>
+            Event for notifying start of a transfer
+            </summary> 
+        </member>
+        <member name="E:EnterpriseDT.Net.Ftp.FTPControlSocket.ReplyReceived">
+            <summary>
+            Event for notifying start of a transfer
+            </summary> 
+        </member>
+        <member name="P:EnterpriseDT.Net.Ftp.FTPControlSocket.StrictReturnCodes">
+            <summary> 
+            Get/Set strict checking of FTP return codes. If strict 
+            checking is on (the default) code must exactly match the expected 
+            code. If strict checking is off, only the first digit must match.
+            </summary>
+        </member>
+        <member name="P:EnterpriseDT.Net.Ftp.FTPControlSocket.Timeout">
+            <summary>   
+            Get/Set the TCP timeout on the underlying control socket.
+            </summary>
+        </member>
+        <member name="T:EnterpriseDT.Net.Ftp.FTPException">
+            <summary>  FTP specific exceptions
+            
+            </summary>
+            <author>      Bruce Blackshaw
+            </author>
+            <version>     $Revision: 1.4 $
+            
+            </version>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPException.replyCode">
+            <summary>  Integer reply code</summary>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPException.#ctor(System.String)">
+            <summary>   Constructor. Delegates to super.
+            
+            </summary>
+            <param name="msg">  Message that the user will be
+            able to retrieve
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPException.#ctor(System.String,System.String)">
+            <summary>  Constructor. Permits setting of reply code
+            
+            </summary>
+            <param name="msg">       message that the user will be
+            able to retrieve
+            </param>
+            <param name="replyCode"> string form of reply code
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPException.#ctor(EnterpriseDT.Net.Ftp.FTPReply)">
+            <summary>  Constructor. Permits setting of reply code
+            
+            </summary>
+            <param name="reply">    reply object
+            </param>
+        </member>
+        <member name="P:EnterpriseDT.Net.Ftp.FTPException.ReplyCode">
+            <summary>   Get the reply code if it exists
+            
+            </summary>
+            <returns>  reply if it exists, -1 otherwise
+            </returns>
+        </member>
+        <member name="T:EnterpriseDT.Util.Debug.Logger">
+            <summary>  
+            Logger class that mimics log4net Logger class
+            </summary>
+            <author>       Bruce Blackshaw
+            </author>
+            <version>      $Revision: 1.6 $
+            </version>
+        </member>
+        <member name="F:EnterpriseDT.Util.Debug.Logger.globalLevel">
+            <summary> Level of all loggers</summary>
+        </member>
+        <member name="F:EnterpriseDT.Util.Debug.Logger.format">
+            <summary>Date format</summary>
+        </member>
+        <member name="F:EnterpriseDT.Util.Debug.Logger.loggers">
+            <summary> Hash of all loggers that exist</summary>
+        </member>
+        <member name="F:EnterpriseDT.Util.Debug.Logger.appenders">
+            <summary> Vector of all appenders</summary>
+        </member>
+        <member name="F:EnterpriseDT.Util.Debug.Logger.ts">
+            <summary> Timestamp</summary>
+        </member>
+        <member name="F:EnterpriseDT.Util.Debug.Logger.clazz">
+            <summary> Class name for this logger</summary>
+        </member>
+        <member name="M:EnterpriseDT.Util.Debug.Logger.#ctor(System.String)">
+            <summary> 
+            Constructor
+            </summary>
+            <param name="clazz">    
+            class this logger is for
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Util.Debug.Logger.GetLogger(System.Type)">
+            <summary> Get a logger for the supplied class
+            
+            </summary>
+            <param name="clazz">   full class name
+            </param>
+            <returns>  logger for class
+            </returns>
+        </member>
+        <member name="M:EnterpriseDT.Util.Debug.Logger.GetLogger(System.String)">
+            <summary> 
+            Get a logger for the supplied class
+            </summary>
+            <param name="clazz">   full class name
+            </param>
+            <returns>  logger for class
+            </returns>
+        </member>
+        <member name="M:EnterpriseDT.Util.Debug.Logger.AddAppender(EnterpriseDT.Util.Debug.Appender)">
+            <summary> 
+            Add an appender to our list
+            </summary>
+            <param name="newAppender">
+            new appender to add
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Util.Debug.Logger.Shutdown">
+            <summary> Close and remove all appenders and loggers</summary>
+        </member>
+        <member name="M:EnterpriseDT.Util.Debug.Logger.Log(EnterpriseDT.Util.Debug.Level,System.String,System.Exception)">
+            <summary> Log a message 
+            
+            </summary>
+            <param name="level">    log level
+            </param>
+            <param name="message">  message to log
+            </param>
+            <param name="t">        throwable object
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Util.Debug.Logger.OurLog(EnterpriseDT.Util.Debug.Level,System.String,System.Exception)">
+            <summary> 
+            Log a message to our logging system
+            </summary>
+            <param name="level">    log level
+            </param>
+            <param name="message">  message to log
+            </param>
+            <param name="t">        throwable object
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Util.Debug.Logger.Info(System.String)">
+            <summary> Log an info level message
+            
+            </summary>
+            <param name="message">  message to log
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Util.Debug.Logger.Info(System.String,System.Exception)">
+            <summary> Log an info level message
+            
+            </summary>
+            <param name="message">  message to log
+            </param>
+            <param name="t">        throwable object
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Util.Debug.Logger.Warn(System.String)">
+            <summary> Log a warning level message
+            
+            </summary>
+            <param name="message">  message to log
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Util.Debug.Logger.Warn(System.String,System.Exception)">
+            <summary> Log a warning level message
+            
+            </summary>
+            <param name="message">  message to log
+            </param>
+            <param name="t">        throwable object
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Util.Debug.Logger.Error(System.String)">
+            <summary> Log an error level message
+            
+            </summary>
+            <param name="message">  message to log
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Util.Debug.Logger.Error(System.String,System.Exception)">
+            <summary> Log an error level message
+            
+            </summary>
+            <param name="message">  message to log
+            </param>
+            <param name="t">        throwable object
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Util.Debug.Logger.Fatal(System.String)">
+            <summary> Log a fatal level message
+            
+            </summary>
+            <param name="message">  message to log
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Util.Debug.Logger.Fatal(System.String,System.Exception)">
+            <summary> Log a fatal level message
+            
+            </summary>
+            <param name="message">  message to log
+            </param>
+            <param name="t">        throwable object
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Util.Debug.Logger.Debug(System.String)">
+            <summary> Log a debug level message
+            
+            </summary>
+            <param name="message">  message to log
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Util.Debug.Logger.Debug(System.String,System.Exception)">
+            <summary> Log a debug level message
+            
+            </summary>
+            <param name="message">  message to log
+            </param>
+            <param name="t">        throwable object
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Util.Debug.Logger.IsEnabledFor(EnterpriseDT.Util.Debug.Level)">
+            <summary> Is logging enabled for the supplied level?
+            
+            </summary>
+            <param name="level">  level to test for
+            </param>
+            <returns> true   if enabled
+            </returns>
+        </member>
+        <member name="M:EnterpriseDT.Util.Debug.Logger.#cctor">
+            <summary> Determine the logging level</summary>
+        </member>
+        <member name="P:EnterpriseDT.Util.Debug.Logger.CurrentLevel">
+            <summary> 
+            Set all loggers to this level
+            </summary>
+        </member>
+        <member name="P:EnterpriseDT.Util.Debug.Logger.DebugEnabled">
+            <summary> 
+            Is debug logging enabled?
+            </summary>
+            <returns> true if enabled
+            </returns>
+        </member>
+        <member name="P:EnterpriseDT.Util.Debug.Logger.InfoEnabled">
+            <summary> Is info logging enabled for the supplied level?
+            
+            </summary>
+            <returns> true if enabled
+            </returns>
+        </member>
+        <member name="T:EnterpriseDT.Net.Ftp.FTPActiveDataSocket">
+            <summary>  
+            Active data socket handling class
+            </summary>
+            <author>       
+            Bruce Blackshaw
+            </author>
+            <version>      
+            $Revision: 1.8 $
+            </version>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPActiveDataSocket.acceptedSock">
+            <summary>  
+            The socket accepted from server
+            </summary>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPActiveDataSocket.#ctor(EnterpriseDT.Net.BaseSocket)">
+            <summary>  
+            Constructor
+            </summary>
+            <param name="sock">   the server socket to use
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPActiveDataSocket.AcceptConnection">
+            <summary> 
+            Waits for a connection from the server and then sets the timeout
+            when the connection is made.
+            </summary>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPActiveDataSocket.Close">
+            <summary>
+            Closes underlying sockets
+            </summary>
+        </member>
+        <member name="P:EnterpriseDT.Net.Ftp.FTPActiveDataSocket.Timeout">
+            <summary>   
+            Set the TCP timeout on the underlying data socket(s).
+            </summary>
+        </member>
+        <member name="P:EnterpriseDT.Net.Ftp.FTPActiveDataSocket.DataStream">
+            <summary>  
+            Accepts the FTP server's connection and returns the socket's stream.
+            </summary>
+        </member>
+        <member name="T:EnterpriseDT.Util.Debug.FileAppender">
+            <summary>  
+            Appends log statements to a file
+            </summary>
+            <author>       Bruce Blackshaw
+            </author>
+            <version>      $Revision: 1.4 $
+            </version>
+        </member>
+        <member name="F:EnterpriseDT.Util.Debug.FileAppender.log">
+            <summary> Destination</summary>
+        </member>
+        <member name="M:EnterpriseDT.Util.Debug.FileAppender.#ctor(System.String)">
+            <summary> Constructor
+            
+            </summary>
+            <param name="file">     file to log to
+            </param>
+            <throws>  IOException </throws>
+        </member>
+        <member name="M:EnterpriseDT.Util.Debug.FileAppender.Log(System.String)">
+            <summary> 
+            Log a message
+            </summary>
+            <param name="msg"> message to log
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Util.Debug.FileAppender.Log(System.Exception)">
+            <summary> 
+            Log a stack trace
+            </summary>
+            <param name="t"> throwable object
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Util.Debug.FileAppender.Close">
+            <summary> 
+            Close this appender
+            </summary>
+        </member>
+        <member name="T:EnterpriseDT.Net.Ftp.FTPFileFactory">
+            <summary>  
+            Factory for creating FTPFile objects
+            </summary>
+            <author>       Bruce Blackshaw
+            </author>
+            <version>      $Revision: 1.4 $
+            </version>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPFileFactory.WINDOWS_STR">
+            <summary> Windows server comparison string</summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPFileFactory.UNIX_STR">
+            <summary> UNIX server comparison string</summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPFileFactory.log">
+            <summary> Logging object</summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPFileFactory.system">
+            <summary> SYST string</summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPFileFactory.windows">
+            <summary> Cached windows parser</summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPFileFactory.unix">
+            <summary> Cached unix parser</summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPFileFactory.parser">
+            <summary> Does the parsing work</summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPFileFactory.rotateParsersOnFail">
+            <summary> Rotate parsers when a ParseException is thrown?</summary>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPFileFactory.#ctor(System.String)">
+            <summary> Constructor
+            
+            </summary>
+            <param name="system">   SYST string
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPFileFactory.#ctor(EnterpriseDT.Net.Ftp.FTPFileParser)">
+            <summary> Constructor. User supplied parser. Note that parser
+            rotation (in case of a ParseException) is disabled if
+            a parser is explicitly supplied
+            
+            </summary>
+            <param name="parser">  the parser to use
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPFileFactory.SetParser(System.String)">
+            <summary> Set the remote server type
+            
+            </summary>
+            <param name="system">   SYST string
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPFileFactory.Parse(System.String[])">
+            <summary> Parse an array of raw file information returned from the
+            FTP server
+            
+            </summary>
+            <param name="files">    array of strings
+            </param>
+            <returns> array of FTPFile objects
+            </returns>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPFileFactory.RotateParsers">
+            <summary> Swap from one parser to the other. We can just check
+            object references
+            </summary>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPFileFactory.GetSystem">
+            <summary> 
+            Get the SYST string
+            </summary>
+            <returns> the system string.
+            </returns>
+        </member>
+        <member name="T:EnterpriseDT.Net.Ftp.UnixFileParser">
+            <summary>  
+            Represents a remote Unix file parser
+            </summary>
+            <author>       
+            Bruce Blackshaw
+            </author>
+            <version>      
+            $Revision: 1.5 $
+            </version>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.UnixFileParser.SYMLINK_ARROW">
+            <summary> Symbolic link symbol</summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.UnixFileParser.SYMLINK_CHAR">
+            <summary> Indicates symbolic link</summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.UnixFileParser.ORDINARY_FILE_CHAR">
+            <summary> Indicates ordinary file</summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.UnixFileParser.DIRECTORY_CHAR">
+            <summary> Indicates directory</summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.UnixFileParser.format1a">
+            <summary>Date format 1</summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.UnixFileParser.format1b">
+            <summary>Date format 1</summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.UnixFileParser.format2a">
+            <summary>Date format 2</summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.UnixFileParser.format2b">
+            <summary>Date format 2</summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.UnixFileParser.MIN_FIELD_COUNT">
+            <summary> Minimum number of expected fields</summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.UnixFileParser.format1">
+            <summary>array of format 1 formats</summary> 
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.UnixFileParser.format2">
+            <summary>array of format 2 formats</summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.UnixFileParser.log">
+            <summary> Logging object</summary>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.UnixFileParser.#ctor">
+            <summary> Default constructor</summary>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.UnixFileParser.Parse(System.String)">
+            <summary> 
+            Parse server supplied string, e.g.:
+            
+            lrwxrwxrwx   1 wuftpd   wuftpd         14 Jul 22  2002 MIRRORS -> README-MIRRORS
+            -rw-r--r--   1 b173771  users         431 Mar 31 20:04 .htaccess
+            
+            </summary>
+            <param name="raw">  raw string to parse
+            </param>
+        </member>
+        <member name="T:EnterpriseDT.Net.Ftp.FTPReply">
+            <summary>  Encapsulates the FTP server reply
+            
+            </summary>
+            <author>       Bruce Blackshaw
+            </author>
+            <version>      $Revision: 1.4 $
+            </version>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPReply.replyCode">
+            <summary>  Reply code</summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPReply.replyText">
+            <summary>  Reply text</summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPReply.data">
+            <summary> Lines of data returned, e.g. FEAT</summary>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPReply.#ctor(System.String,System.String)">
+            <summary>  Constructor. Only to be constructed
+            by this package, hence package access
+            
+            </summary>
+            <param name="replyCode"> the server's reply code
+            </param>
+            <param name="replyText"> the server's reply text
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPReply.#ctor(System.String,System.String,System.String[])">
+            <summary>  Constructor. Only to be constructed
+            by this package, hence package access
+            
+            </summary>
+            <param name="replyCode"> the server's reply code
+            </param>
+            <param name="replyText"> the server's full reply text
+            </param>
+            <param name="data">      data lines contained in reply text
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPReply.#ctor(System.String)">
+            <summary>  Constructor. Only to be constructed
+            by this package, hence package access
+            
+            </summary>
+            <param name="rawReply"> the server's raw reply
+            </param>
+        </member>
+        <member name="P:EnterpriseDT.Net.Ftp.FTPReply.ReplyCode">
+            <summary>  Getter for reply code
+            
+            </summary>
+            <returns> server's reply code
+            </returns>
+        </member>
+        <member name="P:EnterpriseDT.Net.Ftp.FTPReply.ReplyText">
+            <summary>  Getter for reply text
+            
+            </summary>
+            <returns> server's reply text
+            </returns>
+        </member>
+        <member name="P:EnterpriseDT.Net.Ftp.FTPReply.ReplyData">
+            <summary> Getter for reply data lines
+            
+            </summary>
+            <returns> array of data lines returned (if any). Null
+            if no data lines
+            </returns>
+        </member>
+        <member name="T:EnterpriseDT.Net.Ftp.BytesTransferredEventArgs">
+            <summary>
+            Event args for BytesTransferred event
+            </summary>    
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.BytesTransferredEventArgs.#ctor(System.Int64)">
+            <summary>
+            Constructor
+            <param name="byteCount"> 
+            The current count of bytes transferred
+            </param>
+            </summary>        
+        </member>
+        <member name="P:EnterpriseDT.Net.Ftp.BytesTransferredEventArgs.ByteCount">
+            <summary>
+            Gets the byte count 
+            </summary>   
+        </member>
+        <member name="T:EnterpriseDT.Net.Ftp.FTPMessageEventArgs">
+            <summary>
+            Event args for ReplyReceived and CommandSent events
+            </summary>    
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPMessageEventArgs.#ctor(System.String)">
+            <summary>
+            Constructor
+            <param name="message"> 
+            The message sent to or from the remote host
+            </param>
+            </summary>        
+        </member>
+        <member name="P:EnterpriseDT.Net.Ftp.FTPMessageEventArgs.Message">
+            <summary>
+            Gets the message 
+            </summary>   
+        </member>
+        <member name="T:EnterpriseDT.Net.Ftp.BytesTransferredHandler">
+            <summary>
+            Delegate used for the BytesTransferred event
+            </summary>
+        </member>
+        <member name="T:EnterpriseDT.Net.Ftp.FTPMessageHandler">
+            <summary>
+            Delegate used for ReplyReceived and CommandSent events
+            </summary>
+        </member>
+        <member name="T:EnterpriseDT.Net.Ftp.FTPConnectMode">
+            <summary>
+            Enumerates the connect modes that are possible, active and passiv e
+            </summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPConnectMode.ACTIVE">
+            <member>   
+            Represents active - PORT - connect mode
+            </member>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPConnectMode.PASV">
+            <member>   
+            Represents passive - PASV - connect mode
+            </member>
+        </member>
+        <member name="T:EnterpriseDT.Net.Ftp.FTPTransferType">
+            <summary>  
+            Enumerates the transfer types possible. We support only the two common types, 
+            ASCII and Image (often called binary).
+            </summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPTransferType.ASCII">
+            <member>   
+            Represents ASCII transfer type
+            </member>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPTransferType.BINARY">
+            <member>   
+            Represents Image (or binary) transfer type
+            </member>
+        </member>
+        <member name="T:EnterpriseDT.Net.Ftp.FTPClient">
+            <summary>  
+            Supports client-side FTP. Most common
+            FTP operations are present in this class.
+            </summary>
+            <author>       Bruce Blackshaw
+            </author>
+            <version>      $Revision: 1.14 $
+            </version>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPClient.DEFAULT_MONITOR_INTERVAL">
+            <summary> Default byte interval for transfer monitor</summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPClient.DEFAULT_BUFFER_SIZE">
+            <summary> Default transfer buffer size</summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPClient.majorVersion">
+            <summary> Major version (substituted by ant)</summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPClient.middleVersion">
+            <summary> Middle version (substituted by ant)</summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPClient.minorVersion">
+            <summary> Middle version (substituted by ant)</summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPClient.version">
+            <summary> Full version</summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPClient.buildTimestamp">
+            <summary> Timestamp of build</summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPClient.BINARY_CHAR">
+            <summary>  
+            The char sent to the server to set BINARY
+            </summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPClient.ASCII_CHAR">
+            <summary>  
+            The char sent to the server to set ASCII
+            </summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPClient.tsFormat">
+            <summary>Date format</summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPClient.log">
+            <summary> Logging object</summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPClient.control">
+            <summary>  Socket responsible for controlling
+            the connection
+            </summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPClient.data">
+            <summary>  Socket responsible for transferring
+            the data
+            </summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPClient.timeout">
+            <summary>  Socket timeout for both data and control. In
+            milliseconds
+            </summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPClient.strictReturnCodes">
+            <summary> Use strict return codes if true</summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPClient.cancelTransfer">
+            <summary>  Can be used to cancel a transfer</summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPClient.resume">
+            <summary> If true, a file transfer is being resumed</summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPClient.deleteOnFailure">
+            <summary>If a download to a file fails, delete the partial file</summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPClient.resumeMarker">
+            <summary> Resume byte marker point</summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPClient.monitorInterval">
+            <summary> Bytes transferred in between monitor callbacks</summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPClient.transferBufferSize">
+            <summary> Size of transfer buffers</summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPClient.fileFactory">
+            <summary> Parses LIST output</summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPClient.transferType">
+            <summary>  Record of the transfer type - make the default ASCII</summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPClient.connectMode">
+            <summary>  Record of the connect mode - make the default PASV (as this was
+            the original mode supported)
+            </summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPClient.lastValidReply">
+            <summary>
+            Holds the last valid reply from the server on the control socket
+            </summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPClient.controlPort">
+            <summary>
+            Port on which we connect to the FTP server and messages are passed
+            </summary>
+        </member>
+        <member name="F:EnterpriseDT.Net.Ftp.FTPClient.remoteHost">
+            <summary>
+            Remote host we are connecting to
+            </summary>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPClient.#ctor(System.String)">
+            <summary>  
+            Constructor. Creates the control socket
+            </summary>
+            <param name="remoteHost"> the remote hostname
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPClient.#ctor(System.String,System.Int32)">
+            <summary>  
+            Constructor. Creates the control socket
+            </summary>
+            <param name="remoteHost"> the remote hostname
+            </param>
+            <param name="controlPort"> port for control stream (-1 for default port)
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPClient.#ctor(System.String,System.Int32,System.Int32)">
+            <summary>
+            Constructor. Creates the control socket
+            </summary>
+            <param name="remoteHost"> the remote hostname
+            </param>
+            <param name="controlPort"> port for control stream (use -1 for the default port)
+            </param>
+            <param name="timeout">      the length of the timeout, in milliseconds
+            (pass in 0 for no timeout)
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPClient.#ctor(System.Net.IPAddress)">
+            <summary>  Constructor. Creates the control
+            socket
+            
+            </summary>
+            <param name="remoteAddr"> the address of the
+            remote host
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPClient.#ctor(System.Net.IPAddress,System.Int32)">
+            <summary>  
+            Constructor. Creates the control
+            socket. Allows setting of control port (normally
+            set by default to 21).
+            
+            </summary>
+            <param name="remoteAddr"> the address of the
+            remote host
+            </param>
+            <param name="controlPort"> port for control stream
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPClient.#ctor(System.Net.IPAddress,System.Int32,System.Int32)">
+            <summary>  
+            Constructor. Creates the control
+            socket. Allows setting of control port (normally
+            set by default to 21).
+            </summary>
+            <param name="remoteAddr">   the address of the
+            remote host
+            </param>
+            <param name="controlPort">  port for control stream (-1 for default port)
+            </param>
+            <param name="timeout">       the length of the timeout, in milliseconds 
+            (pass in 0 for no timeout)
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPClient.#ctor">
+            <summary>  
+            Default constructor for use by subclasses. Does not connect
+            to the remote host
+            </summary>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPClient.InitBlock">
+            <summary>  
+            Instance initializer. Sets formatter to GMT.
+            </summary>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPClient.Connect">
+            <summary>  
+            Connect to the remote host. Cannot be currently connected. RemoteHost
+            property must be set
+            </summary>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPClient.Initialize(EnterpriseDT.Net.Ftp.FTPControlSocket)">
+            <summary> 
+            Set the control socket explicitly
+            </summary>
+            <param name="control">  control socket reference
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPClient.CheckConnection(System.Boolean)">
+            <summary> 
+            Checks if the client has connected to the server and throws an exception if it hasn't.
+            This is only intended to be used by subclasses
+            </summary>
+            <throws>  FTPException Thrown if the client has not connected to the server. </throws>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPClient.DebugResponses(System.Boolean)">
+            <summary>  
+            Switch Debug of responses on or off
+            </summary>
+            <param name="on"> true if you wish to have responses to
+            the log stream, false otherwise
+            </param>
+            <deprecated>  use the Logger class to switch Debugging on and off
+            </deprecated>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPClient.CancelTransfer">
+            <summary>  Cancels the current transfer. Generally called from a separate
+            thread. Note that this may leave partially written files on the
+            server or on local disk, and should not be used unless absolutely
+            necessary. The server is not notified
+            </summary>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPClient.Login(System.String,System.String)">
+            <summary>  
+            Login into an account on the FTP server. This
+            call completes the entire login process
+            </summary>
+            <param name="user">      user name
+            </param>
+            <param name="password">  user's password
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPClient.User(System.String)">
+            <summary>  Supply the user name to log into an account
+            on the FTP server. Must be followed by the
+            password() method - but we allow for
+            
+            </summary>
+            <param name="user">      user name
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPClient.Password(System.String)">
+            <summary>  
+            Supplies the password for a previously supplied
+            username to log into the FTP server. Must be
+            preceeded by the user() method
+            </summary>
+            <param name="password">      The password.
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPClient.Quote(System.String,System.String[])">
+            <summary>  Issue arbitrary ftp commands to the FTP server.
+            
+            </summary>
+            <param name="command">    ftp command to be sent to server
+            </param>
+            <param name="validCodes"> valid return codes for this command
+            
+            </param>
+            <returns>  the text returned by the FTP server
+            </returns>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPClient.Size(System.String)">
+            <summary>  
+            Get the size of a remote file. This is not a standard FTP command, it
+            is defined in "Extensions to FTP", a draft RFC 
+            (draft-ietf-ftpext-mlst-16.txt)
+            </summary>
+            <param name="remoteFile"> name or path of remote file in current directory
+            </param>
+            <returns> size of file in bytes      
+            </returns>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPClient.Resume">
+            <summary> 
+            Make the next file transfer (put or get) resume. For puts(), the
+            bytes already transferred are skipped over, while for gets(), if 
+            writing to a file, it is opened in append mode, and only the bytes
+            required are transferred.
+            
+            Currently resume is only supported for BINARY transfers (which is
+            generally what it is most useful for). 
+            </summary>
+            <throws>  FTPException </throws>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPClient.CancelResume">
+            <summary> 
+            Cancel the resume. Use this method if something goes wrong
+            and the server is left in an inconsistent state
+            </summary>
+            <throws>  SystemException </throws>
+            <throws>  FTPException </throws>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPClient.Restart(System.Int64)">
+            <summary> 
+            Issue the RESTart command to the remote server 
+            </summary>
+            <param name="size"> the REST param, the mark at which the restart is 
+            performed on the remote file. For STOR, this is retrieved
+            by SIZE
+            </param>
+            <throws>  SystemException </throws>
+            <throws>  FTPException </throws>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPClient.Put(System.String,System.String)">
+            <summary>  
+            Put a local file onto the FTP server. It
+            is placed in the current directory.
+            </summary>
+            <param name="localPath">  path of the local file
+            </param>
+            <param name="remoteFile"> name of remote file in
+            current directory
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPClient.Put(System.IO.Stream,System.String)">
+            <summary>  
+            Put a stream of data onto the FTP server. It
+            is placed in the current directory.
+            </summary>
+            <param name="srcStream">  input stream of data to put
+            </param>
+            <param name="remoteFile"> name of remote file in
+            current directory
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPClient.Put(System.String,System.String,System.Boolean)">
+            <summary>  Put a local file onto the FTP server. It
+            is placed in the current directory. Allows appending
+            if current file exists
+            
+            </summary>
+            <param name="localPath">  path of the local file
+            </param>
+            <param name="remoteFile"> name of remote file in
+            current directory
+            </param>
+            <param name="append">     true if appending, false otherwise
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPClient.Put(System.IO.Stream,System.String,System.Boolean)">
+            <summary>  
+            Put a stream of data onto the FTP server. It
+            is placed in the current directory. Allows appending
+            if current file exists
+            </summary>
+            <param name="srcStream">  input stream of data to put
+            </param>
+            <param name="remoteFile"> name of remote file in
+            current directory
+            </param>
+            <param name="append">     true if appending, false otherwise
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPClient.ValidateTransfer">
+            <summary> 
+            Validate that the Put() or get() was successful.  This method is not
+            for general use.
+            </summary>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPClient.CloseDataSocket(System.IO.Stream)">
+            <summary> 
+            Close the data socket
+            </summary>
+            <param name="stream"> 
+            stream to close
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPClient.CloseDataSocket">
+            <summary> 
+            Close the data socket
+            </summary>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPClient.InitPut(System.String,System.Boolean)">
+            <summary>  
+            Request the server to set up the put
+            </summary>
+            <param name="remoteFile"> name of remote file in
+            current directory
+            </param>
+            <param name="append">     true if appending, false otherwise
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPClient.PutASCII(System.String,System.String,System.Boolean)">
+            <summary>  
+            Put as ASCII, i.e. read a line at a time and write
+            inserting the correct FTP separator
+            </summary>
+            <param name="localPath">  full path of local file to read from
+            </param>
+            <param name="remoteFile"> name of remote file we are writing to
+            </param>
+            <param name="append">     true if appending, false otherwise
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPClient.PutASCII(System.IO.Stream,System.String,System.Boolean)">
+            <summary>  
+            Put as ASCII, i.e. read a line at a time and write
+            inserting the correct FTP separator
+            </summary>
+            <param name="srcStream">  input stream of data to put
+            </param>
+            <param name="remoteFile"> name of remote file we are writing to
+            </param>
+            <param name="append">     true if appending, false otherwise
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPClient.PutBinary(System.String,System.String,System.Boolean)">
+            <summary>  
+            Put as binary, i.e. read and write raw bytes
+            </summary>
+            <param name="localPath">  
+            full path of local file to read from
+            </param>
+            <param name="remoteFile"> 
+            name of remote file we are writing to
+            </param>
+            <param name="append">     
+            true if appending, false otherwise
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPClient.PutBinary(System.IO.Stream,System.String,System.Boolean)">
+            <summary>  
+            Put as binary, i.e. read and write raw bytes
+            </summary>
+            <param name="srcStream">  input stream of data to put
+            </param>
+            <param name="remoteFile"> name of remote file we are writing to
+            </param>
+            <param name="append">     true if appending, false otherwise
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPClient.Put(System.Byte[],System.String)">
+            <summary>  
+            Put data onto the FTP server. It
+            is placed in the current directory.
+            </summary>
+            <param name="bytes">       array of bytes
+            </param>
+            <param name="remoteFile"> name of remote file in
+            current directory
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPClient.Put(System.Byte[],System.String,System.Boolean)">
+            <summary>  
+            Put data onto the FTP server. It
+            is placed in the current directory. Allows
+            appending if current file exists
+            </summary>
+            <param name="bytes">       array of bytes
+            </param>
+            <param name="remoteFile"> name of remote file in
+            current directory
+            </param>
+            <param name="append">     true if appending, false otherwise
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPClient.Get(System.String,System.String)">
+            <summary>  
+            Get data from the FTP server. Uses the currently
+            set transfer mode.
+            </summary>
+            <param name="localPath">  local file to put data in
+            </param>
+            <param name="remoteFile"> name of remote file in
+            current directory
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPClient.Get(System.IO.Stream,System.String)">
+            <summary>  
+            Get data from the FTP server, using the currently
+            set transfer mode.
+            </summary>
+            <param name="destStream"> data stream to write data to
+            </param>
+            <param name="remoteFile"> name of remote file in
+            current directory
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPClient.InitGet(System.String)">
+            <summary>  
+            Request to the server that the get is set up
+            </summary>
+            <param name="remoteFile"> name of remote file
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPClient.GetASCII(System.String,System.String)">
+            <summary>  
+            Get as ASCII, i.e. read a line at a time and write
+            using the correct newline separator for the OS
+            </summary>
+            <param name="localPath">  full path of local file to write to
+            </param>
+            <param name="remoteFile"> name of remote file
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPClient.GetASCII(System.IO.Stream,System.String)">
+            <summary>  
+            Get as ASCII, i.e. read a line at a time and write
+            using the correct newline separator for the OS
+            </summary>
+            <param name="destStream"> data stream to write data to
+            </param>
+            <param name="remoteFile"> name of remote file
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPClient.GetBinary(System.String,System.String)">
+            <summary>  
+            Get as binary file, i.e. straight transfer of data
+            </summary>
+            <param name="localPath">  full path of local file to write to
+            </param>
+            <param name="remoteFile"> name of remote file
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPClient.GetBinary(System.IO.Stream,System.String)">
+            <summary>  
+            Get as binary file, i.e. straight transfer of data
+            </summary>
+            <param name="destStream"> stream to write to
+            </param>
+            <param name="remoteFile"> name of remote file
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPClient.Get(System.String)">
+            <summary>  
+            Get data from the FTP server. 
+            </summary>
+            <remarks>
+            Transfers in whatever mode we are in. Retrieve as a byte array. Note
+            that we may experience memory limitations as the
+            entire file must be held in memory at one time.
+            </remarks>
+            <param name="remoteFile"> name of remote file in
+            current directory
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPClient.Site(System.String)">
+            <summary>  
+            Run a site-specific command on the
+            server. Support for commands is dependent
+            on the server
+            </summary>
+            <param name="command">  the site command to run
+            </param>
+            <returns> true if command ok, false if
+            command not implemented
+            </returns>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPClient.DirDetails(System.String)">
+            <summary>  
+            List a directory's contents as an array of FTPFile objects.
+            Should work for Windows and most Unix FTP servers - let us know
+            about unusual formats (support@enterprisedt.com)
+            </summary>
+            <param name="dirname"> name of directory OR filemask
+            </param>
+            <returns>  an array of FTPFile objects
+            </returns>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPClient.Dir">
+            <summary>  
+            List current directory's contents as an array of strings of
+            filenames.
+            </summary>
+            <returns>  an array of current directory listing strings
+            </returns>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPClient.Dir(System.String)">
+            <summary>  
+            List a directory's contents as an array of strings of filenames.
+            </summary>
+            <param name="dirname"> name of directory OR filemask
+            </param>
+            <returns>  an array of directory listing strings
+            </returns>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPClient.Dir(System.String,System.Boolean)">
+            <summary>  
+            List a directory's contents as an array of strings. A detailed
+            listing is available, otherwise just filenames are provided.
+            The detailed listing varies in details depending on OS and
+            FTP server. Note that a full listing can be used on a file
+            name to obtain information about a file
+            </summary>
+            <param name="dirname"> name of directory OR filemask
+            </param>
+            <param name="full">    true if detailed listing required
+            false otherwise
+            </param>
+            <returns>  an array of directory listing strings
+            </returns>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPClient.ReadChunk(System.IO.BinaryReader,System.Byte[],System.Int32)">
+            <summary> 
+            Attempts to read a specified number of bytes from the given 
+            <code>BufferedStream</code> and place it in the given byte-array.
+            The purpose of this method is to permit subclasses to execute
+            any additional code necessary when performing this operation. 
+            </summary>
+            <param name="input">The <code>BinaryReader</code> to read from.
+            </param>
+            <param name="chunk">The byte-array to place read bytes in.
+            </param>
+            <param name="chunksize">Number of bytes to read.
+            </param>
+            <returns> Number of bytes actually read.
+            </returns>
+            <throws>  SystemException Thrown if there was an error while reading. </throws>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPClient.ReadChar(System.IO.StreamReader)">
+            <summary> 
+            Attempts to read a single character from the given <code>StreamReader</code>. 
+            The purpose of this method is to permit subclasses to execute
+            any additional code necessary when performing this operation. 
+            </summary>
+            <param name="input">The <code>StreamReader</code> to read from.
+            </param>
+            <returns> The character read.
+            </returns>
+            <throws>  SystemException Thrown if there was an error while reading. </throws>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPClient.ReadLine(System.IO.StreamReader)">
+            <summary> 
+            Attempts to read a single line from the given <code>StreamReader</code>. 
+            The purpose of this method is to permit subclasses to execute
+            any additional code necessary when performing this operation. 
+            </summary>
+            <param name="input">The <code>StreamReader</code> to read from.
+            </param>
+            <returns> The string read.
+            </returns>
+            <throws>  
+            SystemException Thrown if there was an error while reading. 
+            </throws>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPClient.Delete(System.String)">
+            <summary>  
+            Delete the specified remote file
+            </summary>
+            <param name="remoteFile"> name of remote file to
+            delete
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPClient.Rename(System.String,System.String)">
+            <summary>  
+            Rename a file or directory
+            </summary>
+            <param name="from"> name of file or directory to rename
+            </param>
+            <param name="to">   intended name
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPClient.RmDir(System.String)">
+            <summary>  
+            Delete the specified remote working directory
+            </summary>
+            <param name="dir"> name of remote directory to
+            delete
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPClient.MkDir(System.String)">
+            <summary>  
+            Create the specified remote working directory
+            </summary>
+            <param name="dir"> name of remote directory to
+            create
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPClient.ChDir(System.String)">
+            <summary>  
+            Change the remote working directory to that supplied
+            </summary>
+            <param name="dir"> name of remote directory to
+            change to
+            </param>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPClient.ModTime(System.String)">
+            <summary>  
+            Get modification time for a remote file
+            </summary>
+            <param name="remoteFile">  name of remote file
+            </param>
+            <returns>   
+            modification time of file as a date
+            </returns>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPClient.Pwd">
+            <summary>  
+            Get the current remote working directory
+            </summary>
+            <returns>   the current working directory
+            </returns>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPClient.Features">
+            <summary>  
+            Get the server supplied features
+            </summary>
+            <returns>   
+            string containing server features, or null if no features or not
+            supported
+            </returns>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPClient.GetSystem">
+            <summary>  
+            Get the type of the OS at the server
+            </summary>
+            <returns>   the type of server OS
+            </returns>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPClient.Help(System.String)">
+            <summary>  Get the help text for the specified command
+            
+            </summary>
+            <param name="command"> name of the command to get help on
+            </param>
+            <returns> help text from the server for the supplied command
+            </returns>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPClient.Abort">
+            <summary>  
+            Abort the current action
+            </summary>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPClient.Quit">
+            <summary>  
+            Quit the FTP session
+            </summary>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPClient.QuitImmediately">
+            <summary>  
+            Quit the FTP session immediately by closing the control socket
+            without sending the QUIT command
+            </summary>
+        </member>
+        <member name="M:EnterpriseDT.Net.Ftp.FTPClient.#cctor">
+            <summary> 
+            Work out the version array
+            </summary>
+        </member>
+        <member name="P:EnterpriseDT.Net.Ftp.FTPClient.Version">
+            <summary> Get the version of edtFTPj
+            
+            </summary>
+            <returns> int array of {major,middle,minor} version numbers 
+            </returns>
+        </member>
+        <member name="P:EnterpriseDT.Net.Ftp.FTPClient.BuildTimestamp">
+            <summary> Get the build timestamp
+            
+            </summary>
+            <returns> d-MMM-yyyy HH:mm:ss z build timestamp 
+            </returns>
+        </member>
+        <member name="P:EnterpriseDT.Net.Ftp.FTPClient.StrictReturnCodes">
+            <summary>
+            Strict checking of return codes. If it is on
+            (the default), all return codes must exactly match the expected code.  
+            If strict checking is off, only the first digit must match
+            </summary>
+            <returns>  
+            true if strict return code checking, false if non-strict.
+            </returns>
+        </member>
+        <member name="P:EnterpriseDT.Net.Ftp.FTPClient.Timeout">
+            <summary>   
+            Set the TCP timeout on the underlying socket.
+            </summary>
+        </member>
+        <member name="P:EnterpriseDT.Net.Ftp.FTPClient.ConnectMode">
+            <summary>  
+            Get/Set the connect mode
+            </summary>
+        </member>
+        <member name="P:EnterpriseDT.Net.Ftp.FTPClient.TransferNotifyInterval">
+            <summary>  
+            Get the bytes transferred between each notification of the
+            BytesTransferred event. Reduce this value to receive more
+            frequent notifications of transfer progress
+            </summary>
+        </member>
+        <member name="P:EnterpriseDT.Net.Ftp.FTPClient.TransferBufferSize">
+            <summary> 
+            Get/set the size of the buffers used in writing to and reading from
+            the data sockets
+            </summary>
+        </member>
+        <member name="P:EnterpriseDT.Net.Ftp.FTPClient.RemoteHost">
+            <summary>  
+            Get/set the name of the remote host.
+            </summary>
+            <remarks>
+            Can only be set if not currently connected.
+            </remarks>
+        </member>
+        <member name="P:EnterpriseDT.Net.Ftp.FTPClient.DeleteOnFailure">
+            <summary>  
+            Get/set the delete on failure flag
+            </summary>
+            <remarks>
+            If true, a partially downloaded file is deleted if there
+            is a failure during the download. For example, the connection
+            to the FTP server might have failed. If false, the partially
+            downloaded file remains on the client machine - and the download
+            may be resumed, if it is a binary transfer. By default this flag is set to true.
+            </remarks>
+        </member>
+        <member name="P:EnterpriseDT.Net.Ftp.FTPClient.ControlPort">
+            <summary>  
+            Get/set the controlPort. Can only be set
+            if not currently connected
+            </summary>
+        </member>
+        <member name="P:EnterpriseDT.Net.Ftp.FTPClient.FTPFileFactory">
+            <summary> 
+            Override the chosen file factory with a user created one - meaning
+            that a specific parser has been selected
+            </summary>
+        </member>
+        <member name="P:EnterpriseDT.Net.Ftp.FTPClient.LastValidReply">
+            <summary>  
+            Gets the latest valid reply from the server
+            </summary>
+            <returns>  reply object encapsulating last valid server response
+            </returns>
+        </member>
+        <member name="P:EnterpriseDT.Net.Ftp.FTPClient.TransferType">
+            <summary>
+            Get or set the current transfer type
+            </summary>
+            <returns>  
+            the current type of the transfer, i.e. BINARY or ASCII
+            </returns>
+        </member>
+        <member name="E:EnterpriseDT.Net.Ftp.FTPClient.TransferStarted">
+            <summary>
+            Event for notifying start of a transfer
+            </summary>
+        </member>
+        <member name="E:EnterpriseDT.Net.Ftp.FTPClient.TransferComplete">
+            <summary>
+            Event for notifying start of a transfer
+            </summary> 
+        </member>
+        <member name="E:EnterpriseDT.Net.Ftp.FTPClient.BytesTransferred">
+            <summary>
+            Event for notifying start of a transfer
+            </summary> 
+        </member>
+        <member name="E:EnterpriseDT.Net.Ftp.FTPClient.CommandSent">
+            <summary>
+            Event for notifying start of a transfer
+            </summary> 
+        </member>
+        <member name="E:EnterpriseDT.Net.Ftp.FTPClient.ReplyReceived">
+            <summary>
+            Event for notifying start of a transfer
+            </summary> 
+        </member>
+    </members>
+</doc>

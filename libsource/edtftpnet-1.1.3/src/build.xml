@@ -1,0 +1,205 @@
+<!-- =================================================================== -->
+<!-- $Id: build.xml.distrib,v 1.7 2004/11/20 23:11:08 bruceb Exp $   	         -->
+<!-- =================================================================== -->
+
+<!-- This is an ant script and must be run using ant. You also need      -->
+<!-- NDoc installed and available in the PATH as well as csc             -->
+<project name="edtftpnet" default="compile" basedir=".">
+
+  <!-- ================================================== -->
+  <!-- Set up properties                                  -->
+  <!-- ================================================== -->
+  <target name="init">
+    <!-- The root directory of the workspace -->
+    <property name="ftp.home" value=".."/>
+    
+    <!-- version numbers -->
+    <property name="major_ver" value="1"/> 
+    <property name="middle_ver" value="1"/>
+    <property name="minor_ver" value="3"/>   
+
+    <!-- The current version  -->
+    <property name="ftp.version" value="${major_ver}.${middle_ver}.${minor_ver}"/>
+    
+    <!-- The current version  -->
+    <property name="ftp.name" value="edtftpnet"/>    
+    
+    <!-- The destination directory for the build -->
+    <property name="ftp.build" value="${ftp.home}/build"/>
+
+	<!-- Where the source is -->
+    <property name="ftp.src" value="."/>
+    
+	<!-- Where the util home is -->
+    <property name="util.home" value="../../util-net"/>
+    
+	<!-- Where the util source is -->
+    <property name="util.src" value="${util.home}/src"/>
+    
+	<!-- Where the parsed source is -->
+    <property name="ftp.parsed.src" value="${ftp.build}/parsed"/>    
+
+    <!-- The destination directory for all the compiled classes. -->
+    <property name="ftp.bindir" value="${ftp.home}/bin"/>
+
+    <!-- The directory holding DLLs we depend on  -->
+    <property name="ftp.libdir" value="${ftp.home}/lib"/>
+
+    <!-- The destination directory for doco -->
+    <property name="ftp.dstdocdir" value="${ftp.build}/doc"/>
+
+    <!-- The name of the test exe -->
+    <property name="ftp.testexe" value="ftptest.exe"/>
+
+    <!-- The original config file name -->
+    <property name="ftp.config.orig" value="config.xml"/>
+
+    <!-- The test config file name -->
+    <property name="ftp.config.test" value="${ftp.testexe}.config"/>
+
+    <!-- The DLL name -->    
+    <property name="ftp.dll" value="${ftp.name}-${ftp.version}.dll"/>
+    
+    <!-- The test DLL name with nunit tests -->    
+    <property name="test.dll" value="${ftp.name}-test-${ftp.version}.dll"/>
+    
+    <!-- The distribution directory -->    
+    <property name="ftp.distdir" value="${ftp.home}/dist"/>   
+    
+    <tstamp>
+      <format pattern="d-MMM-yyyy HH:mm:ss z" property="date_time"/>
+    </tstamp>
+  </target>
+
+  <!-- ================================================== -->
+  <!-- Compile source                                     -->
+  <!-- ================================================== -->
+  <target name="compile" depends="init">
+  	<!-- copy src into a temporary directory and perform the substitutions -->
+     <copy todir="${ftp.parsed.src}">
+    	<fileset dir="${ftp.src}">
+    	   <include name="**/*cs"/>
+    	</fileset>
+  	</copy>     
+  	<replace dir="${ftp.parsed.src}" token="@major_ver@" value="${major_ver}">
+  		<include name="**/*cs"/> 
+	</replace>  
+	<replace dir="${ftp.parsed.src}" token="@middle_ver@" value="${middle_ver}">
+  		<include name="**/*cs"/>
+	</replace>  
+	<replace dir="${ftp.parsed.src}" token="@minor_ver@" value="${minor_ver}">
+  		<include name="**/*cs"/> 
+	</replace> 
+	<replace dir="${ftp.parsed.src}" token="@date_time@" value="${date_time}">
+  		<include name="**/*cs"/>  
+	</replace> 
+
+    <!-- compile the DLL -->
+    <mkdir dir="${ftp.bindir}"/>
+    <mkdir dir="${ftp.dstdocdir}"/>
+    <csc optimize="false" 
+         debug="true" 
+         docFile="${ftp.dstdocdir}/edtftpnet.xml"
+         warnLevel="3" 
+         unsafe="false" 
+         targetType="library" 
+         incremental="false" 
+         destFile="${ftp.bindir}/${ftp.dll}">
+         <src dir="${ftp.parsed.src}" 
+              includes="net/*.cs,net/ftp/*.cs,util/debug/*.cs"/> 
+    </csc>
+    
+    <!-- now compile the basic test client -->
+    <csc optimize="true" 
+         debug="false" 
+         warnLevel="3" 
+         unsafe="false" 
+         targetType="exe" 
+         incremental="false" 
+         mainClass = "EnterpriseDT.Net.Ftp.Test.FTPClientTest" 
+         destFile="${ftp.bindir}/${ftp.testexe}"> 
+         <src dir="${ftp.parsed.src}" includes="net/ftp/test/FTPClientTest.cs" /> 
+         <reference file="${ftp.bindir}/${ftp.dll}" /> 
+    </csc>
+    
+    <!-- compile the test DLL - nunit tests -->
+    <csc optimize="true" 
+         debug="false" 
+         warnLevel="3" 
+         unsafe="false" 
+         targetType="library" 
+         incremental="false" 
+         destFile="${ftp.bindir}/${test.dll}">
+         <src dir="${ftp.parsed.src}" 
+              includes="net/ftp/test/*.cs"
+              excludes="net/ftp/test/FTPClientTest.cs"/>
+         <reference file="${ftp.bindir}/${ftp.dll}" /> 
+         <reference file="${ftp.libdir}/nunit.framework.dll" /> 
+    </csc>
+    
+    <!-- copy config file across -->
+    <copy file="${ftp.src}/config/${ftp.config.orig}" 
+          tofile="${ftp.bindir}/${ftp.config.test}"
+          overwrite="true"/>  
+  </target>
+  
+  <!-- ================================================== -->
+  <!-- Generate documentation via NDoc                    -->
+  <!-- ================================================== -->
+  <target name="doc" depends="compile">
+    <exec executable="ndocconsole">
+      <arg line="${ftp.bindir}/${ftp.dll},${ftp.dstdocdir}/edtftpnet.xml -HtmlHelpName=edtFTPnet-${ftp.version} -OutputDirectory=${ftp.dstdocdir}/api -verbose"/>
+    </exec>
+  </target>
+
+  <!-- ================================================== -->
+  <!-- Clean build                                        -->
+  <!-- ================================================== -->
+  <target name="clean" depends="init">
+    <delete dir="${ftp.build}"/>
+    <delete dir="${ftp.distdir}"/>
+    <delete>
+        <fileset dir="${ftp.bindir}" includes="*.*"/>
+    </delete>
+  </target>
+ 
+  <!-- ================================================== -->
+  <!-- Build a distribution                               -->
+  <!-- ================================================== -->  
+  <target name="dist" depends="clean,doc">
+    <mkdir dir="${ftp.distdir}"/>
+    <!-- copy all the files we want in the tar file to a staging dir -->
+    <copy todir="${ftp.build}/edtftpnet-${ftp.version}"> 
+       <fileset dir="${ftp.build}">
+          <include name="doc/**/*.*"/>
+          <exclude name="doc/**/*.hh*"/>
+          <exclude name="doc/**/*.log"/>
+       </fileset>  
+       <fileset dir="${ftp.home}">
+          <include name="src/build.xml"/>
+          <include name="src/config/*.xml"/>
+          <include name="src/net/**/*.cs"/>
+          <include name="src/util/debug/*.cs"/>
+          <include name="doc/RFC959.TXT"/>
+          <include name="doc/devguide.pdf"/>
+          <include name="demo/*.txt"/>
+          <include name="demo/*.bat"/>
+          <include name="demo/*.cs"/>
+          <include name="demo/*.vb"/>
+          <include name="demo/*.config"/>
+          <include name="bin/*.dll"/>
+          <include name="bin/*.config"/>
+          <include name="bin/*.exe"/>
+          <include name="lib/*.dll"/>
+          <include name="test/test.config.*"/>
+          <include name="test/test.bat"/>
+          <include name="test/empty_local.txt"/>
+       </fileset>
+    </copy>
+              
+    <!-- make a zip distribution --> 
+    <zip destfile="${ftp.distdir}/edtftpnet-${ftp.version}.zip"
+          basedir="${ftp.build}" includes="edtftpnet-${ftp.version}/**" /> 	
+  </target> 
+  
+</project>

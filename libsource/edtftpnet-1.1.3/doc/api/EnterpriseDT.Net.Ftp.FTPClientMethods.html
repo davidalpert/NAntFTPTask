@@ -1,0 +1,125 @@
+﻿<html dir="LTR"><head><META http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="vs_targetSchema" content="http://schemas.microsoft.com/intellisense/ie5"><title>FTPClient Methods</title><xml></xml><link rel="stylesheet" type="text/css" href="MSDN.css"></head><body id="bodyID" class="dtBODY"><div id="nsbanner"><div id="bannerrow1"><table class="bannerparthead" cellspacing="0"><tr id="hdr"><td class="runninghead">An NDoc Documented Class Library</td><td class="product"></td></tr></table></div><div id="TitleRow"><h1 class="dtH1">FTPClient Methods</h1></div></div><div id="nstext"><p>The methods of the <b>FTPClient</b> class are listed below. For a complete list of <b>FTPClient</b> class members, see the <a href="EnterpriseDT.Net.Ftp.FTPClientMembers.html">FTPClient Members</a> topic.</p><h4 class="dtH4">Public Instance Methods</h4><div class="tablediv"><table class="dtTABLE" cellspacing="0">
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"><a href="EnterpriseDT.Net.Ftp.FTPClient.CancelResume.html">CancelResume</a></td><td width="50%"> 
+            Cancel the resume. Use this method if something goes wrong
+            and the server is left in an inconsistent state
+            </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"><a href="EnterpriseDT.Net.Ftp.FTPClient.CancelTransfer.html">CancelTransfer</a></td><td width="50%">  Cancels the current transfer. Generally called from a separate
+            thread. Note that this may leave partially written files on the
+            server or on local disk, and should not be used unless absolutely
+            necessary. The server is not notified
+            </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"><a href="EnterpriseDT.Net.Ftp.FTPClient.ChDir.html">ChDir</a></td><td width="50%">  
+            Change the remote working directory to that supplied
+            </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"><a href="EnterpriseDT.Net.Ftp.FTPClient.Connect.html">Connect</a></td><td width="50%">  
+            Connect to the remote host. Cannot be currently connected. RemoteHost
+            property must be set
+            </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"><a href="EnterpriseDT.Net.Ftp.FTPClient.DebugResponses.html">DebugResponses</a></td><td width="50%">  
+            Switch Debug of responses on or off
+            </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"><a href="EnterpriseDT.Net.Ftp.FTPClient.Delete.html">Delete</a></td><td width="50%">  
+            Delete the specified remote file
+            </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"><a href="EnterpriseDT.Net.Ftp.FTPClient.Dir_overloads.html">Dir</a></td><td width="50%">Overloaded.   
+            List a directory's contents as an array of strings. A detailed
+            listing is available, otherwise just filenames are provided.
+            The detailed listing varies in details depending on OS and
+            FTP server. Note that a full listing can be used on a file
+            name to obtain information about a file
+            </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"><a href="EnterpriseDT.Net.Ftp.FTPClient.DirDetails.html">DirDetails</a></td><td width="50%">  
+            List a directory's contents as an array of FTPFile objects.
+            Should work for Windows and most Unix FTP servers - let us know
+            about unusual formats (support@enterprisedt.com)
+            </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"><a href="ms-help://MS.NETFrameworkSDKv1.1/cpref/html/frlrfSystemObjectClassEqualsTopic.htm">Equals</a> (inherited from <b>Object</b>)</td><td width="50%">Determines whether the specified <a href="ms-help://MS.NETFrameworkSDKv1.1/cpref/html/frlrfSystemObjectClassTopic.htm">Object</a> is equal to the current <a href="ms-help://MS.NETFrameworkSDKv1.1/cpref/html/frlrfSystemObjectClassTopic.htm">Object</a>.</td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"><a href="EnterpriseDT.Net.Ftp.FTPClient.Features.html">Features</a></td><td width="50%">  
+            Get the server supplied features
+            </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"><a href="EnterpriseDT.Net.Ftp.FTPClient.Get_overloads.html">Get</a></td><td width="50%">Overloaded.   
+            Get data from the FTP server. 
+            </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"><a href="ms-help://MS.NETFrameworkSDKv1.1/cpref/html/frlrfSystemObjectClassGetHashCodeTopic.htm">GetHashCode</a> (inherited from <b>Object</b>)</td><td width="50%">Serves as a hash function for a particular type, suitable
+      for use in hashing algorithms and data structures like a hash table.</td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"><a href="EnterpriseDT.Net.Ftp.FTPClient.GetSystem.html">GetSystem</a></td><td width="50%">  
+            Get the type of the OS at the server
+            </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"><a href="ms-help://MS.NETFrameworkSDKv1.1/cpref/html/frlrfSystemObjectClassGetTypeTopic.htm">GetType</a> (inherited from <b>Object</b>)</td><td width="50%">Gets the <a href="ms-help://MS.NETFrameworkSDKv1.1/cpref/html/frlrfSystemTypeClassTopic.htm">Type</a> of the current instance.</td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"><a href="EnterpriseDT.Net.Ftp.FTPClient.Help.html">Help</a></td><td width="50%">  Get the help text for the specified command
+            
+            </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"><a href="EnterpriseDT.Net.Ftp.FTPClient.Login.html">Login</a></td><td width="50%">  
+            Login into an account on the FTP server. This
+            call completes the entire login process
+            </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"><a href="EnterpriseDT.Net.Ftp.FTPClient.MkDir.html">MkDir</a></td><td width="50%">  
+            Create the specified remote working directory
+            </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"><a href="EnterpriseDT.Net.Ftp.FTPClient.ModTime.html">ModTime</a></td><td width="50%">  
+            Get modification time for a remote file
+            </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"><a href="EnterpriseDT.Net.Ftp.FTPClient.Password.html">Password</a></td><td width="50%">  
+            Supplies the password for a previously supplied
+            username to log into the FTP server. Must be
+            preceeded by the user() method
+            </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"><a href="EnterpriseDT.Net.Ftp.FTPClient.Put_overloads.html">Put</a></td><td width="50%">Overloaded.   
+            Put data onto the FTP server. It
+            is placed in the current directory. Allows
+            appending if current file exists
+            </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"><a href="EnterpriseDT.Net.Ftp.FTPClient.Pwd.html">Pwd</a></td><td width="50%">  
+            Get the current remote working directory
+            </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"><a href="EnterpriseDT.Net.Ftp.FTPClient.Quit.html">Quit</a></td><td width="50%">  
+            Quit the FTP session
+            </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"><a href="EnterpriseDT.Net.Ftp.FTPClient.QuitImmediately.html">QuitImmediately</a></td><td width="50%">  
+            Quit the FTP session immediately by closing the control socket
+            without sending the QUIT command
+            </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"><a href="EnterpriseDT.Net.Ftp.FTPClient.Quote.html">Quote</a></td><td width="50%">  Issue arbitrary ftp commands to the FTP server.
+            
+            </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"><a href="EnterpriseDT.Net.Ftp.FTPClient.Rename.html">Rename</a></td><td width="50%">  
+            Rename a file or directory
+            </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"><a href="EnterpriseDT.Net.Ftp.FTPClient.Resume.html">Resume</a></td><td width="50%"> 
+            Make the next file transfer (put or get) resume. For puts(), the
+            bytes already transferred are skipped over, while for gets(), if 
+            writing to a file, it is opened in append mode, and only the bytes
+            required are transferred.
+            
+            Currently resume is only supported for BINARY transfers (which is
+            generally what it is most useful for). 
+            </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"><a href="EnterpriseDT.Net.Ftp.FTPClient.RmDir.html">RmDir</a></td><td width="50%">  
+            Delete the specified remote working directory
+            </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"><a href="EnterpriseDT.Net.Ftp.FTPClient.Site.html">Site</a></td><td width="50%">  
+            Run a site-specific command on the
+            server. Support for commands is dependent
+            on the server
+            </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"><a href="EnterpriseDT.Net.Ftp.FTPClient.Size.html">Size</a></td><td width="50%">  
+            Get the size of a remote file. This is not a standard FTP command, it
+            is defined in "Extensions to FTP", a draft RFC 
+            (draft-ietf-ftpext-mlst-16.txt)
+            </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"><a href="ms-help://MS.NETFrameworkSDKv1.1/cpref/html/frlrfSystemObjectClassToStringTopic.htm">ToString</a> (inherited from <b>Object</b>)</td><td width="50%">Returns a <a href="ms-help://MS.NETFrameworkSDKv1.1/cpref/html/frlrfSystemStringClassTopic.htm">String</a> that represents the current <a href="ms-help://MS.NETFrameworkSDKv1.1/cpref/html/frlrfSystemObjectClassTopic.htm">Object</a>.</td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"><a href="EnterpriseDT.Net.Ftp.FTPClient.User.html">User</a></td><td width="50%">  Supply the user name to log into an account
+            on the FTP server. Must be followed by the
+            password() method - but we allow for
+            
+            </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="pubmethod.gif"><a href="EnterpriseDT.Net.Ftp.FTPClient.ValidateTransfer.html">ValidateTransfer</a></td><td width="50%"> 
+            Validate that the Put() or get() was successful.  This method is not
+            for general use.
+            </td></tr></table></div><h4 class="dtH4">Protected Instance Methods</h4><div class="tablediv"><table class="dtTABLE" cellspacing="0">
+<tr VALIGN="top"><td width="50%"><img src="protmethod.gif"><a href="EnterpriseDT.Net.Ftp.FTPClient.Abort.html">Abort</a></td><td width="50%">  
+            Abort the current action
+            </td></tr>
+<tr VALIGN="top"><td width="50%"><img src="protmethod.gif"><a href="ms-help://MS.NETFrameworkSDKv1.1/cpref/html/frlrfSystemObjectClassFinalizeTopic.htm">Finalize</a> (inherited from <b>Object</b>)</td><td width="50%">Allows an <a href="ms-help://MS.NETFrameworkSDKv1.1/cpref/html/frlrfSystemObjectClassTopic.htm">Object</a> to attempt to free resources and perform other cleanup operations before
+   the <a href="ms-help://MS.NETFrameworkSDKv1.1/cpref/html/frlrfSystemObjectClassTopic.htm">Object</a> is reclaimed by garbage collection.</td></tr>
+<tr VALIGN="top"><td width="50%"><img src="protmethod.gif"><a href="ms-help://MS.NETFrameworkSDKv1.1/cpref/html/frlrfSystemObjectClassMemberwiseCloneTopic.htm">MemberwiseClone</a> (inherited from <b>Object</b>)</td><td width="50%">Creates a shallow copy of the current <a href="ms-help://MS.NETFrameworkSDKv1.1/cpref/html/frlrfSystemObjectClassTopic.htm">Object</a>.</td></tr></table></div><h4 class="dtH4">See Also</h4><p><a href="EnterpriseDT.Net.Ftp.FTPClient.html">FTPClient Class</a> | <a href="EnterpriseDT.Net.Ftp.html">EnterpriseDT.Net.Ftp Namespace</a></p><object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e" viewastext="true" style="display: none;"><param name="Keyword" value="FTPClient class, methods"></object></div></body></html>
